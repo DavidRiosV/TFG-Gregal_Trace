@@ -126,3 +126,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Modelo de usuario propio (Sesiones)
 AUTH_USER_MODEL = 'gestion.Usuario'
+
+# A dónde va Django sin sesión, al entrar y al salir 
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'login'

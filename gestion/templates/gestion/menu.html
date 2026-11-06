@@ -18,4 +18,19 @@
             </a>
         {% endfor %}
     </nav>
+
+    <div class="menu__usuario">
+        <span class="avatar" aria-hidden="true">{{ user.first_name|default:user.username|slice:":1"|upper }}</span>
+        <span class="menu__persona">
+            <strong>{{ user.get_full_name|default:user.username }}</strong>
+            <span>{% if user.is_superuser %}Administrador{% else %}{{ user.get_rol_display }}{% endif %}</span>
+        </span>
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="boton-icono" aria-label="Cerrar sesión" title="Cerrar sesión">
+                {% include "gestion/icono.html" with nombre="salir" %}
+            </button>
+        </form>
+    </div>
+
 </aside>

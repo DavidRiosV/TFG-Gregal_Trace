@@ -8,7 +8,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/estilos.css' %}?v=1">
 </head>
-<body>
+
+<body class="{% block clase_body %}{% endblock %}">
+{% block cuerpo %}
     <div class="app">
         {% include "gestion/menu.html" %}
 
@@ -24,5 +26,7 @@
     </div>
 
     {% include "gestion/menu_movil.html" %}
+{% endblock %}
+    <script src="{% static 'js/main.js' %}?v=1"></script>
 </body>
 </html>
