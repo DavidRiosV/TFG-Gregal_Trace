@@ -1,0 +1,6 @@
+<form class="buscador" method="get" role="search">
+    <input type="hidden" name="estado" value="{{ estado_actual }}">
+    {% include "gestion/icono.html" with nombre="buscar" %}
+    <input type="search" name="q" value="{{ busqueda }}" placeholder="{{ texto_buscador }}">
+    <button type="submit" class="buscador__boton">Buscar</button>
+</form>

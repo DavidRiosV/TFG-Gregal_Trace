@@ -1,0 +1,63 @@
+{% extends "gestion/principal.html" %}
+
+{% block titulo %}{{ proyecto.nombre }} · Gregal Trace{% endblock %}
+
+{% block contenido %}
+{% url 'lista_proyectos' slug_volver as url_lista %}
+<header class="pagina">
+    {% include "gestion/migas.html" with miga_url=url_lista miga_texto=proyecto.get_tipo_display miga_actual=proyecto.nombre %}
+    <div class="pagina__titulo-con-estado">
+        <h1 class="pagina__titulo">{{ proyecto.nombre }}</h1>
+        {% include "gestion/estado.html" %}
+    </div>
+    <dl class="datos">
+        <div><dt>Tipo</dt><dd>{{ proyecto.get_tipo_display }}</dd></div>
+        <div><dt>Inicio</dt><dd>{{ proyecto.fecha_inicio|date:"d/m/Y" }}</dd></div>
+        {% if proyecto.fecha_fin %}<div><dt>Fin</dt><dd>{{ proyecto.fecha_fin|date:"d/m/Y" }}</dd></div>{% endif %}
+    </dl>
+    {% if proyecto.descripcion %}<p class="pagina__texto pagina__texto--descripcion">{{ proyecto.descripcion }}</p>{% endif %}
+</header>
+
+<div class="cifras">
+    <div class="cifra">
+        <span class="cifra__valor">{{ consumos|length }}</span>
+        <span class="cifra__nombre">Apuntes</span>
+    </div>
+    <div class="cifra">
+        <span class="cifra__valor">{{ horas|floatformat:"-2" }} h</span>
+        <span class="cifra__nombre">Horas</span>
+    </div>
+</div>
+
+<section class="panel panel--lista">
+    <h2 class="panel__titulo panel__titulo--con-margen">Apuntes</h2>
+    {% if consumos %}
+        <div class="tabla-contenedor">
+            <table class="tabla">
+                <thead>
+                    <tr>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Material</th>
+                        <th scope="col" class="num">Cantidad</th>
+                        <th scope="col">Añadido por</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for consumo in consumos %}
+                        <tr>
+                            <td class="tabla__fecha">{{ consumo.fecha|date:"d/m/Y" }}</td>
+                            <td class="tabla__material">{{ consumo.material.nombre }}</td>
+                            <td class="num">{{ consumo.cantidad|floatformat:"-2" }} {{ consumo.material.get_unidad_display|lower }}</td>
+                            <td class="tabla__persona">{{ consumo.trabajador.get_full_name|default:consumo.trabajador.username }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="vacio"><p>Este proyecto todavía no tiene apuntes.</p></div>
+    {% endif %}
+</section>
+
+{% include "gestion/volver.html" with volver_url=url_lista volver_texto="Volver al listado" %}
+{% endblock %}

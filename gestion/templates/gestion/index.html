@@ -1,0 +1,27 @@
+{% extends "gestion/principal.html" %}
+{% load static %}
+
+{% block titulo %}Inicio · Gregal Trace{% endblock %}
+
+{% block contenido %}
+<header class="pagina">
+    <h1 class="pagina__titulo">Gregal Trace</h1>
+    <p class="pagina__texto">Elige un apartado para consultar sus proyectos.</p>
+</header>
+
+<div class="tipos">
+    {% for slug, tipo in nav_tipos.items %}
+        <a class="tipo" href="{% url 'lista_proyectos' slug %}">
+            <img class="tipo__foto" src="{% static tipo.imagen %}" alt="">
+            <span class="tipo__cuerpo">
+                <span class="tipo__icono">{% include "gestion/icono.html" with nombre=slug %}</span>
+                <span class="tipo__titulo">{{ tipo.titulo }}</span>
+                <span class="tipo__datos">
+                    <span><strong>{{ tipo.en_proceso }}</strong> en proceso</span>
+                    <span><strong>{{ tipo.terminados }}</strong> terminados</span>
+                </span>
+            </span>
+        </a>
+    {% endfor %}
+</div>
+{% endblock %}

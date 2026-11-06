@@ -1,0 +1,49 @@
+{% extends "gestion/principal.html" %}
+
+{% block titulo %}{{ titulo }} · Gregal Trace{% endblock %}
+
+{% block contenido %}
+{% url 'index' as url_inicio %}
+<header class="pagina">
+    {% include "gestion/migas.html" with miga_actual=titulo %}
+    <h1 class="pagina__titulo">{{ titulo }}</h1>
+</header>
+
+<section class="panel panel--lista">
+    <div class="barra-herramientas">
+        {% include "gestion/buscador.html" with texto_buscador="Buscar por nombre o descripción" %}
+
+        <nav class="segmentos" aria-label="Filtrar por estado">
+            <a href="?estado=PRO&q={{ busqueda }}" class="segmento{% if estado_actual == 'PRO' %} segmento--activo{% endif %}">En proceso</a>
+            <a href="?estado=TER&q={{ busqueda }}" class="segmento{% if estado_actual == 'TER' %} segmento--activo{% endif %}">Terminados</a>
+            <a href="?estado=todos&q={{ busqueda }}" class="segmento{% if estado_actual == 'todos' %} segmento--activo{% endif %}">Todos</a>
+        </nav>
+    </div>
+
+    <ul class="filas">
+        {% for proyecto in proyectos %}
+            <li>
+                <a class="fila" href="{% url 'detalle_proyecto' proyecto.pk %}">
+                    <span class="fila__principal">
+                        <span class="fila__titulo">{{ proyecto.nombre }}</span>
+                        <span class="fila__meta">Inicio {{ proyecto.fecha_inicio|date:"d/m/Y" }}{% if proyecto.fecha_fin %}, fin {{ proyecto.fecha_fin|date:"d/m/Y" }}{% endif %}</span>
+                    </span>
+                    {% include "gestion/estado.html" %}
+                    <span class="fila__flecha">{% include "gestion/icono.html" with nombre="siguiente" %}</span>
+                </a>
+            </li>
+        {% empty %}
+            <li class="vacio">
+                {% if busqueda %}
+                    <p>No hay proyectos que coincidan con «{{ busqueda }}».</p>
+                    <a href="?estado={{ estado_actual }}">Quitar la búsqueda</a>
+                {% else %}
+                    <p>No hay proyectos en este estado.</p>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</section>
+
+{% include "gestion/volver.html" with volver_url=url_inicio volver_texto="Volver al inicio" %}
+{% endblock %}

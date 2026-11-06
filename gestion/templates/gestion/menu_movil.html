@@ -1,0 +1,10 @@
+<nav class="pestanas" aria-label="Menú">
+    <a class="pestana{% if seccion == 'inicio' %} pestana--activa{% endif %}" href="{% url 'index' %}">
+        {% include "gestion/icono.html" with nombre="inicio" %}<span>Inicio</span>
+    </a>
+    {% for slug, tipo in nav_tipos.items %}
+        <a class="pestana{% if seccion == slug %} pestana--activa{% endif %}" href="{% url 'lista_proyectos' slug %}">
+            {% include "gestion/icono.html" with nombre=slug %}<span>{{ tipo.corto }}</span>
+        </a>
+    {% endfor %}
+</nav>
