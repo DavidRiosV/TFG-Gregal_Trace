@@ -4,3 +4,5 @@ __pycache__/
 db.sqlite3
 .vscode/
 /static/
+gestion/fixtures/usuarios.json
+gestion/fixtures/datos_gregal.json
