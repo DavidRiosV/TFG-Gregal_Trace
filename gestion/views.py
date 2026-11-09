@@ -1,7 +1,10 @@
 from django.db.models import Q, Sum
-from django.shortcuts import get_object_or_404, render
+from django.contrib.auth import login
+from django.contrib.auth.models import Group
+from django.shortcuts import get_object_or_404, redirect, render
 
-from .models import Proyecto
+from .forms import RegistroForm
+from .models import Oficina, Operario, Proyecto, Usuario
 
 # Apartados de listado: traduce la palabra de la URL al código guardado en la base de datos
 TIPOS = {
@@ -9,7 +12,6 @@ TIPOS = {
     'intervenciones': {'codigo': 'INT', 'titulo': 'Intervenciones', 'corto': 'Interv.', 'imagen': 'img/categorias/intervenciones.jpg'},
     'mantenimientos': {'codigo': 'MAN', 'titulo': 'Mantenimientos', 'corto': 'Mant.', 'imagen': 'img/categorias/mantenimientos.jpg'},
 }
-
 
 def datos_menu():
     nav_tipos = {}
@@ -77,3 +79,32 @@ def detalle_proyecto(request, pk):
         'nav_tipos': datos_menu(),
         'seccion': slug_volver,
     })
+
+def registrar_usuario(request):
+    # Si ya ha iniciado sesión no tiene sentido registrarse
+    if request.user.is_authenticated:
+        return redirect('index')
+
+    if request.method == 'POST':
+        formulario = RegistroForm(request.POST)
+        if formulario.is_valid():
+            user = formulario.save()
+            # Según el rol elegido se crea un modelo u otro y se mete en su grupo de permisos
+            rol = int(formulario.cleaned_data.get('rol'))
+            if rol == Usuario.OPERARIO:
+                operario = Operario.objects.create(usuario=user)
+                operario.save()
+                grupo = Group.objects.get(name='Operarios')
+                grupo.user_set.add(user)
+            elif rol == Usuario.OFICINA:
+                oficina = Oficina.objects.create(usuario=user)
+                oficina.save()
+                grupo = Group.objects.get(name='Oficina')
+                grupo.user_set.add(user)
+            # Entra directamente sin tener que hacer login
+            login(request, user)
+            return redirect('index')
+    else:
+        formulario = RegistroForm()
+
+    return render(request, 'registration/signup.html', {'formulario': formulario})
