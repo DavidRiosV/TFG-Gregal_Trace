@@ -14,6 +14,14 @@
     <div class="pagina__acciones">
         {% if perms.gestion.change_proyecto %}
            <a class="boton boton--secundario" href="{% url 'proyecto_editar' proyecto.pk %}">Editar</a>
+                <form method="post" action="{% url 'cambiar_estado' proyecto.pk %}">
+                    {% csrf_token %}
+                        {% if proyecto.estado == 'TER' %}
+                            <button type="submit" class="boton boton--secundario">Volver a poner en proceso</button>
+                        {% else %}
+                            <button type="submit" class="boton">Marcar como terminado</button>
+                        {% endif %}
+                </form>
         {% endif %}
         {% if perms.gestion.delete_proyecto %}
             <form method="post" action="{% url 'proyecto_eliminar' proyecto.pk %}">

@@ -3,7 +3,7 @@ from django.contrib.auth import login
 from django.contrib.auth.models import Group
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import permission_required
-from datetime import datetime
+from datetime import date, datetime
 
 from .forms import RegistroForm,ProyectoForm
 from .models import Oficina, Operario, Proyecto, Usuario
@@ -162,6 +162,20 @@ def proyecto_eliminar(request, pk):
     if slug:
         return redirect('lista_proyectos', tipo=slug)
     return redirect('index')
+
+@permission_required('gestion.change_proyecto')
+def cambiar_estado(request, pk):
+    proyecto = get_object_or_404(Proyecto, pk=pk)
+    # Solo cambia si llega por POST (desde el botón); por un enlace (GET) no hace nada
+    if request.method == 'POST':
+        if proyecto.estado == 'TER':
+            proyecto.estado = 'PRO'
+            proyecto.fecha_fin = None
+        else:
+            proyecto.estado = 'TER'
+            proyecto.fecha_fin = date.today()
+        proyecto.save()
+    return redirect('detalle_proyecto', pk=proyecto.pk)
 
 def registrar_usuario(request):
     # Si ya ha iniciado sesión no tiene sentido registrarse
