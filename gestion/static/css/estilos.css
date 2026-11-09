@@ -1,10 +1,3 @@
-/* ==========================================================
-   Gregal Trace · hoja de estilos
-   Inspirada en los CRM de servicios técnicos (menú lateral,
-   cabecera de página con migas, listados en filas y cifras clave),
-   con la paleta verde y blanca de Instalaciones Gregal.
-   ========================================================== */
-
 :root {
     /* Colores de marca */
     --verde-noche: #1E3B14;      /* menú lateral */
@@ -119,7 +112,6 @@ img { display: block; max-width: 100%; }
 
 .menu__marca img { border-radius: 50%; background: var(--blanco); }
 
-/* El elemento que destaca: abrir una urgencia siempre está a mano */
 .menu__urgencia {
     display: flex;
     align-items: center;
@@ -615,8 +607,7 @@ img { display: block; max-width: 100%; }
 .entrada__ojo--visible .icono-ojo--abierto { display: none; }
 .entrada__ojo--visible .icono-ojo--cerrado { display: block; }
 
-/* El foco se marca en la caja (.entrada / .buscador), no en el campo de dentro:
-   así no aparece un doble borde verde */
+/* El foco se marca en la caja (.entrada / .buscador), no en el campo de dentro*/
 .entrada input:focus-visible,
 .entrada select:focus-visible,
 .entrada textarea:focus-visible,
@@ -845,8 +836,8 @@ img { display: block; max-width: 100%; }
 .reloj__rueda {
     position: relative;
     z-index: 1;
-    height: 120px;               /* 3 números a la vista */
-    padding: 40px 0;             /* deja centrar el primero y el último */
+    height: 120px;             
+    padding: 40px 0;             
     box-sizing: border-box;
     overflow-y: auto;
     scroll-snap-type: y mandatory;
@@ -908,14 +899,12 @@ img { display: block; max-width: 100%; }
 .campo__titulo { font-size: 14px; font-weight: 600; }
 
 @media (max-width: 760px) {
-    /* En el móvil las familias se desplazan en una sola fila */
     .familias { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
     .familia { flex: none; }
 }
 
 .barra-herramientas__total { color: var(--texto-suave); font-size: 14px; white-space: nowrap; }
 
-/* Solo para lectores de pantalla */
 .solo-lector {
     position: absolute;
     width: 1px;

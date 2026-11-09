@@ -3,8 +3,6 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from django.utils import timezone
 
-# Create your models here.
-
 class Usuario(AbstractUser):
     """Usuario que inicia sesión (Sesiones, diapositiva 9).
     Nombre, apellidos, email y contraseña ya vienen de AbstractUser."""
@@ -82,7 +80,6 @@ class Categoria(models.Model):
     # El código corto (FON, CLI...) es la clave primaria: es lo que viaja en la URL (?categoria=FON)
     codigo = models.CharField(max_length=3, primary_key=True)
     nombre = models.CharField(max_length=60, unique=True)
-    # Posición en la que sale en los botones de familias (de menor a mayor)
     orden = models.PositiveSmallIntegerField(default=50)
 
     class Meta:
@@ -91,7 +88,7 @@ class Categoria(models.Model):
     def __str__(self):
         return self.nombre
 
-#Tipos de material dentro de una familia (Tuberías, Válvulas, Bombas...)
+#Tipos de material dentro de una familia (Tuberías, Válvulas, Bombas)
 class Tipo(models.Model):
     nombre = models.CharField(max_length=60)
     categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT, related_name='tipos')

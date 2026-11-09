@@ -36,7 +36,6 @@
                         <span class="fila__titulo">{{ proyecto.nombre }}</span>
                         <span class="fila__meta">Inicio {{ proyecto.fecha_inicio|date:"d/m/Y" }}{% if proyecto.fecha_fin %}, fin {{ proyecto.fecha_fin|date:"d/m/Y" }}{% endif %}</span>
                     </span>
-                    {# En proceso: la fecha de entrega junto al estado (en rojo si ya ha pasado, en ámbar si quedan 7 días o menos) #}
                     {% if proyecto.estado == 'PRO' and proyecto.fecha_entrega %}
                         <span class="entrega{% if proyecto.plazo %} entrega--{{ proyecto.plazo }}{% endif %}" title="Fecha de entrega">
                             {% if proyecto.plazo == 'vencido' %}Vencido{% else %}Entrega{% endif %} {{ proyecto.fecha_entrega|date:"d/m/Y" }}
