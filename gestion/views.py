@@ -2,6 +2,7 @@ from django.db.models import Q, Sum
 from django.contrib.auth import login
 from django.contrib.auth.models import Group
 from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib.auth.decorators import permission_required
 
 from .forms import RegistroForm
 from .models import Oficina, Operario, Proyecto, Usuario
@@ -25,13 +26,14 @@ def datos_menu():
         }
     return nav_tipos
 
-
+@permission_required('gestion.view_proyecto')
 def index(request):
     return render(request, 'gestion/index.html', {
         'nav_tipos': datos_menu(),
         'seccion': 'inicio',
     })
 
+@permission_required('gestion.view_proyecto')
 def lista_proyectos(request, tipo):
     datos_tipo = TIPOS[tipo]
     proyectos = Proyecto.objects.filter(tipo=datos_tipo['codigo']).order_by('-fecha_inicio')
@@ -55,7 +57,7 @@ def lista_proyectos(request, tipo):
         'seccion': tipo,
     })
 
-
+@permission_required('gestion.view_proyecto')
 def detalle_proyecto(request, pk):
     proyecto = get_object_or_404(Proyecto, pk=pk)
     consumos = proyecto.consumos.select_related('material', 'trabajador').order_by('-fecha')
