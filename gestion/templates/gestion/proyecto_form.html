@@ -1,0 +1,40 @@
+{% extends "gestion/principal.html" %}
+
+{% block titulo %}{{ titulo }} · Gregal Trace{% endblock %}
+
+{% block contenido %}
+{% url 'lista_proyectos' slug_volver as url_lista %}
+<header class="pagina">
+    {% include "gestion/migas.html" with miga_url=url_lista miga_texto=texto_volver miga_actual=titulo %}
+    <h1 class="pagina__titulo">{{ titulo }}</h1>
+</header>
+
+<section class="panel panel--formulario">
+    <form method="post" class="formulario" novalidate action="{% url 'proyecto_crear' slug_volver %}">
+        {% csrf_token %}
+
+        {% for error in formulario.non_field_errors %}
+            <div class="error-formulario" role="alert">{{ error }}</div>
+        {% endfor %}
+
+        {% include "gestion/campo.html" with campo=formulario.nombre %}
+
+        <div class="formulario__fila">
+            {% include "gestion/campo_widget.html" with campo=formulario.tipo %}
+            {% include "gestion/campo_widget.html" with campo=formulario.estado %}
+        </div>
+
+        <div class="formulario__fila">
+            {% include "gestion/campo_widget.html" with campo=formulario.fecha_inicio %}
+            {% include "gestion/campo_widget.html" with campo=formulario.fecha_fin %}
+        </div>
+
+        {% include "gestion/campo_widget.html" with campo=formulario.descripcion %}
+
+        <div class="formulario__botones">
+            <button type="submit" class="boton">Crear</button>
+            <a class="boton boton--secundario" href="{{ url_lista }}">Cancelar</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

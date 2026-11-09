@@ -4,9 +4,17 @@
 
 {% block contenido %}
 {% url 'index' as url_inicio %}
+
 <header class="pagina">
     {% include "gestion/migas.html" with miga_actual=titulo %}
-    <h1 class="pagina__titulo">{{ titulo }}</h1>
+    <div class="pagina__fila">
+        <h1 class="pagina__titulo">{{ titulo }}</h1>
+        {% if perms.gestion.add_proyecto and perms.gestion.change_proyecto %}
+            <div class="pagina__acciones">
+                <a class="boton" href="{% url 'proyecto_crear' slug %}">{% include "gestion/icono.html" with nombre="mas" %}{{ nuevo }}</a>
+            </div>
+        {% endif %}
+    </div>
 </header>
 
 <section class="panel panel--lista">

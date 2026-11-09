@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import Usuario
+from .models import Usuario,Proyecto
 
 
 class RegistroForm(UserCreationForm):
@@ -25,3 +25,39 @@ class RegistroForm(UserCreationForm):
         super().__init__(*args, **kwargs)
         # El nombre sale en cada apunte, así que es obligatorio
         self.fields['first_name'].required = True
+
+class ProyectoForm(forms.ModelForm):
+    class Meta:
+        model = Proyecto
+        fields = ['nombre', 'tipo', 'descripcion', 'fecha_inicio', 'fecha_fin', 'estado']
+        labels = {
+            'nombre': 'Nombre o dirección',
+            'tipo': 'Tipo',
+            'descripcion': 'Descripción',
+            'fecha_inicio': 'Fecha de inicio',
+            'fecha_fin': 'Fecha de fin',
+            'estado': 'Estado',
+        }
+        widgets = {
+            'descripcion': forms.Textarea(attrs={'rows': 4}),
+            'fecha_inicio': forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'),
+            'fecha_fin': forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'),
+        }
+
+    def clean(self):
+        super().clean()
+
+        fecha_inicio = self.cleaned_data.get('fecha_inicio')
+        fecha_fin = self.cleaned_data.get('fecha_fin')
+        estado = self.cleaned_data.get('estado')
+
+        if fecha_inicio and fecha_fin and fecha_fin < fecha_inicio:
+            self.add_error('fecha_fin', 'La fecha de fin no puede ser anterior a la de inicio.')
+
+        if estado == 'TER' and not fecha_fin:
+            self.add_error('fecha_fin', 'Un proyecto terminado necesita fecha de fin.')
+
+        if estado == 'PRO' and fecha_fin:
+            self.add_error('fecha_fin', 'Un proyecto en proceso no lleva fecha de fin. Déjala vacía o márcalo como terminado.')
+
+        return self.cleaned_data

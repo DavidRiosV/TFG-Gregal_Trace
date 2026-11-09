@@ -5,14 +5,14 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import permission_required
 from datetime import datetime
 
-from .forms import RegistroForm
+from .forms import RegistroForm,ProyectoForm
 from .models import Oficina, Operario, Proyecto, Usuario
 
 # Apartados de listado: traduce la palabra de la URL al código guardado en la base de datos
 TIPOS = {
-    'obras': {'codigo': 'OBR', 'titulo': 'Obras', 'corto': 'Obras', 'imagen': 'img/categorias/obras.jpg'},
-    'intervenciones': {'codigo': 'INT', 'titulo': 'Intervenciones', 'corto': 'Interv.', 'imagen': 'img/categorias/intervenciones.jpg'},
-    'mantenimientos': {'codigo': 'MAN', 'titulo': 'Mantenimientos', 'corto': 'Mant.', 'imagen': 'img/categorias/mantenimientos.jpg'},
+    'obras': {'codigo': 'OBR', 'titulo': 'Obras', 'corto': 'Obras', 'nuevo': 'Nueva obra', 'imagen': 'img/categorias/obras.jpg'},
+    'intervenciones': {'codigo': 'INT', 'titulo': 'Intervenciones', 'corto': 'Interv.', 'nuevo': 'Nueva intervención', 'imagen': 'img/categorias/intervenciones.jpg'},
+    'mantenimientos': {'codigo': 'MAN', 'titulo': 'Mantenimientos', 'corto': 'Mant.', 'nuevo': 'Nuevo mantenimiento', 'imagen': 'img/categorias/mantenimientos.jpg'},
 }
 
 def datos_menu():
@@ -55,10 +55,12 @@ def lista_proyectos(request, tipo):
     return render(request, 'gestion/lista_proyectos.html', {
         'proyectos': proyectos,
         'titulo': datos_tipo['titulo'],
+        'nuevo': datos_tipo['nuevo'],
+        'slug': tipo,
         'busqueda': busqueda,
         'estado_actual': estado,
-        'nav_tipos': datos_menu(),
         'seccion': tipo,
+        'nav_tipos': datos_menu(),
     })
 
 @permission_required('gestion.view_proyecto')
@@ -88,6 +90,32 @@ def detalle_proyecto(request, pk):
         'nav_tipos': datos_menu(),
         'seccion': slug_volver,
     })
+
+@permission_required('gestion.add_proyecto')
+@permission_required('gestion.change_proyecto')
+def proyecto_crear(request, tipo):
+    datos_tipo = TIPOS[tipo]
+
+    if request.method == 'POST':
+        formulario = ProyectoForm(request.POST)
+        if formulario.is_valid():
+            # commit=False: crea el objeto sin guardarlo para poder rellenar quién lo creó
+            proyecto = formulario.save(commit=False)
+            proyecto.creado_por = request.user
+            proyecto.save()
+            return redirect('detalle_proyecto', pk=proyecto.pk)
+    else:
+        # El tipo viene marcado según el listado desde el que se crea
+        formulario = ProyectoForm(initial={'tipo': datos_tipo['codigo']})
+
+    return render(request, 'gestion/proyecto_form.html', {
+        'formulario': formulario,
+        'titulo': datos_tipo['nuevo'],
+        'slug_volver': tipo,
+        'texto_volver': datos_tipo['titulo'],
+        'nav_tipos': datos_menu(),
+        'seccion': tipo,
+    }) 
 
 def registrar_usuario(request):
     # Si ya ha iniciado sesión no tiene sentido registrarse
