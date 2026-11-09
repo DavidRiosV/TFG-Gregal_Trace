@@ -8,3 +8,7 @@ document.querySelectorAll("[data-mostrar-contrasena]").forEach(function (boton) 
         boton.setAttribute("aria-pressed", mostrar ? "true" : "false");
     });
 });
+
+function eliminar() {
+    return confirm("¿Seguro que quieres eliminar este proyecto? Se borrarán también todos sus apuntes.");
+}

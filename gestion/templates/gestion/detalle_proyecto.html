@@ -4,19 +4,26 @@
 
 {% block contenido %}
 {% url 'lista_proyectos' slug_volver as url_lista %}
-<header class="pagina">
-    {% include "gestion/migas.html" with miga_url=url_lista miga_texto=proyecto.get_tipo_display miga_actual=proyecto.nombre %}
+
+<div class="pagina__fila">
     <div class="pagina__titulo-con-estado">
         <h1 class="pagina__titulo">{{ proyecto.nombre }}</h1>
         {% include "gestion/estado.html" %}
     </div>
-    <dl class="datos">
-        <div><dt>Tipo</dt><dd>{{ proyecto.get_tipo_display }}</dd></div>
-        <div><dt>Inicio</dt><dd>{{ proyecto.fecha_inicio|date:"d/m/Y" }}</dd></div>
-        {% if proyecto.fecha_fin %}<div><dt>Fin</dt><dd>{{ proyecto.fecha_fin|date:"d/m/Y" }}</dd></div>{% endif %}
-    </dl>
-    {% if proyecto.descripcion %}<p class="pagina__texto pagina__texto--descripcion">{{ proyecto.descripcion }}</p>{% endif %}
-</header>
+        {% if perms.gestion.change_proyecto or perms.gestion.delete_proyecto %}
+    <div class="pagina__acciones">
+        {% if perms.gestion.change_proyecto %}
+           <a class="boton boton--secundario" href="{% url 'proyecto_editar' proyecto.pk %}">Editar</a>
+        {% endif %}
+        {% if perms.gestion.delete_proyecto %}
+            <form method="post" action="{% url 'proyecto_eliminar' proyecto.pk %}">
+                {% csrf_token %}
+            <button type="submit" class="boton boton--peligro" onclick="return eliminar();">Eliminar</button>
+            </form>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
 
 <div class="cifras">
     <div class="cifra">

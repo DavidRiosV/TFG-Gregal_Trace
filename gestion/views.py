@@ -62,6 +62,12 @@ def lista_proyectos(request, tipo):
         'seccion': tipo,
         'nav_tipos': datos_menu(),
     })
+def slug_del_tipo(proyecto):
+    # Apartado al que pertenece el proyecto ('obras', 'intervenciones'...); None si es una urgencia
+    for slug, datos in TIPOS.items():
+        if datos['codigo'] == proyecto.tipo:
+            return slug
+    return None
 
 @permission_required('gestion.view_proyecto')
 def detalle_proyecto(request, pk):
@@ -77,10 +83,7 @@ def detalle_proyecto(request, pk):
         horas = 0
 
     # Apartado al que pertenece el proyecto, para el botón de volver y el menú
-    slug_volver = None
-    for slug, datos in TIPOS.items():
-        if datos['codigo'] == proyecto.tipo:
-            slug_volver = slug
+    slug_volver = slug_del_tipo(proyecto)
 
     return render(request, 'gestion/detalle_proyecto.html', {
         'proyecto': proyecto,
@@ -116,6 +119,49 @@ def proyecto_crear(request, tipo):
         'nav_tipos': datos_menu(),
         'seccion': tipo,
     }) 
+
+@permission_required('gestion.change_proyecto')
+def proyecto_editar(request, pk):
+    proyecto = get_object_or_404(Proyecto, pk=pk)
+
+    if request.method == 'POST':
+        # Mismo formulario que crear, pero con instance: modifica este proyecto en vez de crear otro
+        formulario = ProyectoForm(request.POST, instance=proyecto)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect('detalle_proyecto', pk=proyecto.pk)
+    else:
+        formulario = ProyectoForm(instance=proyecto)
+
+    slug = slug_del_tipo(proyecto)
+    return render(request, 'gestion/proyecto_form.html', {
+        'formulario': formulario,
+        'proyecto': proyecto,
+        'titulo': f'Editar «{proyecto.nombre}»',
+        'slug_volver': slug,
+        'texto_volver': proyecto.get_tipo_display(),
+        'nav_tipos': datos_menu(),
+        'seccion': slug,
+    })
+
+@permission_required('gestion.delete_proyecto')
+def proyecto_eliminar(request, pk):
+    proyecto = get_object_or_404(Proyecto, pk=pk)
+    # Solo se elimina desde el formulario (POST); si llega por un enlace (GET) vuelve al detalle
+    if request.method != 'POST':
+        return redirect('detalle_proyecto', pk=proyecto.pk)
+
+    slug = slug_del_tipo(proyecto)
+    # Si era el último proyecto abierto, se quita de la sesión para que no quede un enlace roto
+    if 'ultimo_proyecto' in request.session and request.session['ultimo_proyecto'] == proyecto.pk:
+        del request.session['ultimo_proyecto']
+        del request.session['ultimo_nombre']
+    # Borra también sus apuntes (on_delete=CASCADE en Consumo)
+    proyecto.delete()
+
+    if slug:
+        return redirect('lista_proyectos', tipo=slug)
+    return redirect('index')
 
 def registrar_usuario(request):
     # Si ya ha iniciado sesión no tiene sentido registrarse

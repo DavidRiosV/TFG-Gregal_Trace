@@ -10,7 +10,8 @@
 </header>
 
 <section class="panel panel--formulario">
-    <form method="post" class="formulario" novalidate action="{% url 'proyecto_crear' slug_volver %}">
+    <form method="post" class="formulario" novalidate
+          action="{% if proyecto %}{% url 'proyecto_editar' proyecto.pk %}{% else %}{% url 'proyecto_crear' slug_volver %}{% endif %}">
         {% csrf_token %}
 
         {% for error in formulario.non_field_errors %}
@@ -35,6 +36,10 @@
             <button type="submit" class="boton">Crear</button>
             <a class="boton boton--secundario" href="{{ url_lista }}">Cancelar</a>
         </div>
+
+        <button type="submit" class="boton">{% if proyecto %}Guardar cambios{% else %}Crear{% endif %}</button>
+        <a class="boton boton--secundario" href="{% if proyecto %}{% url 'detalle_proyecto' proyecto.pk %}{% else %}{{ url_lista }}{% endif %}">Cancelar</a>
+        
     </form>
 </section>
 {% endblock %}
