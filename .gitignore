@@ -7,3 +7,6 @@ db.sqlite3
 gestion/fixtures/usuarios.json
 gestion/fixtures/datos_gregal.json
 db_antes_prueba.sqlite3
+.env
+gestion/fixtures/catalogo.json
+generar_prueba.py

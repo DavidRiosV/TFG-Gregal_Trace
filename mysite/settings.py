@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,13 +21,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-g-j65es@)@w$9jgppc@hea)pd!@#dao^pv_vn(^jw1t!0aqa6x'
+# La clave secreta y el modo DEBUG se leen del archivo .env (Despliegue, diapositivas 14-16).
+# El .env no se sube a GitHub: cada sitio (tu ordenador, PythonAnywhere) tiene el suyo.
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'), True)
+env = environ.Env()
+SECRET_KEY = env("SECRET_KEY")
+# DEBUG=True en tu ordenador y DEBUG=False en producción
+DEBUG = env.bool("DEBUG", default=False)
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'davidrv.pythonanywhere.com']
 
 
 # Application definition
