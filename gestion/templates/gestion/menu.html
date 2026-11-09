@@ -24,6 +24,9 @@
         <span class="menu__persona">
             <strong>{{ user.get_full_name|default:user.username }}</strong>
             <span>{% if user.is_superuser %}Administrador{% else %}{{ user.get_rol_display }}{% endif %}</span>
+            {% if request.session.fecha_inicio %}
+                <span>{{ request.session.fecha_inicio }}</span>
+            {% endif %}
         </span>
         <form method="post" action="{% url 'logout' %}">
             {% csrf_token %}

@@ -7,6 +7,12 @@
 <header class="pagina">
     <h1 class="pagina__titulo">Gregal Trace</h1>
     <p class="pagina__texto">Elige un apartado para consultar sus proyectos.</p>
+    {% if request.session.ultimo_proyecto %}
+        <p class="pagina__texto">
+            Seguir con
+            <a href="{% url 'detalle_proyecto' request.session.ultimo_proyecto %}">{{ request.session.ultimo_nombre }}</a>
+        </p>
+    {% endif %}
 </header>
 
 <div class="tipos">

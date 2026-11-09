@@ -3,6 +3,7 @@ from django.contrib.auth import login
 from django.contrib.auth.models import Group
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import permission_required
+from datetime import datetime
 
 from .forms import RegistroForm
 from .models import Oficina, Operario, Proyecto, Usuario
@@ -28,6 +29,9 @@ def datos_menu():
 
 @permission_required('gestion.view_proyecto')
 def index(request):
+    # Guarda en la sesión la hora en que entró por primera vez
+    if not 'fecha_inicio' in request.session:
+        request.session['fecha_inicio'] = datetime.now().strftime('%d/%m/%Y %H:%M')
     return render(request, 'gestion/index.html', {
         'nav_tipos': datos_menu(),
         'seccion': 'inicio',
@@ -60,6 +64,9 @@ def lista_proyectos(request, tipo):
 @permission_required('gestion.view_proyecto')
 def detalle_proyecto(request, pk):
     proyecto = get_object_or_404(Proyecto, pk=pk)
+    # Recuerda el último proyecto abierto para ofrecerlo en la portada
+    request.session['ultimo_proyecto'] = proyecto.pk
+    request.session['ultimo_nombre'] = proyecto.nombre
     consumos = proyecto.consumos.select_related('material', 'trabajador').order_by('-fecha')
 
     # Total de horas: suma de las cantidades de los apuntes cuya unidad es Hora
