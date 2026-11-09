@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import Albaran, Consumo, Material, Oficina, Operario, Proyecto, Usuario
+from .models import Albaran, Categoria, Consumo, Material, Tipo, Oficina, Operario, Proyecto, Usuario
 
 class UsuarioAdmin(UserAdmin):
     #El admin de usuarios de Django con el campo rol añadido.
@@ -14,6 +14,8 @@ admin.site.register(Usuario, UsuarioAdmin)
 admin.site.register(Operario)
 admin.site.register(Oficina)
 admin.site.register(Proyecto)
+admin.site.register(Categoria)
+admin.site.register(Tipo)
 admin.site.register(Material)
 admin.site.register(Consumo)
 admin.site.register(Albaran)

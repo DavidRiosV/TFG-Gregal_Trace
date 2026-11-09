@@ -6,8 +6,11 @@
         <a class="pestana{% if seccion == slug %} pestana--activa{% endif %}" href="{% url 'lista_proyectos' slug %}">
             {% include "gestion/icono.html" with nombre=slug %}<span>{{ tipo.corto }}</span>
         </a>
+        {# Después de Obras (la primera vuelta) va Urgencia, así queda en el centro de las 5 pestañas #}
+        {% if forloop.first %}
+            <a class="pestana pestana--urgencia{% if seccion == 'urgencias' %} pestana--activa{% endif %}" href="{% url 'urgencias' %}">
+                <span class="pestana__circulo">{% include "gestion/icono.html" with nombre="mas" %}</span><span>Urgencia</span>
+            </a>
+        {% endif %}
     {% endfor %}
-    <a class="pestana pestana--urgencia{% if seccion == 'urgencias' %} pestana--activa{% endif %}" href="{% url 'urgencias' %}">
-        <span class="pestana__circulo">{% include "gestion/icono.html" with nombre="mas" %}</span><span>Urgencia</span>
-    </a>
 </nav>

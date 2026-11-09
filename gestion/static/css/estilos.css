@@ -1244,3 +1244,15 @@ img { display: block; max-width: 100%; }
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { transition: none !important; animation: none !important; }
 }
+
+/* Fecha de entrega en los listados (junto al estado) */
+.entrega { flex-shrink: 0; color: var(--texto-suave); font-size: 13px; font-weight: 600; white-space: nowrap; }
+.entrega--cerca { color: #7A5600; }
+.entrega--vencido { color: var(--rojo); }
+@media (max-width: 760px) {
+    .fila { flex-wrap: wrap; row-gap: 6px; }
+    .fila__principal { flex-basis: calc(100% - 40px); }
+    .fila .entrega { order: 3; font-size: 12px; }
+    .fila .estado { order: 4; }
+    .fila .fila__flecha { order: 2; }
+}

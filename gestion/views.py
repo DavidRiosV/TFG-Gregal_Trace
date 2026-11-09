@@ -1,4 +1,4 @@
-from django.db.models import Q, Sum
+from django.db.models import Count, F, Q, Sum
 from django.contrib.auth import login
 from django.contrib.auth.models import Group
 from django.shortcuts import get_object_or_404, redirect, render
@@ -12,20 +12,27 @@ from .models import Oficina, Operario, Proyecto, Usuario
 
 # Apartados de listado: traduce la palabra de la URL al código guardado en la base de datos
 TIPOS = {
-    'obras': {'codigo': 'OBR', 'titulo': 'Obras', 'corto': 'Obras', 'nuevo': 'Nueva obra', 'imagen': 'img/categorias/obras.jpg'},
-    'intervenciones': {'codigo': 'INT', 'titulo': 'Intervenciones', 'corto': 'Interv.', 'nuevo': 'Nueva intervención', 'imagen': 'img/categorias/intervenciones.jpg'},
-    'mantenimientos': {'codigo': 'MAN', 'titulo': 'Mantenimientos', 'corto': 'Mant.', 'nuevo': 'Nuevo mantenimiento', 'imagen': 'img/categorias/mantenimientos.jpg'},
+    'obras': {'codigo': 'OBR', 'titulo': 'Obras', 'corto': 'Obras', 'nuevo': 'Nueva obra', 'imagen': 'img/procesos/obras.jpg'},
+    'intervenciones': {'codigo': 'INT', 'titulo': 'Intervenciones', 'corto': 'Interv.', 'nuevo': 'Nueva intervención', 'imagen': 'img/procesos/intervenciones.jpg'},
+    'mantenimientos': {'codigo': 'MAN', 'titulo': 'Mantenimientos', 'corto': 'Mant.', 'nuevo': 'Nuevo mantenimiento', 'imagen': 'img/procesos/mantenimientos.jpg'},
 }
 
 def datos_menu():
+    # Una sola consulta: agrupa los proyectos por tipo y estado y los cuenta (GROUP BY en SQL).
+    # Antes eran 6 count() (en proceso y terminados de cada apartado) en cada página.
+    conteo = {}
+    for fila in Proyecto.objects.values('tipo', 'estado').annotate(n=Count('id')):
+        conteo[(fila['tipo'], fila['estado'])] = fila['n']
+
     nav_tipos = {}
     for slug, datos in TIPOS.items():
         nav_tipos[slug] = {
             'titulo': datos['titulo'],
             'corto': datos['corto'],
             'imagen': datos['imagen'],
-            'en_proceso': Proyecto.objects.filter(tipo=datos['codigo'], estado='PRO').count(),
-            'terminados': Proyecto.objects.filter(tipo=datos['codigo'], estado='TER').count(),
+            # get(..., 0): si no hay ningún proyecto de ese tipo y estado, la pareja no sale en la consulta
+            'en_proceso': conteo.get((datos['codigo'], 'PRO'), 0),
+            'terminados': conteo.get((datos['codigo'], 'TER'), 0),
         }
     return nav_tipos
 
@@ -36,18 +43,27 @@ def index(request):
         request.session['fecha_inicio'] = datetime.now().strftime('%d/%m/%Y %H:%M')
     return render(request, 'gestion/index.html', {
         'nav_tipos': datos_menu(),
+        # Urgencias abiertas, para su tarjeta en la portada
+        'urgencias_abiertas': Proyecto.objects.filter(tipo='URG', estado='PRO').count(),
         'seccion': 'inicio',
     })
 
 @permission_required('gestion.view_proyecto')
 def lista_proyectos(request, tipo):
     datos_tipo = TIPOS[tipo]
-    proyectos = Proyecto.objects.filter(tipo=datos_tipo['codigo']).order_by('-fecha_inicio')
+    proyectos = Proyecto.objects.filter(tipo=datos_tipo['codigo'])
 
     # Filtro por estado: en proceso (por defecto), terminados o todos
     estado = request.GET.get('estado', 'PRO')
     if estado != 'todos':
         proyectos = proyectos.filter(estado=estado)
+
+    if estado == 'TER':
+        # Terminados: el último que se terminó, primero
+        proyectos = proyectos.order_by('-fecha_fin', '-id')
+    else:
+        # En proceso: primero el que antes hay que entregar; los que no tienen fecha de entrega, al final
+        proyectos = proyectos.order_by(F('fecha_entrega').asc(nulls_last=True), '-fecha_inicio', '-id')
 
     # Buscador: el texto en el nombre O en la descripción
     busqueda = request.GET.get('q', '')

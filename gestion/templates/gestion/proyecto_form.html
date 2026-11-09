@@ -27,6 +27,10 @@
 
         <div class="formulario__fila">
             {% include "gestion/campo_widget.html" with campo=formulario.fecha_inicio %}
+            {% include "gestion/campo_widget.html" with campo=formulario.fecha_entrega %}
+        </div>
+
+        <div class="formulario__fila">
             {% include "gestion/campo_widget.html" with campo=formulario.fecha_fin %}
         </div>
 

@@ -29,5 +29,18 @@
             </span>
         </a>
     {% endfor %}
+
+    {# Urgencias no está en TIPOS (no tiene listado propio), así que su tarjeta va aparte #}
+    <a class="tipo tipo--urgencia" href="{% url 'urgencias' %}">
+        <img class="tipo__foto" src="{% static 'img/procesos/urgencias.jpg' %}" alt="">
+        <span class="tipo__cuerpo">
+            <span class="tipo__icono">{% include "gestion/icono.html" with nombre="urgencias" %}</span>
+            <span class="tipo__titulo">Urgencias</span>
+            <span class="tipo__datos">
+                <span><strong>{{ urgencias_abiertas }}</strong> abiertas</span>
+                <span>Abre un trabajo que aún no está dado de alta</span>
+            </span>
+        </span>
+    </a>
 </div>
 {% endblock %}

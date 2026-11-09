@@ -50,18 +50,20 @@ class UrgenciaForm(forms.ModelForm):
 class ProyectoForm(forms.ModelForm):
     class Meta:
         model = Proyecto
-        fields = ['nombre', 'tipo', 'descripcion', 'fecha_inicio', 'fecha_fin', 'estado']
+        fields = ['nombre', 'tipo', 'descripcion', 'fecha_inicio', 'fecha_entrega', 'fecha_fin', 'estado']
         labels = {
             'nombre': 'Nombre o dirección',
             'tipo': 'Tipo',
             'descripcion': 'Descripción',
             'fecha_inicio': 'Fecha de inicio',
+            'fecha_entrega': 'Fecha de entrega',
             'fecha_fin': 'Fecha de fin',
             'estado': 'Estado',
         }
         widgets = {
             'descripcion': forms.Textarea(attrs={'rows': 4}),
             'fecha_inicio': forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'),
+            'fecha_entrega': forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'),
             'fecha_fin': forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'),
         }
 
@@ -74,6 +76,10 @@ class ProyectoForm(forms.ModelForm):
 
         if fecha_inicio and fecha_fin and fecha_fin < fecha_inicio:
             self.add_error('fecha_fin', 'La fecha de fin no puede ser anterior a la de inicio.')
+
+        fecha_entrega = self.cleaned_data.get('fecha_entrega')
+        if fecha_inicio and fecha_entrega and fecha_entrega < fecha_inicio:
+            self.add_error('fecha_entrega', 'La fecha de entrega no puede ser anterior a la de inicio.')
 
         if estado == 'TER' and not fecha_fin:
             self.add_error('fecha_fin', 'Un proyecto terminado necesita fecha de fin.')
