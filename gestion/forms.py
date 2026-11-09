@@ -26,6 +26,27 @@ class RegistroForm(UserCreationForm):
         # El nombre sale en cada apunte, así que es obligatorio
         self.fields['first_name'].required = True
 
+class UrgenciaForm(forms.ModelForm):
+    class Meta:
+        model = Proyecto
+        fields = ['nombre', 'tipo_destino', 'descripcion']
+        labels = {
+            'nombre': 'Nombre o dirección del trabajo',
+            'tipo_destino': '¿Qué es?',
+            'descripcion': 'Descripción',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Solo puede convertirse en Obra, Intervención o Mantenimiento, y es obligatorio
+        self.fields['tipo_destino'].choices = [
+            ('', 'Elige una opción'),
+            ('OBR', 'Obra'),
+            ('INT', 'Intervención'),
+            ('MAN', 'Mantenimiento'),
+        ]
+        self.fields['tipo_destino'].required = True
+
 class ProyectoForm(forms.ModelForm):
     class Meta:
         model = Proyecto

@@ -5,6 +5,13 @@
         <span>Gregal Trace</span>
     </a>
 
+    {% if perms.gestion.add_proyecto %}
+        <a class="menu__urgencia" href="{% url 'urgencias' %}">
+            {% include "gestion/icono.html" with nombre="mas" %}
+            <span>Nueva urgencia</span>
+        </a>
+    {% endif %}
+
     <nav class="menu__lista">
         <a class="menu__enlace{% if seccion == 'inicio' %} menu__enlace--activo{% endif %}" href="{% url 'index' %}">
             {% include "gestion/icono.html" with nombre="inicio" %}
@@ -17,6 +24,10 @@
                 {% if tipo.en_proceso %}<span class="menu__contador" title="En proceso">{{ tipo.en_proceso }}</span>{% endif %}
             </a>
         {% endfor %}
+        <a class="menu__enlace{% if seccion == 'urgencias' %} menu__enlace--activo{% endif %}" href="{% url 'urgencias' %}">
+            {% include "gestion/icono.html" with nombre="urgencias" %}
+            <span>Urgencias</span>
+        </a>
     </nav>
 
     <div class="menu__usuario">

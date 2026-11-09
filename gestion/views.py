@@ -3,10 +3,12 @@ from django.contrib.auth import login
 from django.contrib.auth.models import Group
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import permission_required
+from django.urls import reverse
 from datetime import date, datetime
 
-from .forms import RegistroForm,ProyectoForm
+from .forms import RegistroForm,ProyectoForm,UrgenciaForm
 from .models import Oficina, Operario, Proyecto, Usuario
+
 
 # Apartados de listado: traduce la palabra de la URL al código guardado en la base de datos
 TIPOS = {
@@ -62,6 +64,7 @@ def lista_proyectos(request, tipo):
         'seccion': tipo,
         'nav_tipos': datos_menu(),
     })
+
 def slug_del_tipo(proyecto):
     # Apartado al que pertenece el proyecto ('obras', 'intervenciones'...); None si es una urgencia
     for slug, datos in TIPOS.items():
@@ -91,7 +94,7 @@ def detalle_proyecto(request, pk):
         'horas': horas,
         'slug_volver': slug_volver,
         'nav_tipos': datos_menu(),
-        'seccion': slug_volver,
+        'seccion': slug_volver or 'urgencias',
     })
 
 @permission_required('gestion.add_proyecto')
@@ -141,7 +144,7 @@ def proyecto_editar(request, pk):
         'slug_volver': slug,
         'texto_volver': proyecto.get_tipo_display(),
         'nav_tipos': datos_menu(),
-        'seccion': slug,
+        'seccion': slug or 'urgencias',
     })
 
 @permission_required('gestion.delete_proyecto')
@@ -161,7 +164,8 @@ def proyecto_eliminar(request, pk):
 
     if slug:
         return redirect('lista_proyectos', tipo=slug)
-    return redirect('index')
+    # Si no tiene apartado es que era una urgencia
+    return redirect('urgencias')
 
 @permission_required('gestion.change_proyecto')
 def cambiar_estado(request, pk):
@@ -174,8 +178,37 @@ def cambiar_estado(request, pk):
         else:
             proyecto.estado = 'TER'
             proyecto.fecha_fin = date.today()
+            # Una urgencia terminada pasa al tipo que se eligió al abrirla, con todos sus apuntes
+            if proyecto.tipo == 'URG' and proyecto.tipo_destino:
+                proyecto.tipo = proyecto.tipo_destino
+                proyecto.save()
+                # Se lleva a Oficina al listado donde ha quedado, con el filtro Terminados
+                return redirect(reverse('lista_proyectos', args=[slug_del_tipo(proyecto)]) + '?estado=TER')
         proyecto.save()
     return redirect('detalle_proyecto', pk=proyecto.pk)
+
+@permission_required('gestion.add_proyecto')
+def urgencias(request):
+    if request.method == 'POST':
+        formulario = UrgenciaForm(request.POST)
+        if formulario.is_valid():
+            urgencia = formulario.save(commit=False)
+            # El tipo y el autor no salen en el formulario: los pone la vista
+            urgencia.tipo = 'URG'
+            urgencia.creado_por = request.user
+            urgencia.save()
+            return redirect('urgencias')
+    else:
+        formulario = UrgenciaForm()
+
+    abiertas = Proyecto.objects.filter(tipo='URG', estado='PRO').select_related('creado_por').order_by('-fecha_inicio', '-id')
+
+    return render(request, 'gestion/urgencias.html', {
+        'formulario': formulario,
+        'urgencias': abiertas,
+        'nav_tipos': datos_menu(),
+        'seccion': 'urgencias',
+    })
 
 def registrar_usuario(request):
     # Si ya ha iniciado sesión no tiene sentido registrarse

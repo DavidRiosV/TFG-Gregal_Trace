@@ -7,4 +7,7 @@
             {% include "gestion/icono.html" with nombre=slug %}<span>{{ tipo.corto }}</span>
         </a>
     {% endfor %}
+    <a class="pestana pestana--urgencia{% if seccion == 'urgencias' %} pestana--activa{% endif %}" href="{% url 'urgencias' %}">
+        <span class="pestana__circulo">{% include "gestion/icono.html" with nombre="mas" %}</span><span>Urgencia</span>
+    </a>
 </nav>
