@@ -12,3 +12,5 @@ gestion/fixtures/catalogo.json
 generar_prueba.py
 # PDF de los albaranes subidos por los usuarios
 media/
+# Variables de Docker con claves
+.env.docker

@@ -8,6 +8,7 @@ __pycache__/
 
 # Secretos: el .env se le pasa al contenedor al arrancarlo, nunca va dentro de la imagen
 .env
+.env.docker
 
 # Base de datos y archivos locales: en Docker van en volúmenes
 db.sqlite3

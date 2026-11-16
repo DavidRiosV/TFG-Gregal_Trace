@@ -1,0 +1,57 @@
+# Gregal Trace en Docker: tres contenedores, como el despliegue en la nube de los apuntes
+# (Despliegue, diapositivas 23-24), pero cada pieza en su contenedor:
+#   db    -> PostgreSQL, la base de datos
+#   web   -> Django servido por Gunicorn
+#   nginx -> recibe las peticiones en el puerto 8080, sirve los estáticos y pasa el resto a Gunicorn
+#
+# Arrancar:            docker compose up -d --build
+# Cargar datos:        docker compose exec web python manage.py loaddata grupos datos_prueba
+# Ver la web:          http://localhost:8080
+# Parar:               docker compose down       (los datos se conservan en los volúmenes)
+
+services:
+  db:
+    image: postgres:16
+    # Usuario, contraseña y nombre de la base de datos salen de .env.docker
+    env_file: .env.docker
+    volumes:
+      - datos_db:/var/lib/postgresql/data
+    # La web no arranca hasta que PostgreSQL está listo para recibir conexiones
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      retries: 10
+    restart: unless-stopped
+
+  web:
+    build: .
+    env_file: .env.docker
+    # Al arrancar: crea o actualiza las tablas, copia los estáticos a /app/static y lanza Gunicorn
+    command: >
+      sh -c "python manage.py migrate --noinput &&
+             python manage.py collectstatic --noinput &&
+             gunicorn mysite.wsgi:application --bind 0.0.0.0:8000 --workers 3"
+    volumes:
+      - estaticos:/app/static
+      - media:/app/media
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:1.27
+    ports:
+      - "8080:80"
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - estaticos:/app/static:ro
+    depends_on:
+      - web
+    restart: unless-stopped
+
+# Volúmenes: carpetas que guarda Docker y que sobreviven aunque se borren los contenedores
+volumes:
+  datos_db:
+  estaticos:
+  media:
