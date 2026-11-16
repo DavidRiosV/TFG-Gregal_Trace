@@ -1,0 +1,4197 @@
+[
+{
+    "model": "gestion.categoria",
+    "pk": "CAL",
+    "fields": {
+        "nombre": "Calefacción y ACS",
+        "orden": 20
+    }
+},
+{
+    "model": "gestion.categoria",
+    "pk": "CLI",
+    "fields": {
+        "nombre": "Climatización y ventilación",
+        "orden": 30
+    }
+},
+{
+    "model": "gestion.categoria",
+    "pk": "DOM",
+    "fields": {
+        "nombre": "Domótica y control",
+        "orden": 60
+    }
+},
+{
+    "model": "gestion.categoria",
+    "pk": "ELE",
+    "fields": {
+        "nombre": "Electricidad",
+        "orden": 40
+    }
+},
+{
+    "model": "gestion.categoria",
+    "pk": "FON",
+    "fields": {
+        "nombre": "Fontanería y saneamiento",
+        "orden": 10
+    }
+},
+{
+    "model": "gestion.categoria",
+    "pk": "MOB",
+    "fields": {
+        "nombre": "Mano de obra y servicios",
+        "orden": 80
+    }
+},
+{
+    "model": "gestion.categoria",
+    "pk": "OTR",
+    "fields": {
+        "nombre": "Otros",
+        "orden": 90
+    }
+},
+{
+    "model": "gestion.categoria",
+    "pk": "PIS",
+    "fields": {
+        "nombre": "Piscina y tratamiento de agua",
+        "orden": 70
+    }
+},
+{
+    "model": "gestion.categoria",
+    "pk": "SOL",
+    "fields": {
+        "nombre": "Solar fotovoltaica",
+        "orden": 50
+    }
+},
+{
+    "model": "gestion.tipo",
+    "pk": 1,
+    "fields": {
+        "nombre": "Tuberías",
+        "categoria": "FON"
+    }
+},
+{
+    "model": "gestion.tipo",
+    "pk": 2,
+    "fields": {
+        "nombre": "Válvulas",
+        "categoria": "FON"
+    }
+},
+{
+    "model": "gestion.tipo",
+    "pk": 3,
+    "fields": {
+        "nombre": "Accesorios",
+        "categoria": "FON"
+    }
+},
+{
+    "model": "gestion.tipo",
+    "pk": 4,
+    "fields": {
+        "nombre": "Sanitarios y grifería",
+        "categoria": "FON"
+    }
+},
+{
+    "model": "gestion.tipo",
+    "pk": 5,
+    "fields": {
+        "nombre": "Calderas y termos",
+        "categoria": "CAL"
+    }
+},
+{
+    "model": "gestion.tipo",
+    "pk": 6,
+    "fields": {
+        "nombre": "Vasos de expansión",
+        "categoria": "CAL"
+    }
+},
+{
+    "model": "gestion.tipo",
+    "pk": 7,
+    "fields": {
+        "nombre": "Radiadores",
+        "categoria": "CAL"
+    }
+},
+{
+    "model": "gestion.tipo",
+    "pk": 8,
+    "fields": {
+        "nombre": "Aire acondicionado",
+        "categoria": "CLI"
+    }
+},
+{
+    "model": "gestion.tipo",
+    "pk": 9,
+    "fields": {
+        "nombre": "Soportes",
+        "categoria": "CLI"
+    }
+},
+{
+    "model": "gestion.tipo",
+    "pk": 10,
+    "fields": {
+        "nombre": "Tuberías frigoríficas",
+        "categoria": "CLI"
+    }
+},
+{
+    "model": "gestion.tipo",
+    "pk": 11,
+    "fields": {
+        "nombre": "Cables",
+        "categoria": "ELE"
+    }
+},
+{
+    "model": "gestion.tipo",
+    "pk": 12,
+    "fields": {
+        "nombre": "Protecciones",
+        "categoria": "ELE"
+    }
+},
+{
+    "model": "gestion.tipo",
+    "pk": 13,
+    "fields": {
+        "nombre": "Mecanismos",
+        "categoria": "ELE"
+    }
+},
+{
+    "model": "gestion.tipo",
+    "pk": 14,
+    "fields": {
+        "nombre": "Paneles",
+        "categoria": "SOL"
+    }
+},
+{
+    "model": "gestion.tipo",
+    "pk": 15,
+    "fields": {
+        "nombre": "Inversores y baterías",
+        "categoria": "SOL"
+    }
+},
+{
+    "model": "gestion.tipo",
+    "pk": 16,
+    "fields": {
+        "nombre": "Termostatos",
+        "categoria": "DOM"
+    }
+},
+{
+    "model": "gestion.tipo",
+    "pk": 17,
+    "fields": {
+        "nombre": "Tratamiento de agua",
+        "categoria": "PIS"
+    }
+},
+{
+    "model": "gestion.tipo",
+    "pk": 18,
+    "fields": {
+        "nombre": "Horas",
+        "categoria": "MOB"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 1,
+    "fields": {
+        "nombre": "Tubería multicapa 16 mm",
+        "categoria": "FON",
+        "tipo": 1,
+        "unidad": "M",
+        "precio": "2.10"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 2,
+    "fields": {
+        "nombre": "Tubería multicapa 20 mm",
+        "categoria": "FON",
+        "tipo": 1,
+        "unidad": "M",
+        "precio": "2.90"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 3,
+    "fields": {
+        "nombre": "Tubería PPR 25 mm",
+        "categoria": "FON",
+        "tipo": 1,
+        "unidad": "M",
+        "precio": "3.40"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 4,
+    "fields": {
+        "nombre": "Tubería PVC evacuación 40 mm",
+        "categoria": "FON",
+        "tipo": 1,
+        "unidad": "M",
+        "precio": "2.60"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 5,
+    "fields": {
+        "nombre": "Válvula de esfera 1/2\"",
+        "categoria": "FON",
+        "tipo": 2,
+        "unidad": "UD",
+        "precio": "7.50"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 6,
+    "fields": {
+        "nombre": "Válvula de esfera 3/4\"",
+        "categoria": "FON",
+        "tipo": 2,
+        "unidad": "UD",
+        "precio": "9.80"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 7,
+    "fields": {
+        "nombre": "Válvula de retención 1\"",
+        "categoria": "FON",
+        "tipo": 2,
+        "unidad": "UD",
+        "precio": "14.20"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 8,
+    "fields": {
+        "nombre": "Codo latón 1/2\"",
+        "categoria": "FON",
+        "tipo": 3,
+        "unidad": "UD",
+        "precio": "2.40"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 9,
+    "fields": {
+        "nombre": "Manguito PPR 25 mm",
+        "categoria": "FON",
+        "tipo": 3,
+        "unidad": "UD",
+        "precio": "0.90"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 10,
+    "fields": {
+        "nombre": "Te PPR 25 mm",
+        "categoria": "FON",
+        "tipo": 3,
+        "unidad": "UD",
+        "precio": "1.20"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 11,
+    "fields": {
+        "nombre": "Grifo monomando lavabo",
+        "categoria": "FON",
+        "tipo": 4,
+        "unidad": "UD",
+        "precio": "64.00"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 12,
+    "fields": {
+        "nombre": "Cisterna empotrada",
+        "categoria": "FON",
+        "tipo": 4,
+        "unidad": "UD",
+        "precio": "118.00"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 13,
+    "fields": {
+        "nombre": "Termo eléctrico 80 l",
+        "categoria": "CAL",
+        "tipo": 5,
+        "unidad": "UD",
+        "precio": "245.00"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 14,
+    "fields": {
+        "nombre": "Caldera de condensación 25 kW",
+        "categoria": "CAL",
+        "tipo": 5,
+        "unidad": "UD",
+        "precio": "1320.00"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 15,
+    "fields": {
+        "nombre": "Vaso de expansión 8 l",
+        "categoria": "CAL",
+        "tipo": 6,
+        "unidad": "UD",
+        "precio": "32.00"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 16,
+    "fields": {
+        "nombre": "Vaso de expansión 18 l",
+        "categoria": "CAL",
+        "tipo": 6,
+        "unidad": "UD",
+        "precio": "46.00"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 17,
+    "fields": {
+        "nombre": "Radiador de aluminio 600 mm (elemento)",
+        "categoria": "CAL",
+        "tipo": 7,
+        "unidad": "UD",
+        "precio": "11.50"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 18,
+    "fields": {
+        "nombre": "Purgador automático 1/2\"",
+        "categoria": "CAL",
+        "tipo": 7,
+        "unidad": "UD",
+        "precio": "8.90"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 19,
+    "fields": {
+        "nombre": "Split pared 3,5 kW",
+        "categoria": "CLI",
+        "tipo": 8,
+        "unidad": "UD",
+        "precio": "690.00"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 20,
+    "fields": {
+        "nombre": "Bomba de calor aerotermia 8 kW",
+        "categoria": "CLI",
+        "tipo": 8,
+        "unidad": "UD",
+        "precio": "4100.00"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 21,
+    "fields": {
+        "nombre": "Juego de ménsulas para unidad exterior",
+        "categoria": "CLI",
+        "tipo": 9,
+        "unidad": "UD",
+        "precio": "19.00"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 22,
+    "fields": {
+        "nombre": "Silentblocks (juego de 4)",
+        "categoria": "CLI",
+        "tipo": 9,
+        "unidad": "UD",
+        "precio": "9.50"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 23,
+    "fields": {
+        "nombre": "Tubería frigorífica 1/4\"-3/8\"",
+        "categoria": "CLI",
+        "tipo": 10,
+        "unidad": "M",
+        "precio": "9.80"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 24,
+    "fields": {
+        "nombre": "Tubo de desagüe condensados 20 mm",
+        "categoria": "CLI",
+        "tipo": 10,
+        "unidad": "M",
+        "precio": "1.10"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 25,
+    "fields": {
+        "nombre": "Cable 3x1,5 mm² libre de halógenos",
+        "categoria": "ELE",
+        "tipo": 11,
+        "unidad": "M",
+        "precio": "0.95"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 26,
+    "fields": {
+        "nombre": "Cable 3x2,5 mm² libre de halógenos",
+        "categoria": "ELE",
+        "tipo": 11,
+        "unidad": "M",
+        "precio": "1.45"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 27,
+    "fields": {
+        "nombre": "Cable 5x6 mm²",
+        "categoria": "ELE",
+        "tipo": 11,
+        "unidad": "M",
+        "precio": "5.30"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 28,
+    "fields": {
+        "nombre": "Magnetotérmico 2P 16 A",
+        "categoria": "ELE",
+        "tipo": 12,
+        "unidad": "UD",
+        "precio": "12.40"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 29,
+    "fields": {
+        "nombre": "Diferencial 2P 40 A 30 mA",
+        "categoria": "ELE",
+        "tipo": 12,
+        "unidad": "UD",
+        "precio": "38.00"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 30,
+    "fields": {
+        "nombre": "Enchufe estanco IP55",
+        "categoria": "ELE",
+        "tipo": 13,
+        "unidad": "UD",
+        "precio": "11.80"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 31,
+    "fields": {
+        "nombre": "Interruptor conmutado",
+        "categoria": "ELE",
+        "tipo": 13,
+        "unidad": "UD",
+        "precio": "6.20"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 32,
+    "fields": {
+        "nombre": "Panel fotovoltaico 450 Wp",
+        "categoria": "SOL",
+        "tipo": 14,
+        "unidad": "UD",
+        "precio": "145.00"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 33,
+    "fields": {
+        "nombre": "Estructura coplanar para 4 paneles",
+        "categoria": "SOL",
+        "tipo": 14,
+        "unidad": "UD",
+        "precio": "210.00"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 34,
+    "fields": {
+        "nombre": "Inversor híbrido 5 kW",
+        "categoria": "SOL",
+        "tipo": 15,
+        "unidad": "UD",
+        "precio": "1250.00"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 35,
+    "fields": {
+        "nombre": "Batería de litio 5 kWh",
+        "categoria": "SOL",
+        "tipo": 15,
+        "unidad": "UD",
+        "precio": "1890.00"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 36,
+    "fields": {
+        "nombre": "Termostato digital wifi",
+        "categoria": "DOM",
+        "tipo": 16,
+        "unidad": "UD",
+        "precio": "89.00"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 37,
+    "fields": {
+        "nombre": "Clorador salino 20 g/h",
+        "categoria": "PIS",
+        "tipo": 17,
+        "unidad": "UD",
+        "precio": "640.00"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 38,
+    "fields": {
+        "nombre": "Sal para piscina 25 kg",
+        "categoria": "PIS",
+        "tipo": 17,
+        "unidad": "UD",
+        "precio": "7.20"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 39,
+    "fields": {
+        "nombre": "Hora Oficial",
+        "categoria": "MOB",
+        "tipo": 18,
+        "unidad": "H",
+        "precio": "30.00"
+    }
+},
+{
+    "model": "gestion.material",
+    "pk": 40,
+    "fields": {
+        "nombre": "Hora Pareja",
+        "categoria": "MOB",
+        "tipo": 18,
+        "unidad": "H",
+        "precio": "50.00"
+    }
+},
+{
+    "model": "gestion.usuario",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$fkXEcMolR3oudbLGN2n5W8$2mmg8X8viwDNSbC5BhGQ1TBFYL5GIL7m9n4+UAVpLGg=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "oficina",
+        "first_name": "Marta",
+        "last_name": "Oficina",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-11-16T09:41:57.231",
+        "rol": 2,
+        "groups": [
+            [
+                "Oficina"
+            ]
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "gestion.usuario",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$xuRnn8an7U4VLfBMkwb17d$ynrTw2xN0sXXDvXwFMlZEOehicKDsZXCaOCO/hWN2Us=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "joan",
+        "first_name": "Joan",
+        "last_name": "Ferrer",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-11-16T09:41:57.473",
+        "rol": 1,
+        "groups": [
+            [
+                "Operarios"
+            ]
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "gestion.usuario",
+    "pk": 3,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$rmcuWznBSJ9bhW9KvOvrHC$jDfGn3SwfyjiwwLB+K/RwBBogEIPV0xJCxwUG3VAjRM=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "miquel",
+        "first_name": "Miquel",
+        "last_name": "Riera",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-11-16T09:41:57.692",
+        "rol": 1,
+        "groups": [
+            [
+                "Operarios"
+            ]
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "gestion.usuario",
+    "pk": 4,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$0xwajcT2DVfh15nMcQBlmj$E0YTXEKhpmlLlQxENOXClAvhSnlxaMlAZpHgAluI6gA=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "aina",
+        "first_name": "Aina",
+        "last_name": "Pons",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-11-16T09:41:57.910",
+        "rol": 1,
+        "groups": [
+            [
+                "Operarios"
+            ]
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "gestion.usuario",
+    "pk": 5,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$hEa4905e18YCAj2hDi37fq$gqMlzNaQ78KoV+2x78iQHGSq7M1iZcaDYw8DDphZ64Y=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "tomeu",
+        "first_name": "Tomeu",
+        "last_name": "Vidal",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-11-16T09:41:58.147",
+        "rol": 1,
+        "groups": [
+            [
+                "Operarios"
+            ]
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "gestion.usuario",
+    "pk": 6,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$fEh4D15w8Yi1dMwc3kbhI7$lJmtI6zm7Pr7ibLvPeyHKKRlZZGxGho6ntYSLo3tdYI=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "xisco",
+        "first_name": "Xisco",
+        "last_name": "Mas",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-11-16T09:41:58.370",
+        "rol": 1,
+        "groups": [
+            [
+                "Operarios"
+            ]
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "gestion.usuario",
+    "pk": 7,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$0dClLiJfIPfA78CtRmpEyq$vKqt9UOACQP+GLEqTw0lEHyduAofQoG9/COSPcg3pWQ=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "laura",
+        "first_name": "Laura",
+        "last_name": "Serra",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-11-16T09:41:58.580",
+        "rol": 1,
+        "groups": [
+            [
+                "Operarios"
+            ]
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "gestion.operario",
+    "pk": 1,
+    "fields": {
+        "usuario": [
+            "joan"
+        ]
+    }
+},
+{
+    "model": "gestion.operario",
+    "pk": 2,
+    "fields": {
+        "usuario": [
+            "miquel"
+        ]
+    }
+},
+{
+    "model": "gestion.operario",
+    "pk": 3,
+    "fields": {
+        "usuario": [
+            "aina"
+        ]
+    }
+},
+{
+    "model": "gestion.operario",
+    "pk": 4,
+    "fields": {
+        "usuario": [
+            "tomeu"
+        ]
+    }
+},
+{
+    "model": "gestion.operario",
+    "pk": 5,
+    "fields": {
+        "usuario": [
+            "xisco"
+        ]
+    }
+},
+{
+    "model": "gestion.operario",
+    "pk": 6,
+    "fields": {
+        "usuario": [
+            "laura"
+        ]
+    }
+},
+{
+    "model": "gestion.oficina",
+    "pk": 1,
+    "fields": {
+        "usuario": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 1,
+    "fields": {
+        "nombre": "OBR26001 · Fotovoltaica aislada finca · C/ de la Mar 54, Llucmajor",
+        "tipo": "OBR",
+        "descripcion": "Datos de prueba inventados.",
+        "fecha_inicio": "2026-10-23",
+        "fecha_fin": null,
+        "fecha_entrega": "2026-12-13",
+        "estado": "PRO",
+        "tipo_destino": "",
+        "creado_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 2,
+    "fields": {
+        "nombre": "OBR26002 · Climatización chalet · Camí Vell 55, Santanyí",
+        "tipo": "OBR",
+        "descripcion": "Datos de prueba inventados.",
+        "fecha_inicio": "2026-09-26",
+        "fecha_fin": null,
+        "fecha_entrega": "2026-11-18",
+        "estado": "PRO",
+        "tipo_destino": "",
+        "creado_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 3,
+    "fields": {
+        "nombre": "OBR26003 · Reforma baños y cocina · C/ Major 15, Esporles",
+        "tipo": "OBR",
+        "descripcion": "Datos de prueba inventados.",
+        "fecha_inicio": "2026-11-15",
+        "fecha_fin": null,
+        "fecha_entrega": "2026-12-08",
+        "estado": "PRO",
+        "tipo_destino": "",
+        "creado_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 4,
+    "fields": {
+        "nombre": "OBR26004 · Reforma baños y cocina · Camí Vell 23, Pollença",
+        "tipo": "OBR",
+        "descripcion": "Datos de prueba inventados.",
+        "fecha_inicio": "2026-11-04",
+        "fecha_fin": null,
+        "fecha_entrega": "2026-12-06",
+        "estado": "PRO",
+        "tipo_destino": "",
+        "creado_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 5,
+    "fields": {
+        "nombre": "OBR26005 · Aerotermia y suelo radiante · C/ de la Mar 51, Campos",
+        "tipo": "OBR",
+        "descripcion": "Datos de prueba inventados.",
+        "fecha_inicio": "2026-10-24",
+        "fecha_fin": "2026-10-26",
+        "fecha_entrega": null,
+        "estado": "TER",
+        "tipo_destino": "",
+        "creado_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 6,
+    "fields": {
+        "nombre": "OBR26006 · Reforma integral vivienda · Camí Vell 11, Palma",
+        "tipo": "OBR",
+        "descripcion": "Datos de prueba inventados.",
+        "fecha_inicio": "2026-10-04",
+        "fecha_fin": "2026-10-17",
+        "fecha_entrega": null,
+        "estado": "TER",
+        "tipo_destino": "",
+        "creado_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 7,
+    "fields": {
+        "nombre": "OBR26007 · Aerotermia y suelo radiante · Camí Vell 8, Pollença",
+        "tipo": "OBR",
+        "descripcion": "Datos de prueba inventados.",
+        "fecha_inicio": "2026-08-28",
+        "fecha_fin": "2026-09-19",
+        "fecha_entrega": null,
+        "estado": "TER",
+        "tipo_destino": "",
+        "creado_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 8,
+    "fields": {
+        "nombre": "OBR26008 · Climatización chalet · C/ Ramon Llull 73, Felanitx",
+        "tipo": "OBR",
+        "descripcion": "Datos de prueba inventados.",
+        "fecha_inicio": "2026-08-22",
+        "fecha_fin": "2026-09-17",
+        "fecha_entrega": null,
+        "estado": "TER",
+        "tipo_destino": "",
+        "creado_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 9,
+    "fields": {
+        "nombre": "INT26009 · Fuga en baño · C/ de la Mar 22, Alcúdia",
+        "tipo": "INT",
+        "descripcion": "Datos de prueba inventados.",
+        "fecha_inicio": "2026-09-29",
+        "fecha_fin": null,
+        "fecha_entrega": "2026-11-30",
+        "estado": "PRO",
+        "tipo_destino": "",
+        "creado_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 10,
+    "fields": {
+        "nombre": "INT26010 · Fuga en baño · C/ del Sol 27, Inca",
+        "tipo": "INT",
+        "descripcion": "Datos de prueba inventados.",
+        "fecha_inicio": "2026-11-11",
+        "fecha_fin": null,
+        "fecha_entrega": "2026-11-22",
+        "estado": "PRO",
+        "tipo_destino": "",
+        "creado_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 11,
+    "fields": {
+        "nombre": "INT26011 · Avería caldera · C/ de la Mar 53, Artà",
+        "tipo": "INT",
+        "descripcion": "Datos de prueba inventados.",
+        "fecha_inicio": "2026-09-30",
+        "fecha_fin": null,
+        "fecha_entrega": "2026-12-04",
+        "estado": "PRO",
+        "tipo_destino": "",
+        "creado_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 12,
+    "fields": {
+        "nombre": "INT26012 · Cambio termo eléctrico · C/ de la Mar 45, Manacor",
+        "tipo": "INT",
+        "descripcion": "Datos de prueba inventados.",
+        "fecha_inicio": "2026-11-06",
+        "fecha_fin": null,
+        "fecha_entrega": "2026-12-28",
+        "estado": "PRO",
+        "tipo_destino": "",
+        "creado_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 13,
+    "fields": {
+        "nombre": "INT26013 · Inversor sin producción · C/ Sant Miquel 26, Campos",
+        "tipo": "INT",
+        "descripcion": "Datos de prueba inventados.",
+        "fecha_inicio": "2026-09-10",
+        "fecha_fin": "2026-10-17",
+        "fecha_entrega": null,
+        "estado": "TER",
+        "tipo_destino": "",
+        "creado_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 14,
+    "fields": {
+        "nombre": "INT26014 · Fuga en baño · C/ del Sol 13, Inca",
+        "tipo": "INT",
+        "descripcion": "Datos de prueba inventados.",
+        "fecha_inicio": "2026-10-01",
+        "fecha_fin": "2026-10-03",
+        "fecha_entrega": null,
+        "estado": "TER",
+        "tipo_destino": "",
+        "creado_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 15,
+    "fields": {
+        "nombre": "INT26015 · Split pierde agua · Camí Vell 63, Alcúdia",
+        "tipo": "INT",
+        "descripcion": "Datos de prueba inventados.",
+        "fecha_inicio": "2026-07-31",
+        "fecha_fin": "2026-08-08",
+        "fecha_entrega": null,
+        "estado": "TER",
+        "tipo_destino": "",
+        "creado_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 16,
+    "fields": {
+        "nombre": "INT26016 · Inversor sin producción · C/ del Sol 24, Sóller",
+        "tipo": "INT",
+        "descripcion": "Datos de prueba inventados.",
+        "fecha_inicio": "2026-10-10",
+        "fecha_fin": "2026-11-15",
+        "fecha_entrega": null,
+        "estado": "TER",
+        "tipo_destino": "",
+        "creado_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 17,
+    "fields": {
+        "nombre": "MAN26017 · Mantenimiento fotovoltaica · C/ Sant Miquel 48, Artà",
+        "tipo": "MAN",
+        "descripcion": "Datos de prueba inventados.",
+        "fecha_inicio": "2026-10-27",
+        "fecha_fin": null,
+        "fecha_entrega": "2026-12-16",
+        "estado": "PRO",
+        "tipo_destino": "",
+        "creado_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 18,
+    "fields": {
+        "nombre": "MAN26018 · Revisión caldera · C/ Ramon Llull 1, Sóller",
+        "tipo": "MAN",
+        "descripcion": "Datos de prueba inventados.",
+        "fecha_inicio": "2026-10-19",
+        "fecha_fin": null,
+        "fecha_entrega": "2026-12-10",
+        "estado": "PRO",
+        "tipo_destino": "",
+        "creado_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 19,
+    "fields": {
+        "nombre": "MAN26019 · Mantenimiento fotovoltaica · C/ del Sol 52, Alcúdia",
+        "tipo": "MAN",
+        "descripcion": "Datos de prueba inventados.",
+        "fecha_inicio": "2026-10-31",
+        "fecha_fin": null,
+        "fecha_entrega": "2026-12-19",
+        "estado": "PRO",
+        "tipo_destino": "",
+        "creado_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 20,
+    "fields": {
+        "nombre": "MAN26020 · Limpieza filtros climatización · Camí Vell 8, Campos",
+        "tipo": "MAN",
+        "descripcion": "Datos de prueba inventados.",
+        "fecha_inicio": "2026-10-18",
+        "fecha_fin": null,
+        "fecha_entrega": "2026-11-16",
+        "estado": "PRO",
+        "tipo_destino": "",
+        "creado_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 21,
+    "fields": {
+        "nombre": "MAN26021 · Mantenimiento anual aerotermia · C/ Ramon Llull 32, Pollença",
+        "tipo": "MAN",
+        "descripcion": "Datos de prueba inventados.",
+        "fecha_inicio": "2026-06-25",
+        "fecha_fin": "2026-07-13",
+        "fecha_entrega": null,
+        "estado": "TER",
+        "tipo_destino": "",
+        "creado_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 22,
+    "fields": {
+        "nombre": "MAN26022 · Mantenimiento anual aerotermia · C/ Major 77, Artà",
+        "tipo": "MAN",
+        "descripcion": "Datos de prueba inventados.",
+        "fecha_inicio": "2026-10-06",
+        "fecha_fin": "2026-10-08",
+        "fecha_entrega": null,
+        "estado": "TER",
+        "tipo_destino": "",
+        "creado_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 23,
+    "fields": {
+        "nombre": "MAN26023 · Limpieza filtros climatización · C/ Sant Miquel 27, Inca",
+        "tipo": "MAN",
+        "descripcion": "Datos de prueba inventados.",
+        "fecha_inicio": "2026-06-15",
+        "fecha_fin": "2026-06-20",
+        "fecha_entrega": null,
+        "estado": "TER",
+        "tipo_destino": "",
+        "creado_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 24,
+    "fields": {
+        "nombre": "MAN26024 · Mantenimiento anual aerotermia · C/ de la Mar 48, Inca",
+        "tipo": "MAN",
+        "descripcion": "Datos de prueba inventados.",
+        "fecha_inicio": "2026-07-18",
+        "fecha_fin": "2026-07-30",
+        "fecha_entrega": null,
+        "estado": "TER",
+        "tipo_destino": "",
+        "creado_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 25,
+    "fields": {
+        "nombre": "Fuga en garaje · C/ de la Mar 12, Palma",
+        "tipo": "URG",
+        "descripcion": "Urgencia de prueba.",
+        "fecha_inicio": "2026-11-16",
+        "fecha_fin": null,
+        "fecha_entrega": null,
+        "estado": "PRO",
+        "tipo_destino": "INT",
+        "creado_por": [
+            "tomeu"
+        ]
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 26,
+    "fields": {
+        "nombre": "Sin agua caliente · Camí Vell 3, Sóller",
+        "tipo": "URG",
+        "descripcion": "Urgencia de prueba.",
+        "fecha_inicio": "2026-11-15",
+        "fecha_fin": null,
+        "fecha_entrega": null,
+        "estado": "PRO",
+        "tipo_destino": "INT",
+        "creado_por": [
+            "tomeu"
+        ]
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 27,
+    "fields": {
+        "nombre": "Cuadro eléctrico saltando · C/ Major 40, Inca",
+        "tipo": "URG",
+        "descripcion": "Urgencia de prueba.",
+        "fecha_inicio": "2026-11-16",
+        "fecha_fin": null,
+        "fecha_entrega": null,
+        "estado": "PRO",
+        "tipo_destino": "OBR",
+        "creado_por": [
+            "tomeu"
+        ]
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 1,
+    "fields": {
+        "proyecto": 1,
+        "material": 13,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "6.00",
+        "precio_unitario": "245.00",
+        "fecha": "2026-11-05"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 2,
+    "fields": {
+        "proyecto": 1,
+        "material": 29,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "6.00",
+        "precio_unitario": "38.00",
+        "fecha": "2026-10-30"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 3,
+    "fields": {
+        "proyecto": 1,
+        "material": 13,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "245.00",
+        "fecha": "2026-11-01"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 4,
+    "fields": {
+        "proyecto": 1,
+        "material": 22,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "5.00",
+        "precio_unitario": "9.50",
+        "fecha": "2026-11-15"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 5,
+    "fields": {
+        "proyecto": 1,
+        "material": 14,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "5.00",
+        "precio_unitario": "1320.00",
+        "fecha": "2026-10-30"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 6,
+    "fields": {
+        "proyecto": 1,
+        "material": 14,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "5.00",
+        "precio_unitario": "1320.00",
+        "fecha": "2026-10-27"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 7,
+    "fields": {
+        "proyecto": 1,
+        "material": 40,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "6.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-06"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 8,
+    "fields": {
+        "proyecto": 1,
+        "material": 40,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "2.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-10-30"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 9,
+    "fields": {
+        "proyecto": 2,
+        "material": 24,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "11.00",
+        "precio_unitario": "1.10",
+        "fecha": "2026-11-01"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 10,
+    "fields": {
+        "proyecto": 2,
+        "material": 15,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "32.00",
+        "fecha": "2026-10-14"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 11,
+    "fields": {
+        "proyecto": 2,
+        "material": 34,
+        "trabajador": [
+            "tomeu"
+        ],
+        "cantidad": "2.00",
+        "precio_unitario": "1250.00",
+        "fecha": "2026-10-19"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 12,
+    "fields": {
+        "proyecto": 2,
+        "material": 22,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "9.50",
+        "fecha": "2026-10-15"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 13,
+    "fields": {
+        "proyecto": 2,
+        "material": 11,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "64.00",
+        "fecha": "2026-10-25"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 14,
+    "fields": {
+        "proyecto": 2,
+        "material": 12,
+        "trabajador": [
+            "tomeu"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "118.00",
+        "fecha": "2026-11-11"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 15,
+    "fields": {
+        "proyecto": 2,
+        "material": 32,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "145.00",
+        "fecha": "2026-09-26"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 16,
+    "fields": {
+        "proyecto": 2,
+        "material": 20,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "5.00",
+        "precio_unitario": "4100.00",
+        "fecha": "2026-10-25"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 17,
+    "fields": {
+        "proyecto": 2,
+        "material": 39,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "6.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-11-06"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 18,
+    "fields": {
+        "proyecto": 2,
+        "material": 40,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-10-21"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 19,
+    "fields": {
+        "proyecto": 2,
+        "material": 40,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "2.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-07"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 20,
+    "fields": {
+        "proyecto": 2,
+        "material": 39,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "2.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-10-28"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 21,
+    "fields": {
+        "proyecto": 2,
+        "material": 39,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-11-10"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 22,
+    "fields": {
+        "proyecto": 3,
+        "material": 16,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "2.00",
+        "precio_unitario": "46.00",
+        "fecha": "2026-11-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 23,
+    "fields": {
+        "proyecto": 3,
+        "material": 29,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "2.00",
+        "precio_unitario": "38.00",
+        "fecha": "2026-11-15"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 24,
+    "fields": {
+        "proyecto": 3,
+        "material": 13,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "5.00",
+        "precio_unitario": "245.00",
+        "fecha": "2026-11-15"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 25,
+    "fields": {
+        "proyecto": 3,
+        "material": 20,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "6.00",
+        "precio_unitario": "4100.00",
+        "fecha": "2026-11-15"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 26,
+    "fields": {
+        "proyecto": 3,
+        "material": 30,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "11.80",
+        "fecha": "2026-11-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 27,
+    "fields": {
+        "proyecto": 3,
+        "material": 7,
+        "trabajador": [
+            "tomeu"
+        ],
+        "cantidad": "6.00",
+        "precio_unitario": "14.20",
+        "fecha": "2026-11-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 28,
+    "fields": {
+        "proyecto": 3,
+        "material": 11,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "64.00",
+        "fecha": "2026-11-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 29,
+    "fields": {
+        "proyecto": 3,
+        "material": 14,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "1320.00",
+        "fecha": "2026-11-15"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 30,
+    "fields": {
+        "proyecto": 3,
+        "material": 39,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-11-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 31,
+    "fields": {
+        "proyecto": 3,
+        "material": 40,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-15"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 32,
+    "fields": {
+        "proyecto": 3,
+        "material": 40,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "1.50",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-15"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 33,
+    "fields": {
+        "proyecto": 3,
+        "material": 40,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "1.50",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 34,
+    "fields": {
+        "proyecto": 4,
+        "material": 9,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "0.90",
+        "fecha": "2026-11-04"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 35,
+    "fields": {
+        "proyecto": 4,
+        "material": 31,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "6.20",
+        "fecha": "2026-11-05"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 36,
+    "fields": {
+        "proyecto": 4,
+        "material": 32,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "5.00",
+        "precio_unitario": "145.00",
+        "fecha": "2026-11-07"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 37,
+    "fields": {
+        "proyecto": 4,
+        "material": 12,
+        "trabajador": [
+            "tomeu"
+        ],
+        "cantidad": "5.00",
+        "precio_unitario": "118.00",
+        "fecha": "2026-11-07"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 38,
+    "fields": {
+        "proyecto": 4,
+        "material": 40,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-06"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 39,
+    "fields": {
+        "proyecto": 4,
+        "material": 40,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-15"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 40,
+    "fields": {
+        "proyecto": 4,
+        "material": 40,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "8.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 41,
+    "fields": {
+        "proyecto": 4,
+        "material": 40,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "1.50",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-12"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 42,
+    "fields": {
+        "proyecto": 4,
+        "material": 40,
+        "trabajador": [
+            "tomeu"
+        ],
+        "cantidad": "2.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-15"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 43,
+    "fields": {
+        "proyecto": 4,
+        "material": 39,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-11-05"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 44,
+    "fields": {
+        "proyecto": 5,
+        "material": 26,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "10.50",
+        "precio_unitario": "1.45",
+        "fecha": "2026-10-24"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 45,
+    "fields": {
+        "proyecto": 5,
+        "material": 14,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "6.00",
+        "precio_unitario": "1320.00",
+        "fecha": "2026-10-25"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 46,
+    "fields": {
+        "proyecto": 5,
+        "material": 22,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "5.00",
+        "precio_unitario": "9.50",
+        "fecha": "2026-10-26"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 47,
+    "fields": {
+        "proyecto": 5,
+        "material": 27,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "18.00",
+        "precio_unitario": "5.30",
+        "fecha": "2026-10-24"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 48,
+    "fields": {
+        "proyecto": 5,
+        "material": 35,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "6.00",
+        "precio_unitario": "1890.00",
+        "fecha": "2026-10-26"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 49,
+    "fields": {
+        "proyecto": 5,
+        "material": 30,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "11.80",
+        "fecha": "2026-10-26"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 50,
+    "fields": {
+        "proyecto": 5,
+        "material": 33,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "210.00",
+        "fecha": "2026-10-24"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 51,
+    "fields": {
+        "proyecto": 5,
+        "material": 39,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-10-25"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 52,
+    "fields": {
+        "proyecto": 5,
+        "material": 39,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-10-24"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 53,
+    "fields": {
+        "proyecto": 5,
+        "material": 40,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "8.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-10-26"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 54,
+    "fields": {
+        "proyecto": 5,
+        "material": 39,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-10-24"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 55,
+    "fields": {
+        "proyecto": 5,
+        "material": 39,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "1.50",
+        "precio_unitario": "30.00",
+        "fecha": "2026-10-26"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 56,
+    "fields": {
+        "proyecto": 6,
+        "material": 22,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "6.00",
+        "precio_unitario": "9.50",
+        "fecha": "2026-10-06"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 57,
+    "fields": {
+        "proyecto": 6,
+        "material": 23,
+        "trabajador": [
+            "tomeu"
+        ],
+        "cantidad": "8.50",
+        "precio_unitario": "9.80",
+        "fecha": "2026-10-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 58,
+    "fields": {
+        "proyecto": 6,
+        "material": 15,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "32.00",
+        "fecha": "2026-10-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 59,
+    "fields": {
+        "proyecto": 6,
+        "material": 7,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "14.20",
+        "fecha": "2026-10-10"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 60,
+    "fields": {
+        "proyecto": 6,
+        "material": 6,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "2.00",
+        "precio_unitario": "9.80",
+        "fecha": "2026-10-13"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 61,
+    "fields": {
+        "proyecto": 6,
+        "material": 10,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "1.20",
+        "fecha": "2026-10-09"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 62,
+    "fields": {
+        "proyecto": 6,
+        "material": 4,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "28.00",
+        "precio_unitario": "2.60",
+        "fecha": "2026-10-07"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 63,
+    "fields": {
+        "proyecto": 6,
+        "material": 40,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-10-10"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 64,
+    "fields": {
+        "proyecto": 6,
+        "material": 40,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-10-10"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 65,
+    "fields": {
+        "proyecto": 6,
+        "material": 39,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "1.50",
+        "precio_unitario": "30.00",
+        "fecha": "2026-10-09"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 66,
+    "fields": {
+        "proyecto": 7,
+        "material": 7,
+        "trabajador": [
+            "tomeu"
+        ],
+        "cantidad": "6.00",
+        "precio_unitario": "14.20",
+        "fecha": "2026-09-17"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 67,
+    "fields": {
+        "proyecto": 7,
+        "material": 15,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "32.00",
+        "fecha": "2026-09-01"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 68,
+    "fields": {
+        "proyecto": 7,
+        "material": 25,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "20.50",
+        "precio_unitario": "0.95",
+        "fecha": "2026-09-18"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 69,
+    "fields": {
+        "proyecto": 7,
+        "material": 40,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-09-18"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 70,
+    "fields": {
+        "proyecto": 7,
+        "material": 39,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "2.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-09-13"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 71,
+    "fields": {
+        "proyecto": 7,
+        "material": 40,
+        "trabajador": [
+            "tomeu"
+        ],
+        "cantidad": "1.50",
+        "precio_unitario": "50.00",
+        "fecha": "2026-09-15"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 72,
+    "fields": {
+        "proyecto": 7,
+        "material": 40,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-09-06"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 73,
+    "fields": {
+        "proyecto": 7,
+        "material": 39,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "2.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-09-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 74,
+    "fields": {
+        "proyecto": 7,
+        "material": 40,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "2.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-09-17"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 75,
+    "fields": {
+        "proyecto": 8,
+        "material": 20,
+        "trabajador": [
+            "tomeu"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "4100.00",
+        "fecha": "2026-08-25"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 76,
+    "fields": {
+        "proyecto": 8,
+        "material": 30,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "11.80",
+        "fecha": "2026-09-05"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 77,
+    "fields": {
+        "proyecto": 8,
+        "material": 30,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "11.80",
+        "fecha": "2026-08-22"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 78,
+    "fields": {
+        "proyecto": 8,
+        "material": 39,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "8.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-09-14"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 79,
+    "fields": {
+        "proyecto": 8,
+        "material": 39,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-08-26"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 80,
+    "fields": {
+        "proyecto": 9,
+        "material": 31,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "6.20",
+        "fecha": "2026-10-17"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 81,
+    "fields": {
+        "proyecto": 9,
+        "material": 18,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "2.00",
+        "precio_unitario": "8.90",
+        "fecha": "2026-11-09"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 82,
+    "fields": {
+        "proyecto": 9,
+        "material": 29,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "5.00",
+        "precio_unitario": "38.00",
+        "fecha": "2026-10-01"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 83,
+    "fields": {
+        "proyecto": 9,
+        "material": 21,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "6.00",
+        "precio_unitario": "19.00",
+        "fecha": "2026-09-29"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 84,
+    "fields": {
+        "proyecto": 9,
+        "material": 40,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-10-05"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 85,
+    "fields": {
+        "proyecto": 9,
+        "material": 40,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-10-30"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 86,
+    "fields": {
+        "proyecto": 9,
+        "material": 40,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-10-03"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 87,
+    "fields": {
+        "proyecto": 9,
+        "material": 40,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-10-20"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 88,
+    "fields": {
+        "proyecto": 9,
+        "material": 39,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "1.50",
+        "precio_unitario": "30.00",
+        "fecha": "2026-10-14"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 89,
+    "fields": {
+        "proyecto": 9,
+        "material": 39,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-11-10"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 90,
+    "fields": {
+        "proyecto": 10,
+        "material": 15,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "32.00",
+        "fecha": "2026-11-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 91,
+    "fields": {
+        "proyecto": 10,
+        "material": 10,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "1.20",
+        "fecha": "2026-11-14"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 92,
+    "fields": {
+        "proyecto": 10,
+        "material": 7,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "14.20",
+        "fecha": "2026-11-13"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 93,
+    "fields": {
+        "proyecto": 10,
+        "material": 23,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "16.50",
+        "precio_unitario": "9.80",
+        "fecha": "2026-11-12"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 94,
+    "fields": {
+        "proyecto": 10,
+        "material": 40,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-11"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 95,
+    "fields": {
+        "proyecto": 10,
+        "material": 40,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-15"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 96,
+    "fields": {
+        "proyecto": 10,
+        "material": 39,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "1.50",
+        "precio_unitario": "30.00",
+        "fecha": "2026-11-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 97,
+    "fields": {
+        "proyecto": 10,
+        "material": 39,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "2.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-11-12"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 98,
+    "fields": {
+        "proyecto": 10,
+        "material": 40,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-13"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 99,
+    "fields": {
+        "proyecto": 10,
+        "material": 40,
+        "trabajador": [
+            "tomeu"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-12"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 100,
+    "fields": {
+        "proyecto": 11,
+        "material": 11,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "64.00",
+        "fecha": "2026-10-26"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 101,
+    "fields": {
+        "proyecto": 11,
+        "material": 39,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "1.50",
+        "precio_unitario": "30.00",
+        "fecha": "2026-11-09"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 102,
+    "fields": {
+        "proyecto": 11,
+        "material": 39,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "1.50",
+        "precio_unitario": "30.00",
+        "fecha": "2026-10-01"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 103,
+    "fields": {
+        "proyecto": 11,
+        "material": 40,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-10-25"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 104,
+    "fields": {
+        "proyecto": 11,
+        "material": 40,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "6.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-10-20"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 105,
+    "fields": {
+        "proyecto": 11,
+        "material": 39,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-10-15"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 106,
+    "fields": {
+        "proyecto": 12,
+        "material": 15,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "32.00",
+        "fecha": "2026-11-13"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 107,
+    "fields": {
+        "proyecto": 12,
+        "material": 2,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "29.50",
+        "precio_unitario": "2.90",
+        "fecha": "2026-11-09"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 108,
+    "fields": {
+        "proyecto": 12,
+        "material": 39,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "2.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-11-14"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 109,
+    "fields": {
+        "proyecto": 12,
+        "material": 40,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "1.50",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-11"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 110,
+    "fields": {
+        "proyecto": 12,
+        "material": 40,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "2.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-07"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 111,
+    "fields": {
+        "proyecto": 12,
+        "material": 40,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-14"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 112,
+    "fields": {
+        "proyecto": 12,
+        "material": 39,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "1.50",
+        "precio_unitario": "30.00",
+        "fecha": "2026-11-09"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 113,
+    "fields": {
+        "proyecto": 13,
+        "material": 7,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "6.00",
+        "precio_unitario": "14.20",
+        "fecha": "2026-09-23"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 114,
+    "fields": {
+        "proyecto": 13,
+        "material": 6,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "5.00",
+        "precio_unitario": "9.80",
+        "fecha": "2026-10-09"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 115,
+    "fields": {
+        "proyecto": 13,
+        "material": 40,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "2.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-09-19"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 116,
+    "fields": {
+        "proyecto": 13,
+        "material": 39,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "8.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-09-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 117,
+    "fields": {
+        "proyecto": 13,
+        "material": 40,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "6.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-10-15"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 118,
+    "fields": {
+        "proyecto": 14,
+        "material": 14,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "1320.00",
+        "fecha": "2026-10-02"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 119,
+    "fields": {
+        "proyecto": 14,
+        "material": 22,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "5.00",
+        "precio_unitario": "9.50",
+        "fecha": "2026-10-01"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 120,
+    "fields": {
+        "proyecto": 14,
+        "material": 40,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-10-02"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 121,
+    "fields": {
+        "proyecto": 14,
+        "material": 40,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "8.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-10-03"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 122,
+    "fields": {
+        "proyecto": 14,
+        "material": 40,
+        "trabajador": [
+            "tomeu"
+        ],
+        "cantidad": "6.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-10-03"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 123,
+    "fields": {
+        "proyecto": 15,
+        "material": 25,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "15.50",
+        "precio_unitario": "0.95",
+        "fecha": "2026-08-03"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 124,
+    "fields": {
+        "proyecto": 15,
+        "material": 7,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "5.00",
+        "precio_unitario": "14.20",
+        "fecha": "2026-08-06"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 125,
+    "fields": {
+        "proyecto": 15,
+        "material": 40,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-08-03"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 126,
+    "fields": {
+        "proyecto": 15,
+        "material": 40,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-08-08"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 127,
+    "fields": {
+        "proyecto": 15,
+        "material": 40,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "8.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-08-07"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 128,
+    "fields": {
+        "proyecto": 16,
+        "material": 16,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "46.00",
+        "fecha": "2026-11-02"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 129,
+    "fields": {
+        "proyecto": 16,
+        "material": 39,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-10-27"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 130,
+    "fields": {
+        "proyecto": 16,
+        "material": 40,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "6.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-10-27"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 131,
+    "fields": {
+        "proyecto": 16,
+        "material": 40,
+        "trabajador": [
+            "tomeu"
+        ],
+        "cantidad": "1.50",
+        "precio_unitario": "50.00",
+        "fecha": "2026-10-14"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 132,
+    "fields": {
+        "proyecto": 16,
+        "material": 40,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "2.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-10-27"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 133,
+    "fields": {
+        "proyecto": 16,
+        "material": 39,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "8.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-11-11"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 134,
+    "fields": {
+        "proyecto": 16,
+        "material": 39,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-10-10"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 135,
+    "fields": {
+        "proyecto": 17,
+        "material": 37,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "6.00",
+        "precio_unitario": "640.00",
+        "fecha": "2026-11-06"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 136,
+    "fields": {
+        "proyecto": 17,
+        "material": 39,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-10-31"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 137,
+    "fields": {
+        "proyecto": 17,
+        "material": 40,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-12"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 138,
+    "fields": {
+        "proyecto": 17,
+        "material": 40,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-10-28"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 139,
+    "fields": {
+        "proyecto": 17,
+        "material": 40,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "8.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-01"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 140,
+    "fields": {
+        "proyecto": 17,
+        "material": 40,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "8.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 141,
+    "fields": {
+        "proyecto": 18,
+        "material": 22,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "9.50",
+        "fecha": "2026-11-11"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 142,
+    "fields": {
+        "proyecto": 18,
+        "material": 33,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "210.00",
+        "fecha": "2026-11-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 143,
+    "fields": {
+        "proyecto": 18,
+        "material": 23,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "27.50",
+        "precio_unitario": "9.80",
+        "fecha": "2026-10-29"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 144,
+    "fields": {
+        "proyecto": 18,
+        "material": 40,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-10-20"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 145,
+    "fields": {
+        "proyecto": 18,
+        "material": 39,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-11-01"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 146,
+    "fields": {
+        "proyecto": 18,
+        "material": 39,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-11-03"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 147,
+    "fields": {
+        "proyecto": 18,
+        "material": 40,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "2.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-13"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 148,
+    "fields": {
+        "proyecto": 19,
+        "material": 21,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "19.00",
+        "fecha": "2026-11-10"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 149,
+    "fields": {
+        "proyecto": 19,
+        "material": 15,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "32.00",
+        "fecha": "2026-11-06"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 150,
+    "fields": {
+        "proyecto": 19,
+        "material": 18,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "5.00",
+        "precio_unitario": "8.90",
+        "fecha": "2026-11-03"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 151,
+    "fields": {
+        "proyecto": 19,
+        "material": 38,
+        "trabajador": [
+            "tomeu"
+        ],
+        "cantidad": "6.00",
+        "precio_unitario": "7.20",
+        "fecha": "2026-11-09"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 152,
+    "fields": {
+        "proyecto": 19,
+        "material": 39,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "8.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-11-11"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 153,
+    "fields": {
+        "proyecto": 19,
+        "material": 40,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "6.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-05"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 154,
+    "fields": {
+        "proyecto": 19,
+        "material": 40,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "6.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-09"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 155,
+    "fields": {
+        "proyecto": 19,
+        "material": 40,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-01"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 156,
+    "fields": {
+        "proyecto": 20,
+        "material": 34,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "1250.00",
+        "fecha": "2026-10-28"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 157,
+    "fields": {
+        "proyecto": 20,
+        "material": 40,
+        "trabajador": [
+            "tomeu"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-10-30"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 158,
+    "fields": {
+        "proyecto": 20,
+        "material": 39,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-10-21"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 159,
+    "fields": {
+        "proyecto": 20,
+        "material": 40,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "6.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-06"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 160,
+    "fields": {
+        "proyecto": 21,
+        "material": 17,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "11.50",
+        "fecha": "2026-07-10"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 161,
+    "fields": {
+        "proyecto": 21,
+        "material": 22,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "9.50",
+        "fecha": "2026-07-13"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 162,
+    "fields": {
+        "proyecto": 21,
+        "material": 39,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-06-30"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 163,
+    "fields": {
+        "proyecto": 21,
+        "material": 40,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "8.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-06-29"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 164,
+    "fields": {
+        "proyecto": 22,
+        "material": 13,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "245.00",
+        "fecha": "2026-10-07"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 165,
+    "fields": {
+        "proyecto": 22,
+        "material": 39,
+        "trabajador": [
+            "tomeu"
+        ],
+        "cantidad": "1.50",
+        "precio_unitario": "30.00",
+        "fecha": "2026-10-07"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 166,
+    "fields": {
+        "proyecto": 22,
+        "material": 39,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-10-06"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 167,
+    "fields": {
+        "proyecto": 22,
+        "material": 39,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-10-07"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 168,
+    "fields": {
+        "proyecto": 22,
+        "material": 40,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "2.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-10-08"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 169,
+    "fields": {
+        "proyecto": 22,
+        "material": 40,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "8.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-10-08"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 170,
+    "fields": {
+        "proyecto": 23,
+        "material": 38,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "7.20",
+        "fecha": "2026-06-18"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 171,
+    "fields": {
+        "proyecto": 23,
+        "material": 32,
+        "trabajador": [
+            "tomeu"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "145.00",
+        "fecha": "2026-06-18"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 172,
+    "fields": {
+        "proyecto": 23,
+        "material": 39,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "1.50",
+        "precio_unitario": "30.00",
+        "fecha": "2026-06-19"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 173,
+    "fields": {
+        "proyecto": 23,
+        "material": 40,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "2.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-06-18"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 174,
+    "fields": {
+        "proyecto": 23,
+        "material": 39,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-06-18"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 175,
+    "fields": {
+        "proyecto": 23,
+        "material": 40,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "2.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-06-20"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 176,
+    "fields": {
+        "proyecto": 24,
+        "material": 32,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "145.00",
+        "fecha": "2026-07-18"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 177,
+    "fields": {
+        "proyecto": 24,
+        "material": 24,
+        "trabajador": [
+            "tomeu"
+        ],
+        "cantidad": "7.50",
+        "precio_unitario": "1.10",
+        "fecha": "2026-07-27"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 178,
+    "fields": {
+        "proyecto": 24,
+        "material": 24,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "16.50",
+        "precio_unitario": "1.10",
+        "fecha": "2026-07-25"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 179,
+    "fields": {
+        "proyecto": 24,
+        "material": 20,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "4100.00",
+        "fecha": "2026-07-28"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 180,
+    "fields": {
+        "proyecto": 24,
+        "material": 40,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-07-28"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 181,
+    "fields": {
+        "proyecto": 24,
+        "material": 40,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "6.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-07-30"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 182,
+    "fields": {
+        "proyecto": 24,
+        "material": 40,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "1.50",
+        "precio_unitario": "50.00",
+        "fecha": "2026-07-26"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 183,
+    "fields": {
+        "proyecto": 24,
+        "material": 39,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-07-29"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 184,
+    "fields": {
+        "proyecto": 25,
+        "material": 3,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "2.00",
+        "precio_unitario": "3.40",
+        "fecha": "2026-11-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 185,
+    "fields": {
+        "proyecto": 25,
+        "material": 12,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "118.00",
+        "fecha": "2026-11-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 186,
+    "fields": {
+        "proyecto": 25,
+        "material": 8,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "2.40",
+        "fecha": "2026-11-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 187,
+    "fields": {
+        "proyecto": 25,
+        "material": 8,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "2.00",
+        "precio_unitario": "2.40",
+        "fecha": "2026-11-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 188,
+    "fields": {
+        "proyecto": 25,
+        "material": 40,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "1.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 189,
+    "fields": {
+        "proyecto": 25,
+        "material": 39,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-11-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 190,
+    "fields": {
+        "proyecto": 25,
+        "material": 39,
+        "trabajador": [
+            "miquel"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-11-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 191,
+    "fields": {
+        "proyecto": 25,
+        "material": 40,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 192,
+    "fields": {
+        "proyecto": 26,
+        "material": 12,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "118.00",
+        "fecha": "2026-11-15"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 193,
+    "fields": {
+        "proyecto": 26,
+        "material": 6,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "6.00",
+        "precio_unitario": "9.80",
+        "fecha": "2026-11-15"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 194,
+    "fields": {
+        "proyecto": 26,
+        "material": 39,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-11-15"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 195,
+    "fields": {
+        "proyecto": 26,
+        "material": 40,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 196,
+    "fields": {
+        "proyecto": 26,
+        "material": 40,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "6.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 197,
+    "fields": {
+        "proyecto": 26,
+        "material": 40,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "8.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-15"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 198,
+    "fields": {
+        "proyecto": 26,
+        "material": 39,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "8.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-11-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 199,
+    "fields": {
+        "proyecto": 26,
+        "material": 39,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "6.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-11-15"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 200,
+    "fields": {
+        "proyecto": 27,
+        "material": 2,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "28.50",
+        "precio_unitario": "2.90",
+        "fecha": "2026-11-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 201,
+    "fields": {
+        "proyecto": 27,
+        "material": 39,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "3.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-11-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 202,
+    "fields": {
+        "proyecto": 27,
+        "material": 40,
+        "trabajador": [
+            "tomeu"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "50.00",
+        "fecha": "2026-11-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 203,
+    "fields": {
+        "proyecto": 27,
+        "material": 39,
+        "trabajador": [
+            "xisco"
+        ],
+        "cantidad": "6.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-11-16"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 204,
+    "fields": {
+        "proyecto": 27,
+        "material": 39,
+        "trabajador": [
+            "laura"
+        ],
+        "cantidad": "8.00",
+        "precio_unitario": "30.00",
+        "fecha": "2026-11-16"
+    }
+}
+]

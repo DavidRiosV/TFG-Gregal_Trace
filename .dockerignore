@@ -1,0 +1,22 @@
+# Lo que NO entra en la imagen de Docker (parecido al .gitignore)
+# Entorno virtual de Windows: dentro del contenedor se instalan los paquetes de nuevo
+myvenv/
+__pycache__/
+*.pyc
+.git/
+.vscode/
+
+# Secretos: el .env se le pasa al contenedor al arrancarlo, nunca va dentro de la imagen
+.env
+
+# Base de datos y archivos locales: en Docker van en volúmenes
+db.sqlite3
+db_antes_prueba.sqlite3
+media/
+/static/
+
+# Datos reales de la empresa y scripts locales
+gestion/fixtures/usuarios.json
+gestion/fixtures/datos_gregal.json
+gestion/fixtures/catalogo.json
+generar_prueba.py
