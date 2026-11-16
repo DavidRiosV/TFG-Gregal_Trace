@@ -48,10 +48,11 @@
     <section class="panel panel--oficina">
         <div>
             <h2 class="panel__titulo">Oficina</h2>
-            <p class="pagina__texto">Gestiona el catálogo de materiales con sus precios y revisa los albaranes de cada trabajo.</p>
+            <p class="pagina__texto">Gestiona el catálogo de materiales con sus precios, consulta el calendario y revisa los albaranes de cada trabajo.</p>
         </div>
         <div class="pagina__acciones">
             <a class="boton boton--secundario" href="{% url 'lista_materiales' %}">{% include "gestion/icono.html" with nombre="materiales" %}Materiales</a>
+            <a class="boton boton--secundario" href="{% url 'calendario' %}">{% include "gestion/icono.html" with nombre="cita" %}Calendario</a>
             <a class="boton boton--secundario" href="{% url 'lista_albaranes' %}">{% include "gestion/icono.html" with nombre="albaran" %}Albaranes</a>
         </div>
     </section>

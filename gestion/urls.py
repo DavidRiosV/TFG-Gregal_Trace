@@ -18,6 +18,7 @@ urlpatterns = [
     # Notas, citas y albaranes
     path('nota/<int:pk>/eliminar/', views.nota_eliminar, name='nota_eliminar'),
     path('cita/<int:pk>/eliminar/', views.cita_eliminar, name='cita_eliminar'),
+    path('calendario/', views.calendario, name='calendario'),
     path('albaranes/', views.lista_albaranes, name='lista_albaranes'),
     path('albaran/<int:pk>/', views.albaran_ver, name='albaran_ver'),
     path('albaran/<int:pk>/eliminar/', views.albaran_eliminar, name='albaran_eliminar'),

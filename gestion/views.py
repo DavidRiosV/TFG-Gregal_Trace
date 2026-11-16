@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from urllib.parse import urlencode
 
 from django.contrib import messages
@@ -10,6 +10,7 @@ from django.http import FileResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
+from .calendario import descargar_ics, dias_del_evento, leer_eventos, url_outlook_web
 from .forms import (AlbaranForm, CategoriaForm, CitaForm, ConsumoForm, HorasForm, MaterialForm, NotaForm,
                     ProyectoForm, RegistroForm, TipoForm, UrgenciaForm)
 from .models import (Albaran, Categoria, Cita, Consumo, Material, Nota, Oficina, Operario, Proyecto, Tipo, Usuario,
@@ -878,3 +879,92 @@ def registrar_usuario(request):
         formulario = RegistroForm()
 
     return render(request, 'registration/signup.html', {'formulario': formulario})
+
+
+# ---------------------------------------------------------------------------
+# Calendario (Oficina): el calendario de Outlook de la empresa junto a las citas de los proyectos
+# ---------------------------------------------------------------------------
+DIAS_CALENDARIO = 14
+
+
+@permission_required('gestion.change_proyecto')
+def calendario(request):
+    hoy = date.today()
+    # Primer día que se enseña (?desde=2026-11-10); si no llega o no es una fecha, hoy
+    try:
+        desde = datetime.strptime(request.GET.get('desde', ''), '%Y-%m-%d').date()
+    except ValueError:
+        desde = hoy
+    hasta = desde + timedelta(days=DIAS_CALENDARIO - 1)
+
+    # Qué se ve: todo, solo Outlook o solo las citas de los proyectos
+    ver = request.GET.get('ver', 'todo')
+    if ver not in ('todo', 'outlook', 'citas'):
+        ver = 'todo'
+
+    por_dia = {}
+    for numero in range(DIAS_CALENDARIO):
+        por_dia[desde + timedelta(days=numero)] = []
+
+    error = ''
+    if ver != 'citas':
+        try:
+            eventos = leer_eventos(descargar_ics())
+        except (OSError, ValueError):
+            # Sin internet, enlace caducado o calendario despublicado: se avisa y se siguen viendo las citas
+            eventos = []
+            error = 'Ahora mismo no se puede leer el calendario de Outlook. Se muestran solo las citas de los proyectos.'
+        for evento in eventos:
+            dias = list(dias_del_evento(evento))
+            for numero, dia in enumerate(dias):
+                if dia in por_dia:
+                    # Un evento de varios días sale en cada uno; a partir del segundo, como «todo el día»
+                    primer_dia = numero == 0
+                    con_hora = not evento['todo_el_dia'] and primer_dia
+                    por_dia[dia].append({
+                        'fuente': 'outlook',
+                        'titulo': evento['titulo'] or '(Sin título)',
+                        'lugar': evento['lugar'],
+                        'inicio': evento['inicio'] if con_hora else None,
+                        'fin': evento['fin'] if con_hora and evento['fin'].date() == dia else None,
+                        'varios_dias': f'Día {numero + 1} de {len(dias)}' if len(dias) > 1 else '',
+                        'orden': evento['inicio'].strftime('%H:%M') if con_hora else '',
+                    })
+
+    if ver != 'outlook':
+        for cita in Cita.objects.filter(fecha__range=(desde, hasta)).select_related('proyecto'):
+            por_dia[cita.fecha].append({
+                'fuente': 'cita',
+                'titulo': cita.motivo or 'Cita',
+                'proyecto': cita.proyecto,
+                'inicio': cita.hora,
+                'orden': cita.hora.strftime('%H:%M') if cita.hora else '',
+            })
+
+    # Días con algo (y hoy siempre); dentro de cada día, primero lo de todo el día y luego por hora
+    dias = []
+    for dia, elementos in por_dia.items():
+        if elementos or dia == hoy:
+            elementos.sort(key=lambda elemento: elemento['orden'])
+            dias.append({'fecha': dia, 'elementos': elementos, 'es_hoy': dia == hoy})
+
+    def url_desde(fecha):
+        parametros = {'desde': fecha.isoformat()}
+        if ver != 'todo':
+            parametros['ver'] = ver
+        return '?' + urlencode(parametros)
+
+    return render(request, 'gestion/calendario.html', {
+        'dias': dias,
+        'desde': desde,
+        'hasta': hasta,
+        'ver_actual': ver,
+        'error': error,
+        'url_anterior': url_desde(desde - timedelta(days=DIAS_CALENDARIO)),
+        'url_siguiente': url_desde(desde + timedelta(days=DIAS_CALENDARIO)),
+        'url_hoy': url_desde(hoy),
+        'es_desde_hoy': desde == hoy,
+        'url_outlook': url_outlook_web(),
+        'seccion': 'calendario',
+        'nav_tipos': datos_menu(),
+    })

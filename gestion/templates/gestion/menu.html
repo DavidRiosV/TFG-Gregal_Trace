@@ -35,6 +35,12 @@
                 <span>Materiales</span>
             </a>
         {% endif %}
+        {% if perms.gestion.change_proyecto %}
+            <a class="menu__enlace{% if seccion == 'calendario' %} menu__enlace--activo{% endif %}" href="{% url 'calendario' %}">
+                {% include "gestion/icono.html" with nombre="cita" %}
+                <span>Calendario</span>
+            </a>
+        {% endif %}
         {% if perms.gestion.change_albaran %}
             <a class="menu__enlace{% if seccion == 'albaranes' %} menu__enlace--activo{% endif %}" href="{% url 'lista_albaranes' %}">
                 {% include "gestion/icono.html" with nombre="albaran" %}

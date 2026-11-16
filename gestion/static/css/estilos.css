@@ -1656,3 +1656,77 @@ img { display: block; max-width: 100%; }
 .tabla--compacta td { padding: 12px 14px; }
 .tabla--compacta th:first-child,
 .tabla--compacta td:first-child { padding-left: 24px; }
+
+/* ==========================================================
+   Calendario (Oficina): agenda de Outlook + citas de los proyectos
+   ========================================================== */
+:root { --agenda-outlook: #0F6CBD; --agenda-outlook-suave: #E3EEF8; }
+
+.calendario-nav { display: flex; align-items: center; gap: 8px; }
+.calendario-nav__rango { min-width: 150px; font-weight: 700; text-align: center; }
+.calendario-nav__hoy { display: inline-flex; align-items: center; text-decoration: none; }
+
+.punto-agenda { width: 8px; height: 8px; border-radius: 50%; }
+.punto-agenda--outlook { background: var(--agenda-outlook); }
+.punto-agenda--cita { background: var(--verde-marca); }
+.segmento--activo .punto-agenda { box-shadow: 0 0 0 2px var(--sobre-color); }
+
+.agenda-dia { display: grid; grid-template-columns: 170px minmax(0, 1fr); border-top: 1px solid var(--linea); }
+.agenda-dia:first-of-type { border-top: 0; }
+.agenda-dia--hoy { background: #FAFCF8; }
+
+.agenda-dia__fecha {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 0;
+    padding: 16px 24px;
+    font-size: 15px;
+    font-weight: 700;
+}
+.agenda-dia__numero { font-size: 26px; font-weight: 800; line-height: 1; }
+.agenda-dia__texto { display: flex; flex-direction: column; line-height: 1.2; }
+.agenda-dia__texto span { color: var(--texto-suave); font-size: 13px; font-weight: 500; }
+.agenda-dia__hoy { padding: 2px 8px; border-radius: 999px; background: var(--verde-accion); color: var(--sobre-color); font-size: 11px; }
+.agenda-dia--hoy .agenda-dia__numero { color: var(--verde-accion); }
+
+.agenda { margin: 0; padding: 8px 24px 8px 0; list-style: none; }
+.agenda__elemento {
+    display: flex;
+    align-items: stretch;
+    gap: 14px;
+    margin: 6px 0;
+    border-radius: var(--radio-control);
+    border-left: 4px solid var(--agenda-outlook);
+    background: var(--agenda-outlook-suave);
+}
+.agenda__elemento--cita { border-left-color: var(--verde-marca); background: var(--verde-suave); }
+
+.agenda__hora {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: none;
+    width: 78px;
+    padding: 10px 0 10px 12px;
+    font-size: 14px;
+    font-weight: 700;
+}
+.agenda__hora span { color: var(--texto-suave); font-size: 12px; font-weight: 500; }
+.agenda__cuerpo { display: flex; flex-direction: column; justify-content: center; flex: 1; min-width: 0; padding: 10px 0; color: var(--texto); text-decoration: none; }
+a.agenda__cuerpo:hover .agenda__titulo { color: var(--verde-accion); text-decoration: underline; }
+.agenda__titulo { font-weight: 700; overflow-wrap: anywhere; }
+.agenda__meta { color: var(--texto-suave); font-size: 13px; }
+.agenda__fuente { align-self: center; flex: none; padding-right: 12px; color: var(--texto-suave); font-size: 12px; font-weight: 600; }
+.agenda__vacio { padding: 14px 0; color: var(--texto-suave); }
+
+@media (max-width: 760px) {
+    .agenda-dia { grid-template-columns: 1fr; }
+    .agenda-dia__fecha { padding: 14px 16px 4px; }
+    .agenda { padding: 0 16px 10px; }
+    .agenda__fuente { display: none; }
+    .calendario-nav { width: 100%; justify-content: space-between; }
+    .calendario-nav .boton-tabla { width: 44px; height: 44px; }
+}
+.agenda-dia__hoy { align-self: flex-start; margin-top: 6px; font-style: normal; }
+.agenda__dia-completo { font-size: 12px; font-style: normal; white-space: nowrap; }

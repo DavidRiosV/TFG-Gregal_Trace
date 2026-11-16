@@ -130,6 +130,10 @@ STATIC_ROOT = BASE_DIR / 'static'
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# Enlace .ics del calendario de Outlook publicado (apartado Calendario de Oficina).
+# Quien tenga el enlace ve el calendario, por eso va en el .env y no aquí.
+OUTLOOK_ICS_URL = env('OUTLOOK_ICS_URL', default='')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
