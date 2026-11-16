@@ -26,6 +26,9 @@
                 {% for error in formulario.nombre.errors %}<p class="error-campo">{{ error }}</p>{% endfor %}
             </div>
 
+            {% include "gestion/campo_widget.html" with campo=formulario.cliente %}
+            <datalist id="clientes">{% for cliente in clientes %}<option value="{{ cliente }}">{% endfor %}</datalist>
+
             {% include "gestion/campo_widget.html" with campo=formulario.tipo_destino %}
 
             <div class="campo">
@@ -49,7 +52,7 @@
                         <span class="fila__principal">
                             <span class="fila__titulo">{{ urgencia.nombre }}</span>
                             <span class="fila__meta">
-                                {{ urgencia.get_tipo_destino_display }}, abierta por
+                                {% if urgencia.cliente %}{{ urgencia.cliente }} · {% endif %}{{ urgencia.get_tipo_destino_display }}, abierta por
                                 {{ urgencia.creado_por.get_full_name|default:urgencia.creado_por.username|default:"un usuario eliminado" }}
                                 el {{ urgencia.fecha_inicio|date:"d/m/Y" }}
                             </span>

@@ -1245,3 +1245,414 @@ img { display: block; max-width: 100%; }
     .fila .estado { order: 4; }
     .fila .fila__flecha { order: 2; }
 }
+
+
+/* ==========================================================
+   Hito 3: apuntes, notas, albaranes, citas y catálogo
+   (los mismos estilos que en Gregal Trace)
+   ========================================================== */
+:root { --sobre-color: #FFFFFF; }
+
+/* Avisos de messages con botón de cerrar */
+.aviso--saliendo { opacity: 0; transform: translateY(-6px); }
+.aviso__cerrar {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    width: 30px;
+    height: 30px;
+    margin-top: -15px;
+    border: 0;
+    border-radius: var(--radio-control);
+    background: transparent;
+    color: var(--texto-suave);
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+}
+.aviso__cerrar:hover { background: var(--fondo); color: var(--texto); }
+
+/* Contador pequeño junto a un título (Notas 3, Albaranes 2...) */
+.contador {
+    min-width: 22px;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: var(--fondo);
+    color: var(--texto-suave);
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+}
+.contador--grande { flex: none; padding: 3px 10px; color: var(--texto); font-size: 13px; white-space: nowrap; }
+.pestana-proyecto--activa .contador { background: var(--verde-suave); color: var(--verde-accion); }
+
+/* ==========================================================
+   Materiales: clase (principal, accesorio, soporte) y orden
+   ========================================================== */
+:root {
+    --clase-pri: var(--verde-accion);
+    --clase-pri-suave: var(--verde-suave);
+    --clase-acc: #2F6FA3;
+    --clase-acc-suave: #E3EEF8;
+    --clase-sop: #8A6436;
+    --clase-sop-suave: #F3EADD;
+}
+
+.segmento { display: inline-flex; align-items: center; gap: 6px; }
+.segmento__numero { font-size: 12px; font-weight: 700; opacity: 0.65; }
+.segmento--activo .segmento__numero { opacity: 0.85; }
+
+/* Puntito de color que identifica cada clase (en los botones y en el formulario) */
+.punto-clase { width: 8px; height: 8px; flex: none; border-radius: 50%; }
+.punto-clase--PRI { background: var(--clase-pri); }
+.punto-clase--ACC { background: var(--clase-acc); }
+.punto-clase--SOP { background: var(--clase-sop); }
+.segmento--activo .punto-clase,
+.familia--opcion:has(input:checked) .punto-clase { box-shadow: 0 0 0 2px var(--sobre-color); }
+.familia--opcion .punto-clase { margin-right: 8px; }
+
+/* Etiqueta de la clase en la tabla */
+.clase {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+.clase--PRI { background: var(--clase-pri-suave); color: var(--clase-pri); }
+.clase--ACC { background: var(--clase-acc-suave); color: var(--clase-acc); }
+.clase--SOP { background: var(--clase-sop-suave); color: var(--clase-sop); }
+.tabla__nada { color: var(--texto-suave); }
+
+/* Cabeceras de la tabla que ordenan al pulsarlas */
+.ordenar {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: inherit;
+    text-decoration: none;
+}
+.ordenar:hover { color: var(--verde-accion); }
+.ordenar__flecha { opacity: 0; font-size: 12px; transition: opacity 0.15s; }
+.ordenar:hover .ordenar__flecha { opacity: 0.5; }
+.ordenar--activo { color: var(--verde-accion); font-weight: 700; }
+.ordenar--activo .ordenar__flecha,
+.ordenar--activo:hover .ordenar__flecha { opacity: 1; }
+
+.barra-herramientas__total--fila {
+    margin: 0;
+    padding: 10px 24px;
+    border-bottom: 1px solid var(--linea);
+    font-size: 13px;
+}
+
+.familias--formulario { margin: 0; }
+.campo__opcional { color: var(--texto-suave); font-weight: 500; }
+
+/* ==========================================================
+   Detalle del proyecto: pestañas Apuntes · Notas · Albaranes
+   ========================================================== */
+.pestanas-proyecto__barra {
+    display: flex;
+    gap: 4px;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--linea);
+    background: #FAFCF8;
+    overflow-x: auto;
+}
+
+.pestana-proyecto {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 54px;
+    padding: 0 14px;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -1px;
+    color: var(--texto-suave);
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.pestana-proyecto:hover { color: var(--texto); }
+.pestana-proyecto--activa,
+.pestana-proyecto--activa:hover { color: var(--verde-accion); border-bottom-color: var(--verde-accion); }
+
+.pestana-proyecto__numero {
+    min-width: 22px;
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: var(--fondo);
+    color: var(--texto-suave);
+    font-size: 12px;
+    text-align: center;
+}
+.pestana-proyecto--activa .pestana-proyecto__numero { background: var(--verde-suave); color: var(--verde-accion); }
+
+/* Sin JavaScript los tres bloques se ven seguidos, cada uno con su título.
+   Con pestañas el título sobra (ya está en la pestaña), pero se deja para lectores de pantalla. */
+.pestanas-proyecto--activas .pestanas-proyecto__titulo {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    border: 0;
+}
+.pestanas-proyecto__panel[hidden] { display: none; }
+.pestanas-proyecto:not(.pestanas-proyecto--activas) .pestanas-proyecto__panel + .pestanas-proyecto__panel { border-top: 1px solid var(--linea); }
+
+/* ---------- Notas ---------- */
+.nota-nueva {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--linea);
+    background: #FAFCF8;
+}
+.nota-nueva .entrada { align-items: stretch; }
+.nota-nueva__pie { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+.notas,
+.albaranes { margin: 0; padding: 0; list-style: none; }
+.notas li + li,
+.albaranes li + li { border-top: 1px solid var(--linea); }
+
+.nota {
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 16px 24px;
+}
+.nota .avatar--mini { flex: none; width: 32px; height: 32px; margin-right: 10px; font-size: 13px; }
+.nota__cuerpo { flex: 1; min-width: 0; }
+.nota__cabecera { display: flex; align-items: baseline; gap: 4px 10px; flex-wrap: wrap; font-size: 14px; }
+.nota__cabecera time { color: var(--texto-suave); font-size: 13px; }
+.nota__texto { margin-top: 4px; overflow-wrap: anywhere; line-height: 1.55; }
+
+/* ---------- Subir albarán ---------- */
+.subir-albaran {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--linea);
+    background: #FAFCF8;
+}
+
+.zona-pdf {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px;
+    border: 2px dashed #B9C9AC;
+    border-radius: var(--radio-panel);
+    background: var(--blanco);
+    cursor: pointer;
+    transition: border-color 0.15s, background-color 0.15s;
+}
+/* El campo de archivo real queda invisible encima de toda la zona: así se puede pulsar en cualquier sitio */
+.zona-pdf input[type=file] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+.zona-pdf:hover,
+.zona-pdf--encima { border-color: var(--verde-marca); background: var(--verde-suave); }
+.zona-pdf:focus-within { border-color: var(--verde-marca); box-shadow: var(--foco); }
+.zona-pdf--elegido { border-style: solid; border-color: var(--verde-marca); }
+.zona-pdf--error { border-color: var(--rojo); }
+
+.zona-pdf__icono {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: var(--verde-suave);
+    color: var(--verde-accion);
+}
+.zona-pdf__texto { display: flex; flex-direction: column; min-width: 0; }
+.zona-pdf__texto strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.zona-pdf__texto span { color: var(--texto-suave); font-size: 13px; }
+
+.subir-albaran__fila { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 12px; }
+.subir-albaran__fila .boton { min-height: 46px; }
+
+/* ---------- Lista de albaranes del proyecto ---------- */
+.albaran { display: flex; align-items: center; gap: 8px; padding-right: 20px; }
+.albaran__abrir {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: 1;
+    min-width: 0;
+    padding: 14px 8px 14px 24px;
+    color: var(--texto);
+    text-decoration: none;
+}
+.albaran__abrir:hover .albaran__titulo { color: var(--verde-accion); }
+.albaran:hover { background: #F7FAF4; }
+
+.albaran__icono {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 40px;
+    height: 48px;
+    border-radius: 6px;
+    background: var(--rojo-suave);
+    color: var(--rojo);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+}
+.albaran__datos { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.albaran__titulo { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* Al abrir una pestaña desde la dirección (#albaranes) no queda tapada por la barra de arriba */
+.pestanas-proyecto { scroll-margin-top: 16px; }
+.albaran__meta { color: var(--texto-suave); font-size: 13px; }
+.albaran__ver { display: inline-flex; align-items: center; gap: 6px; color: var(--verde-accion); font-size: 14px; font-weight: 700; }
+
+/* ---------- Apartado Albaranes (Oficina) ---------- */
+.fila__icono {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--verde-suave);
+    color: var(--verde-accion);
+}
+.contador-albaranes {
+    flex: none;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--fondo);
+    color: var(--texto);
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+
+
+@media (max-width: 760px) {
+    /* Los botones de clase y de apartado se deslizan en una fila */
+    .segmentos--desliza { max-width: 100%; overflow-x: auto; }
+    .segmentos--desliza .segmento { flex: none; }
+    .barra-herramientas__total--fila { padding: 10px 16px; }
+
+    .pestanas-proyecto__barra { padding: 0 4px; }
+    .pestana-proyecto { flex: 1; justify-content: center; padding: 0 8px; gap: 6px; }
+    .pestana-proyecto .icono { display: none; }
+
+    .nota-nueva, .subir-albaran { padding: 16px; }
+    .nota-nueva__pie .boton { width: 100%; }
+    .nota { padding: 14px 16px; }
+
+    .subir-albaran__fila { grid-template-columns: 1fr; }
+    .albaran { padding-right: 12px; }
+    .albaran__abrir { padding-left: 16px; gap: 12px; }
+    .albaran__ver span { display: none; }
+    .albaran__ver { min-width: 44px; min-height: 44px; justify-content: center; }
+    .albaran__titulo { white-space: normal; overflow-wrap: anywhere; }
+    .pestanas-proyecto { scroll-margin-top: 84px; }
+    .solo-escritorio { display: none; }
+
+    .fila .contador-albaranes { order: 3; font-size: 12px; }
+    .fila .fila__icono { display: none; }
+}
+
+/* Título de apartado con icono y contador (Notas, Albaranes y Apuntes de los operarios) */
+.panel__titulo--icono { display: flex; align-items: center; gap: 10px; }
+.panel__titulo--icono .icono { color: var(--verde-accion); }
+
+@media (max-width: 760px) {
+    .panel__titulo--icono { padding: 16px; }
+}
+
+/* Cliente en los listados de proyectos */
+.fila__cliente { color: var(--texto); font-weight: 600; }
+
+/* ==========================================================
+   Citas del proyecto
+   ========================================================== */
+.cita-nueva {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.7fr) minmax(0, 2fr) auto;
+    align-items: end;
+    gap: 12px;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--linea);
+    background: #FAFCF8;
+}
+.cita-nueva .boton { min-height: 46px; }
+
+.citas { margin: 0; padding: 0; list-style: none; }
+.citas li + li { border-top: 1px solid var(--linea); }
+
+.cita { display: flex; align-items: center; gap: 14px; padding: 12px 24px; }
+.cita__dia {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 48px;
+    height: 52px;
+    border-radius: 10px;
+    background: var(--verde-suave);
+    color: var(--verde-accion);
+    line-height: 1.1;
+}
+.cita__numero { font-size: 19px; font-weight: 800; }
+.cita__mes { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+.cita__datos { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.cita__titulo { font-weight: 700; }
+.cita__meta { color: var(--texto-suave); font-size: 13px; }
+.cita__meta strong { color: var(--texto); font-weight: 600; }
+
+.cita--cercana .cita__dia { background: var(--ambar-suave); color: #7A5600; }
+.cita--cercana .cita__meta strong { color: #7A5600; }
+.cita--pasada { opacity: 0.6; }
+.cita--pasada .cita__dia { background: var(--fondo); color: var(--texto-suave); }
+
+.citas-pasadas { border-top: 1px solid var(--linea); }
+.citas-pasadas summary {
+    padding: 12px 24px;
+    color: var(--texto-suave);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.citas-pasadas summary:hover { color: var(--texto); }
+.vacio--corto { padding: 20px 24px; }
+
+/* Icono de la cita en los listados */
+.entrega { display: inline-flex; align-items: center; gap: 5px; }
+.entrega .icono { width: 15px; height: 15px; }
+
+
+
+@media (max-width: 760px) {
+    .cita-nueva { grid-template-columns: 1fr 1fr; padding: 16px; }
+    .cita-nueva .campo:nth-of-type(3), .cita-nueva .boton { grid-column: 1 / -1; }
+    .cita { padding: 12px 16px; }
+    .citas-pasadas summary { padding: 12px 16px; min-height: 44px; }
+}
+.cita__meta strong { white-space: nowrap; }
+
+
+/* Ajustes: el botón de cerrar se coloca dentro de su aviso
+   y la tabla del catálogo (8 columnas) cabe sin desplazarse */
+.avisos .aviso { position: relative; padding-right: 48px; transition: opacity .3s, transform .3s; }
+.tabla--compacta th,
+.tabla--compacta td { padding: 12px 14px; }
+.tabla--compacta th:first-child,
+.tabla--compacta td:first-child { padding-left: 24px; }

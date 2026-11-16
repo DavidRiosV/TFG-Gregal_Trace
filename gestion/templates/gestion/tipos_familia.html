@@ -1,0 +1,10 @@
+{% comment %} Tipos de material de la familia elegida, como botones de filtro.
+   Recibe: tipos_familia, categoria_actual, tipo_actual y, opcionalmente, ancla. {% endcomment %}
+{% if tipos_familia %}
+<nav class="familias familias--tipos" aria-label="Tipos de material">
+    <a href="?categoria={{ categoria_actual }}{% if ancla %}#{{ ancla }}{% endif %}" class="familia familia--tipo{% if not tipo_actual %} familia--activa{% endif %}">Todos</a>
+    {% for tipo in tipos_familia %}
+        <a href="?categoria={{ categoria_actual }}&tipo={{ tipo.pk }}{% if ancla %}#{{ ancla }}{% endif %}" class="familia familia--tipo{% if tipo.pk|stringformat:'s' == tipo_actual %} familia--activa{% endif %}">{{ tipo.nombre }} <span class="familia__numero">{{ tipo.n }}</span></a>
+    {% endfor %}
+</nav>
+{% endif %}

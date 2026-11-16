@@ -34,13 +34,16 @@
                 <a class="fila" href="{% url 'detalle_proyecto' proyecto.pk %}">
                     <span class="fila__principal">
                         <span class="fila__titulo">{{ proyecto.nombre }}</span>
-                        <span class="fila__meta">Inicio {{ proyecto.fecha_inicio|date:"d/m/Y" }}{% if proyecto.fecha_fin %}, fin {{ proyecto.fecha_fin|date:"d/m/Y" }}{% endif %}</span>
+                        <span class="fila__meta">{% if proyecto.cliente %}<span class="fila__cliente">{{ proyecto.cliente }}</span> · {% endif %}Inicio {{ proyecto.fecha_inicio|date:"d/m/Y" }}{% if proyecto.fecha_fin %}, fin {{ proyecto.fecha_fin|date:"d/m/Y" }}{% endif %}</span>
                     </span>
-                    {% if proyecto.estado == 'PRO' and proyecto.fecha_entrega %}
-                        <span class="entrega{% if proyecto.plazo %} entrega--{{ proyecto.plazo }}{% endif %}" title="Fecha de entrega">
-                            {% if proyecto.plazo == 'vencido' %}Vencido{% else %}Entrega{% endif %} {{ proyecto.fecha_entrega|date:"d/m/Y" }}
-                        </span>
-                    {% endif %}
+                    {# Próxima cita junto al estado (en ámbar si es hoy o mañana). Los proyectos van ordenados por ella #}
+                    {% with cita=proyecto.siguiente_cita %}
+                        {% if cita and proyecto.estado == 'PRO' %}
+                            <span class="entrega{% if cita.es_cercana %} entrega--cerca{% endif %}" title="Próxima cita{% if cita.motivo %}: {{ cita.motivo }}{% endif %}">
+                                {% include "gestion/icono.html" with nombre="cita" %}{{ cita.fecha|date:"d/m/Y" }}{% if cita.hora %} · {{ cita.hora|time:"H:i" }}{% endif %} · {{ cita.dias }}
+                            </span>
+                        {% endif %}
+                    {% endwith %}
                     {% include "gestion/estado.html" %}
                     <span class="fila__flecha">{% include "gestion/icono.html" with nombre="siguiente" %}</span>
                 </a>

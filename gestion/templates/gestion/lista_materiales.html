@@ -1,0 +1,104 @@
+{% extends "gestion/principal.html" %}
+
+{% block titulo %}Materiales · Gregal Trace{% endblock %}
+
+{% block contenido %}
+{% url 'index' as url_inicio %}
+<header class="pagina">
+    {% include "gestion/migas.html" with miga_actual="Materiales" %}
+    <div class="pagina__fila">
+        <div>
+            <h1 class="pagina__titulo">Materiales</h1>
+            <p class="pagina__texto">Catálogo de materiales y horas que se apuntan en cada proyecto.</p>
+        </div>
+        <div class="pagina__acciones">
+            <a class="boton boton--secundario" href="{% url 'lista_categorias' %}">Familias</a>
+            <a class="boton boton--secundario" href="{% url 'lista_tipos' %}{% if categoria_actual %}?categoria={{ categoria_actual }}{% endif %}">Tipos</a>
+            {% if perms.gestion.add_material %}
+                <a class="boton" href="{% url 'material_crear' %}{% if categoria_actual %}?categoria={{ categoria_actual }}{% if tipo_actual %}&tipo={{ tipo_actual }}{% endif %}{% endif %}">{% include "gestion/icono.html" with nombre="mas" %}Nuevo material</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<section class="panel panel--lista">
+    <div class="barra-herramientas barra-herramientas--familias">
+        {% include "gestion/familias.html" with con_todas=True %}
+        {% include "gestion/tipos_familia.html" %}
+    </div>
+    <div class="barra-herramientas">
+        <form class="buscador" method="get" role="search">
+            {% if categoria_actual %}<input type="hidden" name="categoria" value="{{ categoria_actual }}">{% endif %}
+            {% if tipo_actual %}<input type="hidden" name="tipo" value="{{ tipo_actual }}">{% endif %}
+            {% if clase_actual %}<input type="hidden" name="clase" value="{{ clase_actual }}">{% endif %}
+            {% if orden_actual != 'familia' %}<input type="hidden" name="orden" value="{{ orden_actual }}">{% endif %}
+            {% include "gestion/icono.html" with nombre="buscar" %}
+            <input type="search" name="q" value="{{ busqueda }}" placeholder="Buscar por nombre o proveedor">
+            <button type="submit" class="buscador__boton">Buscar</button>
+        </form>
+        {# Clase: material principal, accesorios o soportes #}
+        <nav class="segmentos segmentos--desliza" aria-label="Filtrar por clase">
+            {% for boton in botones_clase %}
+                <a href="{{ boton.url }}" class="segmento{% if boton.activa %} segmento--activo{% endif %}">{% if boton.codigo %}<span class="punto-clase punto-clase--{{ boton.codigo }}" aria-hidden="true"></span>{% endif %}{{ boton.texto }} <span class="segmento__numero">{{ boton.n }}</span></a>
+            {% endfor %}
+        </nav>
+    </div>
+    <p class="barra-herramientas__total barra-herramientas__total--fila">
+        {{ materiales|length }} material{{ materiales|length|pluralize:"es" }}
+        {% if orden_actual == 'nombre' %}· por nombre{% elif orden_actual == 'precio' %}· del más barato al más caro{% elif orden_actual == '-precio' %}· del más caro al más barato{% else %}· por familia y tipo{% endif %}
+    </p>
+
+    {% if materiales %}
+        <div class="tabla-contenedor">
+            <table class="tabla tabla--compacta">
+                <thead>
+                    <tr>
+                        {# Pulsar una cabecera ordena por esa columna #}
+                        <th scope="col"><a class="ordenar{% if orden_actual == 'nombre' %} ordenar--activo{% endif %}" href="{{ url_orden_nombre }}">Nombre<span class="ordenar__flecha" aria-hidden="true">↑</span></a></th>
+                        <th scope="col"><a class="ordenar{% if orden_actual == 'familia' %} ordenar--activo{% endif %}" href="{{ url_orden_familia }}">Familia<span class="ordenar__flecha" aria-hidden="true">↑</span></a></th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Proveedor</th>
+                        <th scope="col">Clase</th>
+                        <th scope="col">Unidad</th>
+                        <th scope="col" class="num"><a class="ordenar{% if orden_actual == 'precio' or orden_actual == '-precio' %} ordenar--activo{% endif %}" href="{{ url_orden_precio }}" title="Pulsa otra vez para invertir el orden">Precio<span class="ordenar__flecha" aria-hidden="true">{% if orden_actual == '-precio' %}↓{% else %}↑{% endif %}</span></a></th>
+                        <th scope="col" class="num"><span class="solo-lector">Acciones</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for material in materiales %}
+                        <tr>
+                            <td class="tabla__material">{{ material.nombre }}</td>
+                            <td>{{ material.categoria.nombre }}</td>
+                            <td>{{ material.tipo.nombre|default:"—" }}</td>
+                            <td>{{ material.proveedor|default:"—" }}</td>
+                            <td>{% if material.clase %}<span class="clase clase--{{ material.clase }}">{{ material.get_clase_display }}</span>{% else %}<span class="tabla__nada">—</span>{% endif %}</td>
+                            <td>{{ material.get_unidad_display }}</td>
+                            <td class="num">{{ material.precio|floatformat:"2g" }} €/{{ material.abreviatura }}</td>
+                            <td class="tabla__acciones">
+                                <a class="boton-tabla" href="{% url 'material_editar' material.pk %}" aria-label="Editar {{ material.nombre }}" title="Editar">{% include "gestion/icono.html" with nombre="editar" %}</a>
+                                {% if perms.gestion.delete_material %}
+                                    <form method="post" action="{% url 'material_eliminar' material.pk %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="boton-tabla boton-tabla--peligro" aria-label="Eliminar {{ material.nombre }}" title="Eliminar" onclick="return confirm('¿Eliminar «{{ material.nombre|escapejs }}» del catálogo?');">{% include "gestion/icono.html" with nombre="borrar" %}</button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="vacio">
+            {% if busqueda %}
+                <p>No hay materiales que coincidan con «{{ busqueda }}».</p>
+                <a href="?{% if categoria_actual %}categoria={{ categoria_actual }}{% endif %}">Quitar la búsqueda</a>
+            {% else %}
+                <p>No hay materiales con estos filtros.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+</section>
+
+{% include "gestion/volver.html" with volver_url=url_inicio volver_texto="Volver al inicio" %}
+{% endblock %}

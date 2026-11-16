@@ -1,0 +1,40 @@
+{% extends "gestion/principal.html" %}
+
+{% block titulo %}Editar apunte · Gregal Trace{% endblock %}
+
+{% block contenido %}
+{% url 'detalle_proyecto' proyecto.pk as url_proyecto %}
+<header class="pagina">
+    {% include "gestion/migas.html" with miga_url=url_proyecto miga_texto=proyecto.nombre miga_actual="Editar apunte" %}
+    <h1 class="pagina__titulo">Editar apunte</h1>
+    <p class="pagina__texto">{{ proyecto.nombre }} · apuntado por {{ consumo.trabajador.get_full_name|default:consumo.trabajador.username }}</p>
+</header>
+
+<section class="panel panel--formulario">
+    {% if es_horas %}
+        <form method="post" action="{% url 'consumo_editar' consumo.pk %}" class="formulario" novalidate>
+            {% csrf_token %}
+            {% include "gestion/selector_horas.html" %}
+            <div class="formulario__botones">
+                <button type="submit" class="boton">Guardar cambios</button>
+                <a class="boton boton--secundario" href="{{ url_proyecto }}">Cancelar</a>
+            </div>
+        </form>
+    {% else %}
+        {% include "gestion/elegir_material.html" %}
+        <form method="post" action="{% url 'consumo_editar' consumo.pk %}" class="formulario" novalidate data-opciones-material>
+            {% csrf_token %}
+            {% include "gestion/filtros_ocultos.html" %}
+            {% include "gestion/opciones_material.html" %}
+            <div class="formulario__fila">
+                {% include "gestion/campo_cantidad.html" %}
+                {% include "gestion/campo_widget.html" with campo=formulario.fecha %}
+            </div>
+            <div class="formulario__botones">
+                <button type="submit" class="boton">Guardar cambios</button>
+                <a class="boton boton--secundario" href="{{ url_proyecto }}">Cancelar</a>
+            </div>
+        </form>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "gestion/principal.html" %}
+
+{% block titulo %}Tipos de material · Gregal Trace{% endblock %}
+
+{% block contenido %}
+{% url 'lista_materiales' as url_materiales %}
+<header class="pagina">
+    {% include "gestion/migas.html" with miga_url=url_materiales miga_texto="Materiales" miga_actual="Tipos" %}
+    <h1 class="pagina__titulo">Tipos de material</h1>
+    <p class="pagina__texto">Dentro de cada familia, los tipos (Tuberías, Válvulas...) ayudan a encontrar el material.</p>
+</header>
+
+<div class="dos-columnas">
+    <section class="panel">
+        <h2 class="panel__titulo">Nuevo tipo</h2>
+        <form method="post" class="formulario" novalidate>
+            {% csrf_token %}
+            {% include "gestion/campo.html" with campo=formulario.nombre %}
+            {% include "gestion/campo_widget.html" with campo=formulario.categoria %}
+            <button type="submit" class="boton">{% include "gestion/icono.html" with nombre="mas" %}Crear tipo</button>
+        </form>
+    </section>
+
+    <section class="panel panel--lista">
+        <div class="barra-herramientas barra-herramientas--familias">
+            {% include "gestion/familias.html" with con_todas=True %}
+        </div>
+        <div class="tabla-contenedor">
+            <table class="tabla">
+                <thead><tr><th scope="col">Tipo</th><th scope="col">Familia</th><th scope="col" class="num">Materiales</th><th scope="col" class="num"><span class="solo-lector">Acciones</span></th></tr></thead>
+                <tbody>
+                    {% for tipo in tipos %}
+                        <tr>
+                            <td class="tabla__material"><a href="{% url 'lista_materiales' %}?categoria={{ tipo.categoria_id }}&tipo={{ tipo.pk }}">{{ tipo.nombre }}</a></td>
+                            <td>{{ tipo.categoria.nombre }}</td>
+                            <td class="num">{{ tipo.num_materiales }}</td>
+                            <td class="tabla__acciones">
+                                <a class="boton-tabla" href="{% url 'tipo_editar' tipo.pk %}" aria-label="Editar" title="Editar">{% include "gestion/icono.html" with nombre="editar" %}</a>
+                                <form method="post" action="{% url 'tipo_eliminar' tipo.pk %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="boton-tabla boton-tabla--peligro" aria-label="Eliminar" title="Eliminar" onclick="return confirm('¿Eliminar el tipo «{{ tipo.nombre|escapejs }}»? Sus materiales se quedarán sin tipo.');">{% include "gestion/icono.html" with nombre="borrar" %}</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="4" class="vacio">No hay tipos en esta familia.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+{% include "gestion/volver.html" with volver_url=url_materiales volver_texto="Volver a Materiales" %}
+{% endblock %}

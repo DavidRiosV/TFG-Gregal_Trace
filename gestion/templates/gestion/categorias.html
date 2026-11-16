@@ -1,0 +1,51 @@
+{% extends "gestion/principal.html" %}
+
+{% block titulo %}Familias · Gregal Trace{% endblock %}
+
+{% block contenido %}
+{% url 'lista_materiales' as url_materiales %}
+<header class="pagina">
+    {% include "gestion/migas.html" with miga_url=url_materiales miga_texto="Materiales" miga_actual="Familias" %}
+    <h1 class="pagina__titulo">Familias</h1>
+    <p class="pagina__texto">Las familias agrupan el catálogo: el operario elige primero la familia y luego el material.</p>
+</header>
+
+<div class="dos-columnas">
+    <section class="panel">
+        <h2 class="panel__titulo">Nueva familia</h2>
+        <form method="post" class="formulario" novalidate>
+            {% csrf_token %}
+            {% include "gestion/campo.html" with campo=formulario.nombre %}
+            {% include "gestion/campo_widget.html" with campo=formulario.orden %}
+            <button type="submit" class="boton">{% include "gestion/icono.html" with nombre="mas" %}Crear familia</button>
+        </form>
+    </section>
+
+    <section class="panel panel--lista">
+        <div class="tabla-contenedor">
+            <table class="tabla">
+                <thead><tr><th scope="col">Familia</th><th scope="col">Código</th><th scope="col" class="num">Tipos</th><th scope="col" class="num">Materiales</th><th scope="col" class="num"><span class="solo-lector">Acciones</span></th></tr></thead>
+                <tbody>
+                    {% for categoria in categorias %}
+                        <tr>
+                            <td class="tabla__material"><a href="{% url 'lista_materiales' %}?categoria={{ categoria.codigo }}">{{ categoria.nombre }}</a></td>
+                            <td>{{ categoria.codigo }}</td>
+                            <td class="num">{{ categoria.num_tipos }}</td>
+                            <td class="num">{{ categoria.num_materiales }}</td>
+                            <td class="tabla__acciones">
+                                <a class="boton-tabla" href="{% url 'categoria_editar' categoria.codigo %}" aria-label="Editar" title="Editar">{% include "gestion/icono.html" with nombre="editar" %}</a>
+                                <form method="post" action="{% url 'categoria_eliminar' categoria.codigo %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="boton-tabla boton-tabla--peligro" aria-label="Eliminar" title="Eliminar" onclick="return confirm('¿Eliminar la familia «{{ categoria.nombre|escapejs }}»?');">{% include "gestion/icono.html" with nombre="borrar" %}</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+{% include "gestion/volver.html" with volver_url=url_materiales volver_texto="Volver a Materiales" %}
+{% endblock %}

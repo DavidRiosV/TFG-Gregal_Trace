@@ -28,6 +28,19 @@
             {% include "gestion/icono.html" with nombre="urgencias" %}
             <span>Urgencias</span>
         </a>
+        {# Apartados de Oficina #}
+        {% if perms.gestion.change_material %}
+            <a class="menu__enlace{% if seccion == 'materiales' %} menu__enlace--activo{% endif %}" href="{% url 'lista_materiales' %}">
+                {% include "gestion/icono.html" with nombre="materiales" %}
+                <span>Materiales</span>
+            </a>
+        {% endif %}
+        {% if perms.gestion.change_albaran %}
+            <a class="menu__enlace{% if seccion == 'albaranes' %} menu__enlace--activo{% endif %}" href="{% url 'lista_albaranes' %}">
+                {% include "gestion/icono.html" with nombre="albaran" %}
+                <span>Albaranes</span>
+            </a>
+        {% endif %}
     </nav>
 
     <div class="menu__usuario">

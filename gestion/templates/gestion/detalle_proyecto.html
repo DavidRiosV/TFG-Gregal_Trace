@@ -14,9 +14,10 @@
                 {% include "gestion/estado.html" %}
             </div>
             <dl class="datos">
+                {% if proyecto.cliente %}<div><dt>Cliente</dt><dd>{{ proyecto.cliente }}</dd></div>{% endif %}
                 <div><dt>Tipo</dt><dd>{{ proyecto.get_tipo_display }}{% if proyecto.tipo == 'URG' and proyecto.tipo_destino %}, pasará a {{ proyecto.get_tipo_destino_display|lower }}{% endif %}</dd></div>
                 <div><dt>Inicio</dt><dd>{{ proyecto.fecha_inicio|date:"d/m/Y" }}</dd></div>
-                {% if proyecto.fecha_entrega %}<div><dt>Entrega</dt><dd>{{ proyecto.fecha_entrega|date:"d/m/Y" }}</dd></div>{% endif %}
+                {% with cita=citas_proximas.0 %}{% if cita %}<div><dt>Próxima cita</dt><dd><a href="#citas">{{ cita.fecha|date:"d/m/Y" }}{% if cita.hora %} a las {{ cita.hora|time:"H:i" }}{% endif %}</a> <span class="entrega{% if cita.es_cercana %} entrega--cerca{% endif %}">({{ cita.dias }})</span></dd></div>{% endif %}{% endwith %}
                 {% if proyecto.fecha_fin %}<div><dt>Fin</dt><dd>{{ proyecto.fecha_fin|date:"d/m/Y" }}</dd></div>{% endif %}
                 {% if proyecto.creado_por %}<div><dt>Abierto por</dt><dd>{{ proyecto.creado_por.get_full_name|default:proyecto.creado_por.username }}</dd></div>{% endif %}
             </dl>
@@ -54,40 +55,125 @@
         <span class="cifra__nombre">Apuntes</span>
     </div>
     <div class="cifra">
-        <span class="cifra__valor">{{ horas|floatformat:"-2" }} h</span>
+        <span class="cifra__valor">{{ horas_texto }}</span>
         <span class="cifra__nombre">Horas</span>
     </div>
+    {% if es_oficina %}
+        <div class="cifra cifra--principal">
+            <span class="cifra__valor">{{ coste_total|floatformat:"2g" }} €</span>
+            <span class="cifra__nombre">Coste total</span>
+        </div>
+    {% endif %}
 </div>
 
-<section class="panel panel--lista">
-    <h2 class="panel__titulo panel__titulo--con-margen">Apuntes</h2>
-    {% if consumos %}
-        <div class="tabla-contenedor">
-            <table class="tabla">
-                <thead>
-                    <tr>
-                        <th scope="col">Fecha</th>
-                        <th scope="col">Material</th>
-                        <th scope="col" class="num">Cantidad</th>
-                        <th scope="col">Añadido por</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for consumo in consumos %}
-                        <tr>
-                            <td class="tabla__fecha">{{ consumo.fecha|date:"d/m/Y" }}</td>
-                            <td class="tabla__material">{{ consumo.material.nombre }}</td>
-                            <td class="num">{{ consumo.cantidad|floatformat:"-2" }} {{ consumo.material.get_unidad_display|lower }}</td>
-                            <td class="tabla__persona">{{ consumo.trabajador.get_full_name|default:consumo.trabajador.username }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    {% else %}
-        <div class="vacio"><p>Este proyecto todavía no tiene apuntes.</p></div>
+{# Citas: Oficina las añade y las quita; los operarios las ven si hay alguna #}
+{% if perms.gestion.add_cita or citas_proximas or citas_pasadas %}
+<section class="panel panel--lista" id="citas">
+    <h2 class="panel__titulo panel__titulo--con-margen panel__titulo--icono">{% include "gestion/icono.html" with nombre="cita" %}Citas <span class="contador">{{ citas_proximas|length }}</span></h2>
+    {% if perms.gestion.add_cita %}
+        <form method="post" class="cita-nueva" novalidate>
+            {% csrf_token %}
+            <input type="hidden" name="apunte" value="cita">
+            {% include "gestion/campo_widget.html" with campo=formulario_cita.fecha %}
+            {% include "gestion/campo_widget.html" with campo=formulario_cita.hora %}
+            {% include "gestion/campo_widget.html" with campo=formulario_cita.motivo %}
+            <button type="submit" class="boton">{% include "gestion/icono.html" with nombre="mas" %}Añadir cita</button>
+        </form>
+    {% endif %}
+    <ul class="citas">
+        {% for cita in citas_proximas %}
+            {% include "gestion/cita.html" %}
+        {% empty %}
+            <li class="vacio vacio--corto"><p>No hay citas pendientes.</p></li>
+        {% endfor %}
+    </ul>
+    {% if citas_pasadas %}
+        <details class="citas-pasadas">
+            <summary>Citas pasadas ({{ citas_pasadas|length }})</summary>
+            <ul class="citas">
+                {% for cita in citas_pasadas %}{% include "gestion/cita.html" %}{% endfor %}
+            </ul>
+        </details>
     {% endif %}
 </section>
+{% endif %}
+
+{% if proyecto.estado == 'TER' %}
+    <p class="aviso aviso--info">Este proyecto está terminado, así que ya no admite apuntes nuevos.</p>
+{% endif %}
+
+{% if puede_apuntar %}
+<section class="panel" id="horas">
+    <h2 class="panel__titulo">Horas de trabajo</h2>
+    <form method="post" class="formulario" novalidate>
+        {% csrf_token %}
+        <input type="hidden" name="apunte" value="horas">
+        {% include "gestion/selector_horas.html" with formulario=formulario_horas %}
+        <button type="submit" class="boton boton--ancho">Apuntar horas</button>
+    </form>
+</section>
+{% endif %}
+
+{# Operarios: Notas y Albaranes son apartados propios, justo después de las horas #}
+{% if not es_oficina %}
+    <section class="panel panel--lista" id="notas">
+        <h2 class="panel__titulo panel__titulo--con-margen panel__titulo--icono">{% include "gestion/icono.html" with nombre="nota" %}Notas <span class="contador">{{ notas|length }}</span></h2>
+        {% include "gestion/bloque_notas.html" %}
+    </section>
+    <section class="panel panel--lista" id="albaranes">
+        <h2 class="panel__titulo panel__titulo--con-margen panel__titulo--icono">{% include "gestion/icono.html" with nombre="albaran" %}Albaranes <span class="contador">{{ albaranes|length }}</span></h2>
+        {% include "gestion/bloque_albaranes.html" %}
+    </section>
+{% endif %}
+
+{# Material: solo Oficina #}
+{% if puede_apuntar_material %}
+<section class="panel" id="apuntar">
+    <h2 class="panel__titulo">Material</h2>
+    {% include "gestion/elegir_material.html" with ancla="apuntar" %}
+
+    <form method="post" class="formulario" novalidate data-opciones-material>
+        {% csrf_token %}
+        <input type="hidden" name="apunte" value="material">
+        {% include "gestion/filtros_ocultos.html" %}
+        {% include "gestion/opciones_material.html" %}
+
+        <div class="formulario--consumo">
+            {% include "gestion/campo_cantidad.html" %}
+            {% include "gestion/campo_widget.html" with campo=formulario.fecha %}
+        </div>
+        <button type="submit" class="boton boton--ancho">Apuntar material</button>
+    </form>
+</section>
+{% endif %}
+
+{% if es_oficina %}
+{# Oficina: abajo, en pestañas, Apuntes, Notas y Albaranes. Sin JavaScript se ven las tres seguidas #}
+<section class="panel panel--lista pestanas-proyecto" data-pestanas data-pestana-inicial="{{ pestana }}">
+    <div class="pestanas-proyecto__barra" role="tablist">
+        <a class="pestana-proyecto" href="#apuntes" role="tab" data-pestana="apuntes">{% include "gestion/icono.html" with nombre="materiales" %}<span>Apuntes</span> <span class="contador">{{ consumos|length }}</span></a>
+        <a class="pestana-proyecto" href="#notas" role="tab" data-pestana="notas">{% include "gestion/icono.html" with nombre="nota" %}<span>Notas</span> <span class="contador">{{ notas|length }}</span></a>
+        <a class="pestana-proyecto" href="#albaranes" role="tab" data-pestana="albaranes">{% include "gestion/icono.html" with nombre="albaran" %}<span>Albaranes</span> <span class="contador">{{ albaranes|length }}</span></a>
+    </div>
+    <div class="pestanas-proyecto__panel" id="apuntes" role="tabpanel">
+        <h2 class="panel__titulo panel__titulo--con-margen pestanas-proyecto__titulo">Apuntes</h2>
+        {% include "gestion/bloque_apuntes.html" %}
+    </div>
+    <div class="pestanas-proyecto__panel" id="notas" role="tabpanel">
+        <h2 class="panel__titulo panel__titulo--con-margen pestanas-proyecto__titulo">Notas</h2>
+        {% include "gestion/bloque_notas.html" %}
+    </div>
+    <div class="pestanas-proyecto__panel" id="albaranes" role="tabpanel">
+        <h2 class="panel__titulo panel__titulo--con-margen pestanas-proyecto__titulo">Albaranes</h2>
+        {% include "gestion/bloque_albaranes.html" %}
+    </div>
+</section>
+{% else %}
+<section class="panel panel--lista" id="apuntes">
+    <h2 class="panel__titulo panel__titulo--con-margen panel__titulo--icono">{% include "gestion/icono.html" with nombre="materiales" %}Apuntes <span class="contador">{{ consumos|length }}</span></h2>
+    {% include "gestion/bloque_apuntes.html" %}
+</section>
+{% endif %}
 
 {% include "gestion/volver.html" with volver_url=url_lista volver_texto="Volver al listado" %}
 {% endblock %}

@@ -1,0 +1,25 @@
+{% extends "gestion/principal.html" %}
+
+{% block titulo %}{{ titulo }} · Gregal Trace{% endblock %}
+
+{% block contenido %}
+{# Editar una familia o un tipo: el mismo formulario sirve para los dos #}
+<header class="pagina">
+    {% include "gestion/migas.html" with miga_url=url_lista miga_texto=texto_lista miga_actual=titulo %}
+    <h1 class="pagina__titulo">{{ titulo }}</h1>
+    {% if ayuda %}<p class="pagina__texto">{{ ayuda }}</p>{% endif %}
+</header>
+
+<section class="panel panel--formulario">
+    <form method="post" class="formulario" novalidate>
+        {% csrf_token %}
+        {% for campo in formulario %}
+            {% include "gestion/campo_widget.html" with campo=campo %}
+        {% endfor %}
+        <div class="formulario__botones">
+            <button type="submit" class="boton">Guardar cambios</button>
+            <a class="boton boton--secundario" href="{{ url_lista }}">Cancelar</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

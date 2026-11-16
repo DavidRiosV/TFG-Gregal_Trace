@@ -1,3 +1,6 @@
+import os
+import unicodedata
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
@@ -30,7 +33,7 @@ class Oficina(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.usuario.usernam
+        return self.usuario.username
 
  #Los proyectos que hay en la web ya sean obras intervencones mantenimientos o urgencias
 class Proyecto(models.Model):
@@ -48,12 +51,12 @@ class Proyecto(models.Model):
     ]
 
     nombre = models.CharField(max_length=150)
+    # Cliente del trabajo. Texto libre: al escribirlo se sugieren los clientes que ya existen
+    cliente = models.CharField(max_length=150, blank=True)
     tipo = models.CharField(max_length=3, choices=TIPOS, default='OBR')
     descripcion = models.TextField(blank=True)
     fecha_inicio = models.DateField(default=timezone.now)
     fecha_fin = models.DateField(blank=True, null=True)
-    # Fecha prevista de entrega (plazo). Distinta de fecha_fin, que es cuando se terminó de verdad.
-    fecha_entrega = models.DateField(blank=True, null=True)
     estado = models.CharField(max_length=3, choices=ESTADOS, default='PRO')
 
     # Cuando es una urgencia: en qué se convertirá cuando se termine
@@ -61,19 +64,46 @@ class Proyecto(models.Model):
     creado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
                                    null=True, blank=True, related_name='proyectos_creados')
 
-    def plazo(self):
-        # Cómo va de plazo un proyecto en proceso: 'vencido', 'cerca' (7 días o menos) o '' si va bien o no tiene
-        if self.estado == 'TER' or not self.fecha_entrega:
-            return ''
-        dias = (self.fecha_entrega - timezone.now().date()).days
-        if dias < 0:
-            return 'vencido'
-        if dias <= 7:
-            return 'cerca'
-        return ''
-
     def __str__(self):
         return f"{self.nombre} ({self.get_tipo_display()})"
+
+def dias_texto(fecha):
+    """Lo que falta (o lo que ha pasado) hasta una fecha: «hoy», «mañana», «en 4 días», «hace 3 días»."""
+    dias = (fecha - timezone.now().date()).days
+    if dias == 0:
+        return 'hoy'
+    if dias == 1:
+        return 'mañana'
+    if dias == -1:
+        return 'ayer'
+    if dias > 0:
+        return f'en {dias} días'
+    return f'hace {-dias} días'
+
+
+def horas_texto(horas):
+    """Horas en decimal (2.5) a texto (2 h 30 min)."""
+    minutos = int(round(horas * 60))
+    h, m = divmod(minutos, 60)
+    if h and m:
+        return f'{h} h {m} min'
+    if m:
+        return f'{m} min'
+    return f'{h} h'
+
+
+def sin_tildes(texto):
+    """«Válvula» -> «valvula». Para que el buscador encuentre igual con o sin tildes ni mayúsculas."""
+    return ''.join(c for c in unicodedata.normalize('NFD', texto) if unicodedata.category(c) != 'Mn').lower()
+
+
+def buscar_materiales(materiales, texto):
+    """Materiales cuyo nombre o proveedor contiene todas las palabras buscadas, sin importar tildes
+    («valvula 1/2» encuentra «Válvula de esfera 1/2"»)."""
+    palabras = sin_tildes(texto).split()
+    encontrados = [m.pk for m in materiales if all(p in sin_tildes(f'{m.nombre} {m.proveedor}') for p in palabras)]
+    return materiales.filter(pk__in=encontrados)
+
 
 #Familias del catálogo (Fontanería, Climatización...): primero se elige la familia y luego el material
 class Categoria(models.Model):
@@ -121,6 +151,20 @@ class Material(models.Model):
     tipo = models.ForeignKey('Tipo', on_delete=models.SET_NULL, null=True, blank=True, related_name='materiales')
     unidad = models.CharField(max_length=2, choices=UNIDADES, default='UD')
     precio = models.DecimalField(max_digits=10, decimal_places=2)
+    # Proveedor habitual (texto libre con sugerencias de los que ya existen)
+    proveedor = models.CharField(max_length=100, blank=True)
+    # Clase: separa el material principal de los accesorios y los soportes (para las estadísticas).
+    # Vacía en mano de obra y servicios.
+    CLASES = [
+        ('PRI', 'Material principal'),
+        ('ACC', 'Accesorio'),
+        ('SOP', 'Soporte'),
+    ]
+    clase = models.CharField(max_length=3, choices=CLASES, blank=True, default='PRI')
+
+    def abreviatura(self):
+        # Unidad corta para mostrar junto a la cantidad: 2 h, 3 ud, 40 m
+        return {'UD': 'ud', 'M': 'm', 'M2': 'm²', 'KG': 'kg', 'L': 'l', 'H': 'h'}.get(self.unidad, '')
 
     def __str__(self):
         return f"{self.nombre} ({self.get_unidad_display()})"
@@ -134,16 +178,90 @@ class Consumo(models.Model):
     precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
     fecha = models.DateField(default=timezone.now)
 
+    def total(self):
+        return self.cantidad * self.precio_unitario
+
+    def cantidad_texto(self):
+        # Las horas como «2 h 30 min»; el resto como «3 ud» o «12,5 m»
+        if self.material.unidad == 'H':
+            return horas_texto(self.cantidad)
+        return f'{self.cantidad.normalize():f}'.replace('.', ',') + ' ' + self.material.abreviatura()
+
     def __str__(self):
         return f"{self.cantidad} {self.material.nombre} - {self.proyecto.nombre}"
 
-#Clase para la implementacion de los albaranes en el hito 3
+# Citas de un proyecto (visita, entrega, revisión...). Un proyecto puede tener varias
+# y los listados se ordenan por la próxima.
+class Cita(models.Model):
+    proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE, related_name='citas')
+    fecha = models.DateField()
+    # La hora es opcional: hay citas de todo el día
+    hora = models.TimeField(blank=True, null=True)
+    motivo = models.CharField(max_length=120, blank=True)
+    creada_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='citas')
+
+    class Meta:
+        ordering = ['fecha', 'hora', 'id']
+
+    def dias(self):
+        return dias_texto(self.fecha)
+
+    def es_pasada(self):
+        return self.fecha < timezone.now().date()
+
+    def es_cercana(self):
+        # Hoy o mañana: se marca en ámbar para que no se pase
+        return 0 <= (self.fecha - timezone.now().date()).days <= 1
+
+    def __str__(self):
+        return f"Cita de {self.proyecto.nombre} el {self.fecha:%d/%m/%Y}"
+
+
+# Notas de texto de un proyecto. Las escribe cualquier usuario
+class Nota(models.Model):
+    proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE, related_name='notas')
+    # SET_NULL: si se borra el usuario, sus notas se quedan en el proyecto
+    autor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='notas')
+    texto = models.TextField(max_length=2000)
+    fecha = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-fecha', '-id']
+
+    def __str__(self):
+        return f"Nota de {self.proyecto.nombre}"
+
+
+def ruta_albaran(albaran, nombre):
+    # Cada albarán se guarda en la carpeta de su proyecto: media/albaranes/proyecto_12/factura.pdf
+    return f'albaranes/proyecto_{albaran.proyecto_id}/{nombre}'
+
+
+# Albaranes en PDF de un proyecto. Los sube cualquiera; los borra Oficina
 class Albaran(models.Model):
-    """Preparado para el apartado de albaranes del Hito 3."""
     proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE, related_name='albaranes')
-    archivo = models.FileField(upload_to='albaranes/%Y/%m/')
+    archivo = models.FileField(upload_to=ruta_albaran)
+    # Proveedor o número de albarán, para reconocerlo sin abrirlo
+    descripcion = models.CharField(max_length=120, blank=True)
     subido_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='albaranes')
     fecha = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-fecha', '-id']
+
+    def nombre_archivo(self):
+        # «albaranes/proyecto_12/factura.pdf» -> «factura.pdf»
+        return os.path.basename(self.archivo.name)
+
+    def tamano_texto(self):
+        # Tamaño del PDF para mostrarlo: «240 KB», «1,3 MB». Vacío si el archivo ya no está
+        try:
+            tamano = self.archivo.size
+        except (OSError, ValueError):
+            return ''
+        if tamano < 1024 * 1024:
+            return f'{max(1, round(tamano / 1024))} KB'
+        return f'{tamano / (1024 * 1024):.1f} MB'.replace('.', ',')
 
     def __str__(self):
         return f"Albarán de {self.proyecto.nombre}"

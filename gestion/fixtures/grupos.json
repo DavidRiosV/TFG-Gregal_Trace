@@ -15,6 +15,11 @@
                 "albaran"
             ],
             [
+                "view_cita",
+                "gestion",
+                "cita"
+            ],
+            [
                 "add_consumo",
                 "gestion",
                 "consumo"
@@ -38,6 +43,21 @@
                 "view_material",
                 "gestion",
                 "material"
+            ],
+            [
+                "add_nota",
+                "gestion",
+                "nota"
+            ],
+            [
+                "delete_nota",
+                "gestion",
+                "nota"
+            ],
+            [
+                "view_nota",
+                "gestion",
+                "nota"
             ],
             [
                 "add_proyecto",
@@ -76,6 +96,46 @@
                 "view_albaran",
                 "gestion",
                 "albaran"
+            ],
+            [
+                "add_categoria",
+                "gestion",
+                "categoria"
+            ],
+            [
+                "change_categoria",
+                "gestion",
+                "categoria"
+            ],
+            [
+                "delete_categoria",
+                "gestion",
+                "categoria"
+            ],
+            [
+                "view_categoria",
+                "gestion",
+                "categoria"
+            ],
+            [
+                "add_cita",
+                "gestion",
+                "cita"
+            ],
+            [
+                "change_cita",
+                "gestion",
+                "cita"
+            ],
+            [
+                "delete_cita",
+                "gestion",
+                "cita"
+            ],
+            [
+                "view_cita",
+                "gestion",
+                "cita"
             ],
             [
                 "add_consumo",
@@ -118,6 +178,26 @@
                 "material"
             ],
             [
+                "add_nota",
+                "gestion",
+                "nota"
+            ],
+            [
+                "change_nota",
+                "gestion",
+                "nota"
+            ],
+            [
+                "delete_nota",
+                "gestion",
+                "nota"
+            ],
+            [
+                "view_nota",
+                "gestion",
+                "nota"
+            ],
+            [
                 "add_proyecto",
                 "gestion",
                 "proyecto"
@@ -136,6 +216,26 @@
                 "view_proyecto",
                 "gestion",
                 "proyecto"
+            ],
+            [
+                "add_tipo",
+                "gestion",
+                "tipo"
+            ],
+            [
+                "change_tipo",
+                "gestion",
+                "tipo"
+            ],
+            [
+                "delete_tipo",
+                "gestion",
+                "tipo"
+            ],
+            [
+                "view_tipo",
+                "gestion",
+                "tipo"
             ]
         ]
     }
