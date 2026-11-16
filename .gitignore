@@ -10,3 +10,5 @@ db_antes_prueba.sqlite3
 .env
 gestion/fixtures/catalogo.json
 generar_prueba.py
+# PDF de los albaranes subidos por los usuarios
+media/

@@ -29,7 +29,11 @@ SECRET_KEY = env("SECRET_KEY")
 # DEBUG=True en tu ordenador y DEBUG=False en producción
 DEBUG = env.bool("DEBUG", default=False)
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'davidrv.pythonanywhere.com']
+# Direcciones desde las que se puede abrir la web. Cada sitio pone las suyas en su .env
+# (ALLOWED_HOSTS=127.0.0.1,localhost). Si no las pone, valen estas.
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost', 'davidrv.pythonanywhere.com'])
+# Webs de confianza para los formularios (token CSRF) cuando se entra a través de Nginx o con HTTPS
+CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', default=[])
 
 
 # Application definition
@@ -78,11 +82,10 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# Base de datos: SQLite por defecto (tu ordenador y PythonAnywhere) y PostgreSQL en Docker,
+# que la indica en su .env con DATABASE_URL=postgres://usuario:contraseña@db:5432/gregal
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': env.db('DATABASE_URL', default=f'sqlite:///{BASE_DIR / "db.sqlite3"}')
 }
 
 
@@ -122,6 +125,10 @@ USE_TZ = False
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'static'
+
+# Archivos que suben los usuarios (PDF de los albaranes)
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
