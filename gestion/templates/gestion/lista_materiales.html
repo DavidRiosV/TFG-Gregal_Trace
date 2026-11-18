@@ -9,7 +9,6 @@
     <div class="pagina__fila">
         <div>
             <h1 class="pagina__titulo">Materiales</h1>
-            <p class="pagina__texto">Catálogo de materiales y horas que se apuntan en cada proyecto.</p>
         </div>
         <div class="pagina__acciones">
             <a class="boton boton--secundario" href="{% url 'lista_categorias' %}">Familias</a>
@@ -56,11 +55,9 @@
                     <tr>
                         {# Pulsar una cabecera ordena por esa columna #}
                         <th scope="col"><a class="ordenar{% if orden_actual == 'nombre' %} ordenar--activo{% endif %}" href="{{ url_orden_nombre }}">Nombre<span class="ordenar__flecha" aria-hidden="true">↑</span></a></th>
-                        <th scope="col"><a class="ordenar{% if orden_actual == 'familia' %} ordenar--activo{% endif %}" href="{{ url_orden_familia }}">Familia<span class="ordenar__flecha" aria-hidden="true">↑</span></a></th>
-                        <th scope="col">Tipo</th>
+                        <th scope="col"><a class="ordenar{% if orden_actual == 'familia' %} ordenar--activo{% endif %}" href="{{ url_orden_familia }}">Tipo y familia<span class="ordenar__flecha" aria-hidden="true">↑</span></a></th>
                         <th scope="col">Proveedor</th>
                         <th scope="col">Clase</th>
-                        <th scope="col">Unidad</th>
                         <th scope="col" class="num"><a class="ordenar{% if orden_actual == 'precio' or orden_actual == '-precio' %} ordenar--activo{% endif %}" href="{{ url_orden_precio }}" title="Pulsa otra vez para invertir el orden">Precio<span class="ordenar__flecha" aria-hidden="true">{% if orden_actual == '-precio' %}↓{% else %}↑{% endif %}</span></a></th>
                         <th scope="col" class="num"><span class="solo-lector">Acciones</span></th>
                     </tr>
@@ -69,11 +66,10 @@
                     {% for material in materiales %}
                         <tr>
                             <td class="tabla__material">{{ material.nombre }}</td>
-                            <td>{{ material.categoria.nombre }}</td>
-                            <td>{{ material.tipo.nombre|default:"—" }}</td>
+                            {# Tipo arriba y familia debajo, más suave: una columna menos #}
+                            <td class="tabla__doble"><span>{{ material.tipo.nombre|default:"Sin tipo" }}</span><span class="tabla__detalle">{{ material.categoria.nombre }}</span></td>
                             <td>{% if material.proveedor %}{{ material.proveedor }}{% else %}<span class="tabla__nada">—</span>{% endif %}</td>
                             <td>{% if material.clase %}<span class="clase clase--{{ material.clase }}">{{ material.get_clase_display }}</span>{% else %}<span class="tabla__nada">—</span>{% endif %}</td>
-                            <td>{{ material.get_unidad_display }}</td>
                             <td class="num">{{ material.precio|floatformat:"2g" }} €/{{ material.abreviatura }}</td>
                             <td class="tabla__acciones">
                                 <a class="boton-tabla" href="{% url 'material_editar' material.pk %}" aria-label="Editar {{ material.nombre }}" title="Editar">{% include "gestion/icono.html" with nombre="editar" %}</a>
