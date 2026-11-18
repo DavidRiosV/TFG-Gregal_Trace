@@ -71,7 +71,7 @@
                             <td class="tabla__material">{{ material.nombre }}</td>
                             <td>{{ material.categoria.nombre }}</td>
                             <td>{{ material.tipo.nombre|default:"—" }}</td>
-                            <td>{{ material.proveedor|default:"—" }}</td>
+                            <td>{% if material.proveedor %}{{ material.proveedor }}{% else %}<span class="tabla__nada">—</span>{% endif %}</td>
                             <td>{% if material.clase %}<span class="clase clase--{{ material.clase }}">{{ material.get_clase_display }}</span>{% else %}<span class="tabla__nada">—</span>{% endif %}</td>
                             <td>{{ material.get_unidad_display }}</td>
                             <td class="num">{{ material.precio|floatformat:"2g" }} €/{{ material.abreviatura }}</td>

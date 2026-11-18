@@ -1,4 +1,5 @@
-// Mostrar u ocultar la contraseña con el botón del ojo
+// Mostrar u ocultar la contraseña con el botón del ojo.
+// Cuando la contraseña se ve, el icono pasa a ojo tachado: pulsarlo la vuelve a ocultar.
 document.querySelectorAll("[data-mostrar-contrasena]").forEach(function (boton) {
     boton.addEventListener("click", function () {
         var campo = document.getElementById(boton.dataset.mostrarContrasena);
@@ -6,12 +7,10 @@ document.querySelectorAll("[data-mostrar-contrasena]").forEach(function (boton) 
         campo.type = mostrar ? "text" : "password";
         boton.classList.toggle("entrada__ojo--visible", mostrar);
         boton.setAttribute("aria-pressed", mostrar ? "true" : "false");
+        boton.setAttribute("aria-label", mostrar ? "Ocultar contraseña" : "Mostrar contraseña");
     });
 });
 
-function eliminar() {
-    return confirm("¿Seguro que quieres eliminar este proyecto? Se borrarán también todos sus apuntes.");
-}
 // Avisos («Apuntado…», «Proyecto creado»...): se cierran solos a los 4 segundos.
 // Si el ratón está encima, esperan; la X los cierra al momento.
 document.querySelectorAll(".avisos .aviso").forEach(function (aviso) {
@@ -185,9 +184,20 @@ document.querySelectorAll("[data-pestanas]").forEach(function (bloque) {
     if (nombres.indexOf(desdeDireccion) !== -1) {
         abrir(desdeDireccion, true);
     } else {
+        // Solo se baja hasta las pestañas si se vuelve de enviar un formulario con errores
         abrir(nombres.indexOf(bloque.dataset.pestanaInicial) !== -1 ? bloque.dataset.pestanaInicial : nombres[0],
-              bloque.dataset.pestanaInicial && bloque.dataset.pestanaInicial !== "apuntes");
+              bloque.dataset.mover === "1");
     }
+
+    // Enlaces de la cabecera que llevan a una pestaña (p. ej. «Próxima cita»)
+    document.querySelectorAll("[data-ir-pestana]").forEach(function (enlace) {
+        enlace.addEventListener("click", function (evento) {
+            if (nombres.indexOf(enlace.dataset.irPestana) === -1) { return; }
+            evento.preventDefault();
+            abrir(enlace.dataset.irPestana, true);
+            history.replaceState(null, "", "#" + enlace.dataset.irPestana);
+        });
+    });
 });
 
 // Subir albarán: muestra el nombre del PDF elegido y deja soltarlo arrastrándolo encima
@@ -293,7 +303,149 @@ document.querySelectorAll("[data-lineas-horas]").forEach(function (zona) {
     });
 });
 
-// Apartado Citas: escribir en el filtro deja en el desplegable solo los trabajos que coinciden
+// Botón de modo claro / oscuro (menú lateral y barra del móvil). La elección se guarda en este
+// navegador; mientras no se toque, se sigue el modo del sistema (script en principal.html).
+(function () {
+    var raiz = document.documentElement;
+    var botones = document.querySelectorAll("[data-cambiar-tema]");
+    var barra = document.querySelector('meta[name="theme-color"]');
+
+    function poner(tema) {
+        raiz.dataset.tema = tema;
+        var oscuro = tema === "oscuro";
+        botones.forEach(function (boton) {
+            boton.setAttribute("aria-label", oscuro ? "Activar modo claro" : "Activar modo oscuro");
+            boton.title = oscuro ? "Modo claro" : "Modo oscuro";
+            boton.setAttribute("aria-pressed", oscuro ? "true" : "false");
+            var texto = boton.querySelector("[data-texto-tema]");
+            if (texto) { texto.textContent = oscuro ? "Modo claro" : "Modo oscuro"; }
+        });
+        if (barra) { barra.content = oscuro ? "#0F1C0A" : "#1E3B14"; }
+    }
+
+    botones.forEach(function (boton) {
+        boton.addEventListener("click", function () {
+            var nuevo = raiz.dataset.tema === "oscuro" ? "claro" : "oscuro";
+            try { localStorage.setItem("tema", nuevo); } catch (e) {}
+            poner(nuevo);
+        });
+    });
+
+    // Si nunca se ha pulsado el botón, sigue los cambios del sistema
+    var sistema = window.matchMedia("(prefers-color-scheme: dark)");
+    sistema.addEventListener("change", function (evento) {
+        var guardado = null;
+        try { guardado = localStorage.getItem("tema"); } catch (e) {}
+        if (!guardado) { poner(evento.matches ? "oscuro" : "claro"); }
+    });
+
+    poner(raiz.dataset.tema === "oscuro" ? "oscuro" : "claro");
+})();
+
+// ---------- Buscador global: Ctrl+K (o Cmd+K) y el botón «Buscar» ----------
+(function () {
+    var cuadro = document.querySelector("[data-buscador]");
+    if (!cuadro || typeof cuadro.showModal !== "function") { return; }
+    var entrada = cuadro.querySelector("[data-buscador-texto]");
+    var lista = cuadro.querySelector("[data-buscador-resultados]");
+    var espera = null;
+    var elegido = -1;
+
+    function abrir() {
+        cuadro.showModal();
+        entrada.select();
+    }
+    function enlaces() { return lista.querySelectorAll("a"); }
+    function marcar(indice) {
+        var todos = enlaces();
+        if (!todos.length) { return; }
+        elegido = (indice + todos.length) % todos.length;
+        todos.forEach(function (enlace, i) { enlace.classList.toggle("buscador-global__resultado--elegido", i === elegido); });
+        todos[elegido].scrollIntoView({ block: "nearest" });
+    }
+    function mensaje(texto) {
+        lista.innerHTML = "";
+        var p = document.createElement("p");
+        p.className = "buscador-global__vacio";
+        p.textContent = texto;
+        lista.appendChild(p);
+    }
+    function pintar(resultados) {
+        if (!resultados.length) { mensaje("No hay nada que coincida."); return; }
+        lista.innerHTML = "";
+        var grupoActual = "";
+        resultados.forEach(function (r) {
+            if (r.grupo !== grupoActual) {
+                grupoActual = r.grupo;
+                var titulo = document.createElement("p");
+                titulo.className = "buscador-global__grupo";
+                titulo.textContent = r.grupo;
+                lista.appendChild(titulo);
+            }
+            var enlace = document.createElement("a");
+            enlace.className = "buscador-global__resultado";
+            enlace.href = r.url;
+            var nombre = document.createElement("strong");
+            nombre.textContent = r.titulo;
+            var detalle = document.createElement("span");
+            detalle.textContent = r.detalle;
+            enlace.appendChild(nombre);
+            enlace.appendChild(detalle);
+            lista.appendChild(enlace);
+        });
+        marcar(0);
+    }
+    function buscar() {
+        var texto = entrada.value.trim();
+        elegido = -1;
+        if (texto.length < 2) { mensaje("Escribe al menos dos letras."); return; }
+        fetch(cuadro.dataset.url + "?q=" + encodeURIComponent(texto), { headers: { "Accept": "application/json" } })
+            .then(function (respuesta) { return respuesta.json(); })
+            .then(function (datos) { if (entrada.value.trim() === texto) { pintar(datos.resultados); } })
+            .catch(function () { mensaje("No se ha podido buscar. Revisa la conexión."); });
+    }
+
+    entrada.addEventListener("input", function () {
+        clearTimeout(espera);
+        espera = setTimeout(buscar, 200);
+    });
+    entrada.addEventListener("keydown", function (evento) {
+        if (evento.key === "ArrowDown") { evento.preventDefault(); marcar(elegido + 1); }
+        if (evento.key === "ArrowUp") { evento.preventDefault(); marcar(elegido - 1); }
+        if (evento.key === "Enter") {
+            var todos = enlaces();
+            if (todos[elegido]) { evento.preventDefault(); location.href = todos[elegido].href; }
+        }
+    });
+    // Pulsar fuera del cuadro lo cierra
+    cuadro.addEventListener("click", function (evento) { if (evento.target === cuadro) { cuadro.close(); } });
+    document.querySelectorAll("[data-abrir-buscador]").forEach(function (boton) { boton.addEventListener("click", abrir); });
+    document.addEventListener("keydown", function (evento) {
+        if ((evento.ctrlKey || evento.metaKey) && evento.key.toLowerCase() === "k") {
+            evento.preventDefault();
+            if (cuadro.open) { cuadro.close(); } else { abrir(); }
+        }
+    });
+})();
+
+// ---------- Menús desplegables («Más acciones» y el del usuario): se cierran al pulsar fuera ----------
+document.addEventListener("click", function (evento) {
+    document.querySelectorAll("details.mas-acciones[open], details.usuario-menu[open], details.pestana-grupo[open]").forEach(function (menu) {
+        if (!menu.contains(evento.target)) { menu.open = false; }
+    });
+});
+
+// Barra inferior del móvil (Oficina): al abrir un grupo se cierran los demás
+document.querySelectorAll("details.pestana-grupo").forEach(function (grupo) {
+    grupo.addEventListener("toggle", function () {
+        if (!grupo.open) { return; }
+        document.querySelectorAll("details.pestana-grupo[open]").forEach(function (otro) {
+            if (otro !== grupo) { otro.open = false; }
+        });
+    });
+});
+
+// ---------- Filtrar un desplegable escribiendo (p. ej. el trabajo de una cita) ----------
 document.querySelectorAll("[data-filtrar-select]").forEach(function (entrada) {
     var lista = document.getElementById(entrada.dataset.filtrarSelect);
     if (!lista) { return; }

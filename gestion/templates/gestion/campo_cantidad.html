@@ -1,5 +1,7 @@
-{# Cantidad de material. La unidad (m, ud, kg...) se escribe al lado al elegir el material (main.js) #}
-<div class="campo">
+{% comment %}
+Cantidad de material. La unidad (m, ud, kg...) se escribe al lado al elegir el material (main.js).
+{% endcomment %}
+<div class="campo campo--cantidad">
     <label for="{{ formulario.cantidad.id_for_label }}">{{ formulario.cantidad.label }}</label>
     <div class="entrada entrada--unidad{% if formulario.cantidad.errors %} entrada--error{% endif %}">
         {{ formulario.cantidad }}

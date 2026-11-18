@@ -1,62 +1,176 @@
 {% extends "gestion/principal.html" %}
-{% load static %}
 
 {% block titulo %}Inicio · Gregal Trace{% endblock %}
 
 {% block contenido %}
 <header class="pagina">
-    <h1 class="pagina__titulo">Gregal Trace</h1>
-    <p class="pagina__texto">Elige un apartado para consultar sus proyectos.</p>
-    {% if request.session.ultimo_proyecto %}
-        <p class="pagina__texto">
-            Seguir con
-            <a href="{% url 'detalle_proyecto' request.session.ultimo_proyecto %}">{{ request.session.ultimo_nombre }}</a>
-        </p>
-    {% endif %}
+    <div class="pagina__fila">
+        <div>
+            <p class="pagina__antetitulo">{{ hoy|date:"l, j \d\e F"|capfirst }}</p>
+            <h1 class="pagina__titulo">Hola, {{ user.first_name|default:user.username }}</h1>
+        </div>
+        {# Último proyecto abierto, guardado en la sesión desde detalle_proyecto #}
+        {% if request.session.ultimo_proyecto %}
+            <div class="pagina__acciones">
+                <a class="boton boton--secundario" href="{% url 'detalle_proyecto' request.session.ultimo_proyecto %}">Seguir con {{ request.session.ultimo_nombre|truncatechars:34 }}{% include "gestion/icono.html" with nombre="siguiente" %}</a>
+            </div>
+        {% endif %}
+    </div>
 </header>
 
-<div class="tipos">
-    {% for slug, tipo in nav_tipos.items %}
-        <a class="tipo" href="{% url 'lista_proyectos' slug %}">
-            <img class="tipo__foto" src="{% static tipo.imagen %}" alt="">
-            <span class="tipo__cuerpo">
-                <span class="tipo__icono">{% include "gestion/icono.html" with nombre=slug %}</span>
-                <span class="tipo__titulo">{{ tipo.titulo }}</span>
-                <span class="tipo__datos">
-                    <span><strong>{{ tipo.en_proceso }}</strong> en proceso</span>
-                    <span><strong>{{ tipo.terminados }}</strong> terminados</span>
-                </span>
-            </span>
+{# ---------- Cifras del momento ---------- #}
+<div class="indicadores">
+    {% if es_oficina %}
+        <a class="indicador{% if urgencias_abiertas %} indicador--aviso{% endif %}" href="{% url 'urgencias' %}">
+            <span class="indicador__nombre">Urgencias abiertas</span>
+            <span class="indicador__valor">{{ urgencias_abiertas }}</span>
         </a>
-    {% endfor %}
-
-    {# Urgencias no está en TIPOS (no tiene listado propio), así que su tarjeta va aparte #}
-    <a class="tipo tipo--urgencia" href="{% url 'urgencias' %}">
-        <img class="tipo__foto" src="{% static 'img/procesos/urgencias.jpg' %}" alt="">
-        <span class="tipo__cuerpo">
-            <span class="tipo__icono">{% include "gestion/icono.html" with nombre="urgencias" %}</span>
-            <span class="tipo__titulo">Urgencias</span>
-            <span class="tipo__datos">
-                <span><strong>{{ urgencias_abiertas }}</strong> abiertas</span>
-                <span>Abre un trabajo que aún no está dado de alta</span>
-            </span>
-        </span>
-    </a>
+        <div class="indicador">
+            <span class="indicador__nombre">Trabajos en proceso</span>
+            <span class="indicador__valor">{{ en_proceso }}</span>
+        </div>
+        <div class="indicador{% if citas_hoy %} indicador--destacado{% endif %}">
+            <span class="indicador__nombre">Citas hoy</span>
+            <span class="indicador__valor">{{ citas_hoy }}</span>
+        </div>
+        <div class="indicador">
+            <span class="indicador__nombre">Citas esta semana</span>
+            <span class="indicador__valor">{{ citas_semana }}</span>
+        </div>
+    {% else %}
+        <div class="indicador">
+            <span class="indicador__nombre">Mis horas hoy</span>
+            <span class="indicador__valor">{{ horas_hoy_texto }}</span>
+        </div>
+        <div class="indicador">
+            <span class="indicador__nombre">Mis horas esta semana</span>
+            <span class="indicador__valor">{{ horas_semana_texto }}</span>
+        </div>
+        <a class="indicador{% if urgencias_abiertas %} indicador--aviso{% endif %}" href="{% url 'urgencias' %}">
+            <span class="indicador__nombre">Urgencias abiertas</span>
+            <span class="indicador__valor">{{ urgencias_abiertas|default:0 }}</span>
+        </a>
+    {% endif %}
 </div>
 
-{% if perms.gestion.change_material %}
-    <section class="panel panel--oficina">
-        <div>
-            <h2 class="panel__titulo">Oficina</h2>
-            <p class="pagina__texto">Gestiona el catálogo de materiales con sus precios, consulta el calendario y revisa los albaranes de cada trabajo.</p>
-        </div>
-        <div class="pagina__acciones">
-            <a class="boton boton--secundario" href="{% url 'lista_materiales' %}">{% include "gestion/icono.html" with nombre="materiales" %}Materiales</a>
-            <a class="boton boton--secundario" href="{% url 'calendario' %}">{% include "gestion/icono.html" with nombre="cita" %}Calendario</a>
-            <a class="boton boton--secundario" href="{% url 'precios_horas' %}">{% include "gestion/icono.html" with nombre="reloj" %}Precios horas</a>
-            {% if perms.gestion.view_usuario %}<a class="boton boton--secundario" href="{% url 'lista_empleados' %}">{% include "gestion/icono.html" with nombre="personas" %}Empleados</a>{% endif %}
-            <a class="boton boton--secundario" href="{% url 'lista_albaranes' %}">{% include "gestion/icono.html" with nombre="albaran" %}Albaranes</a>
-        </div>
-    </section>
-{% endif %}
+<div class="tablero">
+    <div class="tablero__principal">
+        {% if es_oficina %}
+            {# ---------- Próximas citas de las dos semanas, por día ---------- #}
+            <section class="panel panel--lista">
+                <div class="panel__cabecera">
+                    <h2 class="panel__titulo">Próximas citas</h2>
+                    <span class="panel__enlaces">
+                        <a class="panel__enlace" href="{% url 'lista_citas' %}#nueva">Agendar cita</a>
+                        <a class="panel__enlace" href="{% url 'calendario' %}">Ver calendario</a>
+                    </span>
+                </div>
+                {% if dias_citas %}
+                    {% for dia in dias_citas %}
+                        <div class="citas-dia">
+                            <h3 class="citas-dia__fecha{% if dia.fecha == hoy %} citas-dia__fecha--hoy{% endif %}">
+                                {% if dia.fecha == hoy %}Hoy{% else %}{{ dia.fecha|date:"l"|capfirst }}{% endif %}
+                                <span>{{ dia.fecha|date:"j \d\e F" }}</span>
+                            </h3>
+                            <ul class="citas-dia__lista">
+                                {% for cita in dia.citas %}
+                                    <li>
+                                        <a class="cita-fila" href="{% url 'detalle_proyecto' cita.proyecto.pk %}#citas">
+                                            <span class="cita-fila__hora">{% if cita.hora %}{{ cita.hora|time:"H:i" }}{% else %}Sin hora{% endif %}</span>
+                                            <span class="cita-fila__texto">
+                                                <strong>{{ cita.motivo|default:"Cita" }}</strong>
+                                                <span>{{ cita.proyecto.nombre }}{% if cita.proyecto.cliente %} · {{ cita.proyecto.cliente }}{% endif %}</span>
+                                            </span>
+                                            {% include "gestion/icono.html" with nombre="siguiente" %}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="vacio"><p>No hay citas en las próximas dos semanas.</p></div>
+                {% endif %}
+            </section>
+        {% else %}
+            {# ---------- Mis trabajos: donde ha apuntado hace poco ---------- #}
+            <section class="panel panel--lista">
+                <div class="panel__cabecera">
+                    <h2 class="panel__titulo">Mis trabajos</h2>
+                </div>
+                {% if trabajos_recientes %}
+                    <ul class="filas">
+                        {% for proyecto in trabajos_recientes %}
+                            <li>
+                                <a class="fila" href="{% url 'detalle_proyecto' proyecto.pk %}#horas">
+                                    <span class="fila__principal">
+                                        <span class="fila__titulo">{{ proyecto.nombre }}</span>
+                                        <span class="fila__meta">{{ proyecto.get_tipo_display }}{% if proyecto.cliente %} · {{ proyecto.cliente }}{% endif %} · último apunte el {{ proyecto.ultimo|date:"d/m" }}</span>
+                                    </span>
+                                    <span class="boton boton--secundario boton--pequeno">Apuntar horas</span>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="vacio"><p>Aún no has apuntado horas. Busca tu trabajo en Obras, Intervenciones o Mantenimientos.</p></div>
+                {% endif %}
+            </section>
+        {% endif %}
+    </div>
+
+    <aside class="tablero__lateral">
+        {# ---------- Citas de esta semana (Oficina ya las ve en grande a la izquierda) ---------- #}
+        {% if not es_oficina %}
+        <section class="panel panel--lista">
+            <div class="panel__cabecera">
+                <h2 class="panel__titulo">Próximas citas</h2>
+                {% if es_oficina %}<a class="panel__enlace" href="{% url 'calendario' %}">Calendario</a>{% endif %}
+            </div>
+            {% if citas %}
+                <ul class="agenda-corta">
+                    {% for cita in citas %}
+                        <li>
+                            <a class="agenda-corta__fila" href="{% url 'detalle_proyecto' cita.proyecto.pk %}#citas">
+                                <span class="agenda-corta__dia{% if cita.fecha == hoy %} agenda-corta__dia--hoy{% endif %}">
+                                    <strong>{{ cita.fecha|date:"j" }}</strong><span>{{ cita.fecha|date:"M" }}</span>
+                                </span>
+                                <span class="agenda-corta__texto">
+                                    <strong>{{ cita.motivo|default:"Cita" }}{% if cita.hora %} · {{ cita.hora|time:"H:i" }}{% endif %}</strong>
+                                    <span>{{ cita.proyecto.nombre }}</span>
+                                </span>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="vacio vacio--corto"><p>Sin citas en los próximos 7 días.</p></div>
+            {% endif %}
+        </section>
+        {% endif %}
+
+        {# ---------- Accesos a los trabajos ---------- #}
+        <section class="panel panel--lista">
+            <div class="panel__cabecera"><h2 class="panel__titulo">Trabajos</h2></div>
+            <ul class="atajos">
+                {% for slug, tipo in nav_tipos.items %}
+                    <li>
+                        <a class="atajo" href="{% url 'lista_proyectos' slug %}">
+                            <span class="atajo__icono">{% include "gestion/icono.html" with nombre=slug %}</span>
+                            <span class="atajo__nombre">{{ tipo.titulo }}</span>
+                            <span class="atajo__dato">{{ tipo.en_proceso }} en proceso</span>
+                        </a>
+                    </li>
+                {% endfor %}
+                <li>
+                    <a class="atajo atajo--urgencia" href="{% url 'urgencias' %}">
+                        <span class="atajo__icono">{% include "gestion/icono.html" with nombre="urgencias" %}</span>
+                        <span class="atajo__nombre">Urgencias</span>
+                        <span class="atajo__dato">{{ urgencias_abiertas|default:0 }} abiertas</span>
+                    </a>
+                </li>
+            </ul>
+        </section>
+    </aside>
+</div>
 {% endblock %}

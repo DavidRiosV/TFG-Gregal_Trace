@@ -4,9 +4,14 @@
         <img src="{% static 'img/logo.png' %}" alt="" width="32" height="32">
         <span>Gregal Trace</span>
     </a>
-
     <div class="barra-superior__usuario">
+        <button type="button" class="boton-icono boton-icono--claro" data-abrir-buscador aria-label="Buscar" title="Buscar">
+            {% include "gestion/icono.html" with nombre="buscar" %}
+        </button>
         <span class="avatar avatar--claro" aria-hidden="true">{{ user.first_name|default:user.username|slice:":1"|upper }}</span>
+        <button type="button" class="boton-icono boton-icono--claro boton-tema" data-cambiar-tema aria-label="Activar modo oscuro" title="Modo oscuro">
+                {% include "gestion/icono.html" with nombre="luna" %}{% include "gestion/icono.html" with nombre="sol" %}
+        </button>
         <form method="post" action="{% url 'logout' %}">
             {% csrf_token %}
             <button type="submit" class="boton-icono boton-icono--claro" aria-label="Cerrar sesión">
@@ -14,5 +19,4 @@
             </button>
         </form>
     </div>
-    
 </header>

@@ -1,15 +1,76 @@
-<nav class="pestanas" aria-label="Menú">
+{% comment %} Barra inferior del móvil.
+   Oficina: las mismas secciones que el menú de la web (Inicio, Trabajos, Gestión y Herramientas);
+   cada grupo abre hacia arriba un panel con sus apartados.
+   Oficiales y peones: acceso directo a lo que usan (Inicio, Obras, Mantenimientos y Urgencias). {% endcomment %}
+{% if perms.gestion.change_proyecto %}
+<nav class="pestanas pestanas--cuatro" aria-label="Menú">
     <a class="pestana{% if seccion == 'inicio' %} pestana--activa{% endif %}" href="{% url 'index' %}">
         {% include "gestion/icono.html" with nombre="inicio" %}<span>Inicio</span>
     </a>
-    {% for slug, tipo in nav_tipos.items %}
-        <a class="pestana{% if seccion == slug %} pestana--activa{% endif %}" href="{% url 'lista_proyectos' slug %}">
-            {% include "gestion/icono.html" with nombre=slug %}<span>{{ tipo.corto }}</span>
-        </a>
-        {% if forloop.first %}
-            <a class="pestana pestana--urgencia{% if seccion == 'urgencias' %} pestana--activa{% endif %}" href="{% url 'urgencias' %}">
-                <span class="pestana__circulo">{% include "gestion/icono.html" with nombre="mas" %}</span><span>Urgencia</span>
+
+    <details class="pestana-grupo">
+        <summary class="pestana{% if seccion == 'obras' or seccion == 'intervenciones' or seccion == 'mantenimientos' or seccion == 'urgencias' %} pestana--activa{% endif %}">
+            {% include "gestion/icono.html" with nombre="obras" %}<span>Trabajos</span>
+        </summary>
+        <div class="pestana-grupo__panel">
+            <p class="pestana-grupo__titulo">Trabajos</p>
+            {% for slug, tipo in nav_tipos.items %}
+                <a class="pestana-grupo__enlace{% if seccion == slug %} pestana-grupo__enlace--activo{% endif %}" href="{% url 'lista_proyectos' slug %}">
+                    {% include "gestion/icono.html" with nombre=slug %}<span>{{ tipo.titulo }}</span>
+                    {% if tipo.en_proceso %}<span class="pestana-grupo__numero">{{ tipo.en_proceso }}</span>{% endif %}
+                </a>
+            {% endfor %}
+            <a class="pestana-grupo__enlace{% if seccion == 'urgencias' %} pestana-grupo__enlace--activo{% endif %}" href="{% url 'urgencias' %}">
+                {% include "gestion/icono.html" with nombre="urgencias" %}<span>Urgencias</span>
             </a>
-        {% endif %}
-    {% endfor %}
+        </div>
+    </details>
+
+    <details class="pestana-grupo">
+        <summary class="pestana{% if seccion == 'materiales' or seccion == 'precios_horas' or seccion == 'citas' or seccion == 'empleados' or seccion == 'albaranes' %} pestana--activa{% endif %}">
+            {% include "gestion/icono.html" with nombre="materiales" %}<span>Gestión</span>
+        </summary>
+        <div class="pestana-grupo__panel">
+            <p class="pestana-grupo__titulo">Gestión</p>
+            {% if perms.gestion.change_material %}
+                <a class="pestana-grupo__enlace{% if seccion == 'materiales' %} pestana-grupo__enlace--activo{% endif %}" href="{% url 'lista_materiales' %}">{% include "gestion/icono.html" with nombre="materiales" %}<span>Materiales</span></a>
+                <a class="pestana-grupo__enlace{% if seccion == 'precios_horas' %} pestana-grupo__enlace--activo{% endif %}" href="{% url 'precios_horas' %}">{% include "gestion/icono.html" with nombre="reloj" %}<span>Precios horas</span></a>
+            {% endif %}
+            {% if perms.gestion.change_cita %}
+                <a class="pestana-grupo__enlace{% if seccion == 'citas' %} pestana-grupo__enlace--activo{% endif %}" href="{% url 'lista_citas' %}">{% include "gestion/icono.html" with nombre="agenda" %}<span>Citas</span></a>
+            {% endif %}
+            {% if perms.gestion.view_usuario %}
+                <a class="pestana-grupo__enlace{% if seccion == 'empleados' %} pestana-grupo__enlace--activo{% endif %}" href="{% url 'lista_empleados' %}">{% include "gestion/icono.html" with nombre="personas" %}<span>Empleados</span></a>
+            {% endif %}
+            {% if perms.gestion.change_albaran %}
+                <a class="pestana-grupo__enlace{% if seccion == 'albaranes' %} pestana-grupo__enlace--activo{% endif %}" href="{% url 'lista_albaranes' %}">{% include "gestion/icono.html" with nombre="albaran" %}<span>Albaranes</span></a>
+            {% endif %}
+        </div>
+    </details>
+
+    <details class="pestana-grupo">
+        <summary class="pestana{% if seccion == 'calendario' %} pestana--activa{% endif %}">
+            {% include "gestion/icono.html" with nombre="cita" %}<span>Herramientas</span>
+        </summary>
+        <div class="pestana-grupo__panel">
+            <p class="pestana-grupo__titulo">Herramientas</p>
+            <a class="pestana-grupo__enlace{% if seccion == 'calendario' %} pestana-grupo__enlace--activo{% endif %}" href="{% url 'calendario' %}">{% include "gestion/icono.html" with nombre="cita" %}<span>Calendario</span></a>
+        </div>
+    </details>
 </nav>
+{% else %}
+<nav class="pestanas pestanas--cuatro" aria-label="Menú">
+    <a class="pestana{% if seccion == 'inicio' %} pestana--activa{% endif %}" href="{% url 'index' %}">
+        {% include "gestion/icono.html" with nombre="inicio" %}<span>Inicio</span>
+    </a>
+    <a class="pestana{% if seccion == 'obras' %} pestana--activa{% endif %}" href="{% url 'lista_proyectos' 'obras' %}">
+        {% include "gestion/icono.html" with nombre="obras" %}<span>Obras</span>
+    </a>
+    <a class="pestana{% if seccion == 'mantenimientos' %} pestana--activa{% endif %}" href="{% url 'lista_proyectos' 'mantenimientos' %}">
+        {% include "gestion/icono.html" with nombre="mantenimientos" %}<span>Mantenimientos</span>
+    </a>
+    <a class="pestana{% if seccion == 'urgencias' %} pestana--activa{% endif %}" href="{% url 'urgencias' %}">
+        {% include "gestion/icono.html" with nombre="urgencias" %}<span>Urgencias</span>
+    </a>
+</nav>
+{% endif %}

@@ -4,13 +4,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {# Color de la barra del móvil: main.js lo cambia según el modo claro u oscuro #}
+    <meta name="theme-color" content="#1E3B14">
+    {% comment %} Modo claro u oscuro antes de pintar la página (evita un parpadeo): el que eligió con el botón
+       del menú (guardado en este navegador) o, si nunca lo ha tocado, el del sistema {% endcomment %}
+    <script>
+        (function () {
+            var tema = null;
+            try { tema = localStorage.getItem("tema"); } catch (e) {}
+            if (tema !== "oscuro" && tema !== "claro") {
+                tema = window.matchMedia("(prefers-color-scheme: dark)").matches ? "oscuro" : "claro";
+            }
+            document.documentElement.dataset.tema = tema;
+        })();
+    </script>
     <title>{% block titulo %}Gregal Trace{% endblock %}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/estilos.css' %}?v=9">
+    {# Fuente Manrope servida desde static/fonts (sin Google Fonts). Se precarga la parte latina, la que más se usa #}
+    <link rel="preload" href="{% static 'fonts/manrope-latin.woff2' %}" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}?v=12">
+    {% block estilos %}{% endblock %}
 </head>
-
 <body class="{% block clase_body %}{% endblock %}">
 {% block cuerpo %}
+    <a class="saltar" href="#contenido">Saltar al contenido</a>
     <div class="app">
         {% include "gestion/menu.html" %}
 
@@ -18,7 +34,6 @@
             {% include "gestion/cabecera.html" %}
 
             <main class="contenido" id="contenido">
-                {# Mensajes de messages: «Apunte guardado», «Proyecto creado»... (Formularios, diapositivas 83-84) #}
                 {% if messages %}
                     <ul class="avisos">
                         {% for message in messages %}
@@ -26,15 +41,28 @@
                         {% endfor %}
                     </ul>
                 {% endif %}
+
                 {% block contenido %}{% endblock %}
             </main>
 
-            {% include "gestion/pie.html" %}
+            {% block pie %}{% include "gestion/pie.html" %}{% endblock %}
         </div>
     </div>
 
     {% include "gestion/menu_movil.html" %}
+
+    {# Cuadro del buscador global (main.js lo abre con Ctrl+K o con el botón Buscar) #}
+    <dialog class="buscador-global" data-buscador data-url="{% url 'buscar' %}" aria-label="Buscar">
+        <div class="buscador-global__entrada">
+            {% include "gestion/icono.html" with nombre="buscar" %}
+            <input type="search" placeholder="Buscar trabajos, clientes{% if perms.gestion.change_material %}, materiales{% endif %}{% if perms.gestion.view_usuario %} o empleados{% endif %}…" autocomplete="off" data-buscador-texto>
+            <kbd>Esc</kbd>
+        </div>
+        <div class="buscador-global__resultados" data-buscador-resultados>
+            <p class="buscador-global__vacio">Escribe al menos dos letras.</p>
+        </div>
+    </dialog>
 {% endblock %}
-    <script src="{% static 'js/main.js' %}?v=4"></script>
+    <script src="{% static 'js/main.js' %}?v=6"></script>
 </body>
 </html>

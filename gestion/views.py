@@ -7,7 +7,8 @@ from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.models import Group
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.db.models import ProtectedError, Count, F, Max, Min, Q, Sum
-from django.http import FileResponse, Http404
+from django.core.paginator import Paginator
+from django.http import FileResponse, Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
@@ -57,12 +58,77 @@ def index(request):
     # Guarda en la sesión la hora en que entró por primera vez
     if not 'fecha_inicio' in request.session:
         request.session['fecha_inicio'] = datetime.now().strftime('%d/%m/%Y %H:%M')
-    return render(request, 'gestion/index.html', {
+    hoy = date.today()
+    contexto = {
         'nav_tipos': datos_menu(),
-        # Urgencias abiertas, para su tarjeta en la portada
-        'urgencias_abiertas': Proyecto.objects.filter(tipo='URG', estado='PRO').count(),
         'seccion': 'inicio',
-    })
+        'hoy': hoy,
+        'urgencias_abiertas': Proyecto.objects.filter(tipo='URG', estado='PRO').count(),
+        # Citas de hoy y de los próximos 7 días (las ven todos)
+        'citas': Cita.objects.filter(fecha__range=(hoy, hoy + timedelta(days=7))).select_related('proyecto')[:8],
+    }
+    if request.user.has_perm('gestion.change_proyecto'):
+        # Oficina: lo que hay que atender. Las próximas citas de dos semanas, agrupadas por día
+        proximas = Cita.objects.filter(fecha__range=(hoy, hoy + timedelta(days=14))).select_related('proyecto')
+        dias_citas = {}
+        for cita in proximas:
+            dias_citas.setdefault(cita.fecha, []).append(cita)
+        contexto.update({
+            'es_oficina': True,
+            'en_proceso': Proyecto.objects.exclude(tipo='URG').filter(estado='PRO').count(),
+            'citas_hoy': sum(1 for cita in proximas if cita.fecha == hoy),
+            'citas_semana': sum(1 for cita in proximas if cita.fecha <= hoy + timedelta(days=7)),
+            'dias_citas': [{'fecha': fecha, 'citas': citas} for fecha, citas in dias_citas.items()],
+        })
+    else:
+        # Oficial o peón: sus horas de hoy y de la semana y los trabajos donde ha apuntado hace poco
+        lunes = hoy - timedelta(days=hoy.weekday())
+        mias = Consumo.objects.filter(material__unidad='H', trabajador=request.user)
+        recientes = (Proyecto.objects.filter(consumos__trabajador=request.user, estado='PRO')
+                     .annotate(ultimo=Max('consumos__fecha')).order_by('-ultimo')[:5])
+        contexto.update({
+            'es_oficina': False,
+            'horas_hoy_texto': horas_texto(mias.filter(fecha=hoy).aggregate(total=Sum('cantidad'))['total'] or 0),
+            'horas_semana_texto': horas_texto(mias.filter(fecha__gte=lunes).aggregate(total=Sum('cantidad'))['total'] or 0),
+            'trabajos_recientes': recientes,
+        })
+    return render(request, 'gestion/index.html', contexto)
+
+# Buscador global (Ctrl+K): trabajos para todos; materiales y empleados, solo Oficina.
+# Devuelve JSON, que main.js pinta en el cuadro de búsqueda
+@permission_required('gestion.view_proyecto')
+def buscar(request):
+    texto = request.GET.get('q', '').strip()
+    resultados = []
+    if len(texto) >= 2:
+        proyectos = (Proyecto.objects.filter(Q(nombre__icontains=texto) | Q(cliente__icontains=texto))
+                     .order_by('estado', '-fecha_inicio')[:8])
+        for proyecto in proyectos:
+            resultados.append({
+                'grupo': 'Trabajos',
+                'titulo': proyecto.nombre,
+                'detalle': ' · '.join(filter(None, [proyecto.get_tipo_display(), proyecto.cliente, proyecto.get_estado_display()])),
+                'url': reverse('detalle_proyecto', args=[proyecto.pk]),
+            })
+        if request.user.has_perm('gestion.change_material'):
+            for material in buscar_materiales(Material.objects.select_related('categoria'), texto)[:5]:
+                resultados.append({
+                    'grupo': 'Materiales',
+                    'titulo': material.nombre,
+                    'detalle': ' · '.join(filter(None, [material.categoria.nombre, material.proveedor])),
+                    'url': reverse('material_editar', args=[material.pk]),
+                })
+        if request.user.has_perm('gestion.view_usuario'):
+            empleados = Usuario.objects.filter(rol__in=Usuario.ROLES_OPERARIO).filter(
+                Q(first_name__icontains=texto) | Q(last_name__icontains=texto) | Q(username__icontains=texto))[:5]
+            for empleado in empleados:
+                resultados.append({
+                    'grupo': 'Empleados',
+                    'titulo': empleado.get_full_name() or empleado.username,
+                    'detalle': empleado.get_rol_display(),
+                    'url': reverse('empleado_editar', args=[empleado.pk]),
+                })
+    return JsonResponse({'resultados': resultados})
 
 @permission_required('gestion.view_proyecto')
 def lista_proyectos(request, tipo):
@@ -86,20 +152,28 @@ def lista_proyectos(request, tipo):
         proyectos = proyectos.order_by(F('proxima_cita').asc(nulls_last=True), '-fecha_inicio', '-id')
 
     # Buscador: el texto en el nombre, el cliente O la descripción
-    busqueda = request.GET.get('q', '')
+    busqueda = request.GET.get('q', '').strip()
     if busqueda:
         proyectos = proyectos.filter(Q(nombre__icontains=busqueda) | Q(cliente__icontains=busqueda) | Q(descripcion__icontains=busqueda))
 
-    # La próxima cita completa (con hora y motivo) de cada proyecto, en una sola consulta
-    proyectos = list(proyectos)
+    # De 25 en 25: con muchos trabajos la página no se hace eterna
+    pagina = Paginator(proyectos, 25).get_page(request.GET.get('pagina'))
+    parametros = {'estado': estado}
+    if busqueda:
+        parametros['q'] = busqueda
+
+    # La próxima cita completa (con hora y motivo) de cada proyecto de la página, en una sola consulta
+    proyectos = list(pagina)
     siguientes = {}
-    for cita in Cita.objects.filter(proyecto__in=proyectos, fecha__gte=hoy):
+    for cita in Cita.objects.filter(proyecto__in=proyectos, fecha__gte=hoy).order_by('fecha', 'hora', 'id'):
         siguientes.setdefault(cita.proyecto_id, cita)
     for proyecto in proyectos:
         proyecto.siguiente_cita = siguientes.get(proyecto.pk)
 
     return render(request, 'gestion/lista_proyectos.html', {
         'proyectos': proyectos,
+        'pagina': pagina,
+        'base_paginas': '?' + urlencode(parametros) + '&pagina=',
         'titulo': datos_tipo['titulo'],
         'nuevo': datos_tipo['nuevo'],
         'slug': tipo,
@@ -203,14 +277,16 @@ def detalle_proyecto(request, pk):
     formulario_nota = NotaForm()
     formulario_albaran = AlbaranForm()
     formulario_cita = CitaForm()
-    # Pestaña de abajo que se abre al cargar (Oficina): Apuntes, Notas o Albaranes
-    pestana = 'apuntes'
+    # Pestaña que se abre al cargar: Horas si puede apuntar; si no, Apuntes.
+    # Si un formulario vuelve con errores, se abre su pestaña
+    pestana = 'horas' if puede_apuntar else 'apuntes'
 
     if request.method == 'POST':
         # La página tiene varios formularios: un campo oculto «apunte» dice cuál se ha enviado
         enviado = request.POST.get('apunte')
 
         if enviado == 'cita' and request.user.has_perm('gestion.add_cita'):
+            pestana = 'citas'
             formulario_cita = CitaForm(request.POST)
             if formulario_cita.is_valid():
                 cita = formulario_cita.save(commit=False)
@@ -265,6 +341,7 @@ def detalle_proyecto(request, pk):
                 messages.error(request, 'Alguna línea no es válida y no se ha apuntado ninguna. Revísalas y vuelve a intentarlo.')
 
         elif enviado == 'material' and puede_apuntar_material:
+            pestana = 'apuntar'
             formulario = ConsumoForm(request.POST, **opciones)
             if formulario.is_valid():
                 consumo = formulario.save(commit=False)
@@ -1339,9 +1416,15 @@ def lista_citas(request):
             parametros['q'] = busqueda
         botones.append({'texto': texto, 'n': totales[codigo], 'url': '?' + urlencode(parametros), 'activo': codigo == ver})
 
+    pagina = Paginator(citas, 25).get_page(request.GET.get('pagina'))
+    parametros = {'ver': ver}
+    if busqueda:
+        parametros['q'] = busqueda
     return render(request, 'gestion/citas.html', {
         'formulario': formulario,
-        'citas': citas,
+        'pagina': pagina,
+        'citas': list(pagina),
+        'base_paginas': '?' + urlencode(parametros) + '&pagina=',
         'botones_ver': botones,
         'ver_actual': ver,
         'busqueda': busqueda,

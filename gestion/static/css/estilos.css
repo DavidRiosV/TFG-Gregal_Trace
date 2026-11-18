@@ -1,11 +1,38 @@
+/* ==========================================================
+   Gregal Trace · hoja de estilos
+   Inspirada en los CRM de servicios técnicos (menú lateral,
+   cabecera de página con migas, listados en filas y cifras clave),
+   con la paleta verde y blanca de Instalaciones Gregal.
+   ========================================================== */
+
+/* Fuente Manrope (variable, pesos 400-800) servida desde nuestro servidor. Licencia SIL Open Font License. */
+@font-face {
+    font-family: "Manrope";
+    font-style: normal;
+    font-weight: 400 800;
+    font-display: swap;
+    src: url("../fonts/manrope-latin-ext.woff2") format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+    font-family: "Manrope";
+    font-style: normal;
+    font-weight: 400 800;
+    font-display: swap;
+    src: url("../fonts/manrope-latin.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
+    color-scheme: light;        /* calendarios, desplegables y barras de scroll siguen el tema */
     /* Colores de marca */
     --verde-noche: #1E3B14;      /* menú lateral */
     --verde-marca: #689B41;      /* logotipo, detalles */
     --verde-accion: #2E5E1E;     /* botones principales y enlaces */
     --verde-suave: #E4EFDA;      /* selección, filas al pasar */
-    --fondo: #F4F7F1;            /* fondo de la aplicación */
+    --fondo: #F4F5F2;            /* fondo de la aplicación (gris neutro) */
     --blanco: #FFFFFF;           /* superficies */
+    --sobre-color: #FFFFFF;      /* texto sobre botones y fondos de color */
 
     /* Colores con función */
     --ambar: #D99A00;            /* en proceso y urgencias */
@@ -15,14 +42,15 @@
 
     /* Texto y líneas */
     --texto: #17240F;
-    --texto-suave: #56664D;
-    --linea: #DCE5D3;
+    --texto-suave: #5A6653;
+    --linea: #E1E5DC;
 
     /* Medidas */
-    --radio-panel: 12px;
+    --radio-panel: 10px;
     --radio-control: 8px;
     --ancho-menu: 248px;
-    --sombra-panel: 0 1px 2px rgba(23, 36, 15, 0.06);
+    --sombra-panel: 0 1px 2px rgba(16, 24, 12, 0.05);
+    --sombra-flotante: 0 12px 32px rgba(16, 24, 12, 0.16), 0 2px 6px rgba(16, 24, 12, 0.08);   /* menús y avisos */
     --foco: 0 0 0 3px rgba(104, 155, 65, 0.45);
 }
 
@@ -38,7 +66,7 @@ body {
     background: var(--fondo);
     color: var(--texto);
     font-family: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
-    font-size: 15px;
+    font-size: 14.5px;
     line-height: 1.5;
     font-variant-numeric: tabular-nums;
 }
@@ -80,9 +108,9 @@ img { display: block; max-width: 100%; }
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-width: 1180px;
+    max-width: 1240px;
     margin: 0 auto;
-    padding: 32px 40px 48px;
+    padding: 28px 36px 48px;
 }
 
 /* ---------- Menú lateral ---------- */
@@ -103,7 +131,7 @@ img { display: block; max-width: 100%; }
     align-items: center;
     gap: 10px;
     padding: 4px 8px;
-    color: var(--blanco);
+    color: var(--sobre-color);
     font-size: 17px;
     font-weight: 800;
     letter-spacing: -0.01em;
@@ -112,6 +140,7 @@ img { display: block; max-width: 100%; }
 
 .menu__marca img { border-radius: 50%; background: var(--blanco); }
 
+/* El elemento que destaca: abrir una urgencia siempre está a mano */
 .menu__urgencia {
     display: flex;
     align-items: center;
@@ -145,12 +174,12 @@ img { display: block; max-width: 100%; }
     text-decoration: none;
 }
 
-.menu__enlace:hover { background: rgba(255, 255, 255, 0.07); color: var(--blanco); }
+.menu__enlace:hover { background: rgba(255, 255, 255, 0.07); color: var(--sobre-color); }
 
 .menu__enlace--activo,
 .menu__enlace--activo:hover {
     background: var(--verde-marca);
-    color: var(--blanco);
+    color: var(--sobre-color);
 }
 
 .menu__contador {
@@ -159,22 +188,13 @@ img { display: block; max-width: 100%; }
     padding: 1px 8px;
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.14);
-    color: var(--blanco);
+    color: var(--sobre-color);
     font-size: 12px;
     font-weight: 700;
     text-align: center;
 }
 
 .menu__contador--aviso { background: var(--ambar); color: var(--verde-noche); }
-
-.menu__usuario {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: auto;
-    padding: 12px 8px 4px;
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
-}
 
 .menu__persona {
     display: flex;
@@ -184,9 +204,8 @@ img { display: block; max-width: 100%; }
     line-height: 1.3;
 }
 
-.menu__persona strong { color: var(--blanco); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.menu__persona strong { color: var(--sobre-color); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .menu__persona span { color: #A9C29A; }
-.menu__usuario form { margin-left: auto; }
 
 .avatar {
     display: inline-flex;
@@ -197,7 +216,7 @@ img { display: block; max-width: 100%; }
     height: 34px;
     border-radius: 50%;
     background: var(--verde-marca);
-    color: var(--blanco);
+    color: var(--sobre-color);
     font-size: 14px;
     font-weight: 800;
 }
@@ -218,14 +237,13 @@ img { display: block; max-width: 100%; }
     cursor: pointer;
 }
 
-.boton-icono:hover { background: rgba(255, 255, 255, 0.1); color: var(--blanco); }
+.boton-icono:hover { background: rgba(255, 255, 255, 0.1); color: var(--sobre-color); }
 
 /* Barra superior y pestañas: solo en móvil */
 .barra-superior,
 .pestanas { display: none; }
 
 /* ---------- Cabecera de cada página ---------- */
-.pagina { margin-bottom: 24px; }
 
 .migas {
     display: flex;
@@ -250,10 +268,10 @@ img { display: block; max-width: 100%; }
 }
 
 .pagina__titulo {
-    font-size: 30px;
-    font-weight: 800;
+    font-size: 26px;
+    font-weight: 750;
     line-height: 1.15;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.015em;
 }
 
 .pagina__titulo-con-estado {
@@ -299,7 +317,7 @@ img { display: block; max-width: 100%; }
 
 .panel__titulo {
     margin-bottom: 18px;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 700;
 }
 
@@ -320,69 +338,6 @@ img { display: block; max-width: 100%; }
     gap: 20px;
     align-items: start;
 }
-
-/* ---------- Inicio: los tres tipos de trabajo y Urgencias ---------- */
-.tipos {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 20px;
-}
-
-.tipo {
-    display: flex;
-    flex-direction: column;
-    background: var(--blanco);
-    border: 1px solid var(--linea);
-    border-radius: var(--radio-panel);
-    color: var(--texto);
-    text-decoration: none;
-    overflow: hidden;
-    box-shadow: var(--sombra-panel);
-}
-
-.tipo:hover { border-color: var(--verde-marca); }
-.tipo:hover .tipo__titulo { color: var(--verde-accion); }
-
-.tipo__foto {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-}
-
-.tipo__cuerpo {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 4px 12px;
-    padding: 18px 20px 20px;
-}
-
-.tipo__icono {
-    grid-row: span 2;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 42px;
-    height: 42px;
-    border-radius: 10px;
-    background: var(--verde-suave);
-    color: var(--verde-accion);
-}
-
-.tipo__titulo { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; }
-
-.tipo__datos {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px 16px;
-    color: var(--texto-suave);
-    font-size: 14px;
-}
-
-.tipo__datos strong { color: var(--texto); }
-
-.tipo--urgencia { border-color: #EBCB7A; }
-.tipo--urgencia .tipo__icono { background: var(--ambar-suave); color: #8A6100; }
-.tipo--urgencia:hover { border-color: var(--ambar); }
 
 /* ---------- Barra de herramientas: buscador + filtros ---------- */
 .barra-herramientas {
@@ -458,7 +413,7 @@ img { display: block; max-width: 100%; }
 
 .segmento:hover { color: var(--texto); background: var(--fondo); }
 .segmento--activo,
-.segmento--activo:hover { background: var(--verde-accion); color: var(--blanco); }
+.segmento--activo:hover { background: var(--verde-accion); color: var(--sobre-color); }
 
 /* ---------- Listados en filas ---------- */
 .filas { margin: 0; padding: 0; list-style: none; }
@@ -541,7 +496,6 @@ img { display: block; max-width: 100%; }
 
 .cifra__valor { font-size: 24px; font-weight: 800; letter-spacing: -0.01em; }
 .cifra__nombre { color: var(--texto-suave); font-size: 13px; }
-.cifra--principal .cifra__valor { color: var(--verde-accion); }
 
 /* ---------- Formularios ---------- */
 .formulario { display: flex; flex-direction: column; gap: 18px; }
@@ -607,7 +561,8 @@ img { display: block; max-width: 100%; }
 .entrada__ojo--visible .icono-ojo--abierto { display: none; }
 .entrada__ojo--visible .icono-ojo--cerrado { display: block; }
 
-/* El foco se marca en la caja (.entrada / .buscador), no en el campo de dentro*/
+/* El foco se marca en la caja (.entrada / .buscador), no en el campo de dentro:
+   así no aparece un doble borde verde */
 .entrada input:focus-visible,
 .entrada select:focus-visible,
 .entrada textarea:focus-visible,
@@ -634,7 +589,7 @@ img { display: block; max-width: 100%; }
     border: 1px solid var(--verde-accion);
     border-radius: var(--radio-control);
     background: var(--verde-accion);
-    color: var(--blanco);
+    color: var(--sobre-color);
     font: inherit;
     font-weight: 700;
     text-decoration: none;
@@ -661,30 +616,6 @@ img { display: block; max-width: 100%; }
 .formulario__botones { display: flex; flex-wrap: wrap; gap: 8px; }
 
 /* Botón de volver: al final de la página y centrado */
-.acciones-pie {
-    display: flex;
-    justify-content: center;
-    margin-top: auto;
-    padding-top: 32px;
-}
-
-.boton-volver {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    min-width: 220px;
-    min-height: 46px;
-    padding: 0 22px;
-    border: 1px solid var(--verde-accion);
-    border-radius: var(--radio-control);
-    background: var(--blanco);
-    color: var(--verde-accion);
-    font-weight: 700;
-    text-decoration: none;
-}
-
-.boton-volver:hover { background: var(--verde-suave); }
 
 /* ---------- Tabla de apuntes ---------- */
 .tabla-contenedor { overflow-x: auto; }
@@ -802,7 +733,7 @@ img { display: block; max-width: 100%; }
 /* Tipo de hora (Oficial / Pareja) como botones */
 .familia--opcion { display: inline-flex; align-items: center; cursor: pointer; }
 .familia--opcion input { position: absolute; opacity: 0; width: 1px; height: 1px; }
-.familia--opcion:has(input:checked) { background: var(--verde-accion); border-color: var(--verde-accion); color: var(--blanco); }
+.familia--opcion:has(input:checked) { background: var(--verde-accion); border-color: var(--verde-accion); color: var(--sobre-color); }
 .familia--opcion:has(input:focus-visible) { box-shadow: var(--foco); }
 .formulario__fila--horas { align-items: end; }
 
@@ -836,8 +767,8 @@ img { display: block; max-width: 100%; }
 .reloj__rueda {
     position: relative;
     z-index: 1;
-    height: 120px;             
-    padding: 40px 0;             
+    height: 120px;               /* 3 números a la vista */
+    padding: 40px 0;             /* deja centrar el primero y el último */
     box-sizing: border-box;
     overflow-y: auto;
     scroll-snap-type: y mandatory;
@@ -893,18 +824,20 @@ img { display: block; max-width: 100%; }
 .familia:hover { color: var(--texto); border-color: var(--verde-marca); }
 .familia:focus-visible { outline: none; box-shadow: var(--foco); }
 .familia--activa,
-.familia--activa:hover { background: var(--verde-accion); border-color: var(--verde-accion); color: var(--blanco); }
+.familia--activa:hover { background: var(--verde-accion); border-color: var(--verde-accion); color: var(--sobre-color); }
 
 .barra-herramientas--familias .familias { margin: 0; }
 .campo__titulo { font-size: 14px; font-weight: 600; }
 
 @media (max-width: 760px) {
+    /* En el móvil las familias se desplazan en una sola fila */
     .familias { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
     .familia { flex: none; }
 }
 
 .barra-herramientas__total { color: var(--texto-suave); font-size: 14px; white-space: nowrap; }
 
+/* Solo para lectores de pantalla */
 .solo-lector {
     position: absolute;
     width: 1px;
@@ -912,15 +845,6 @@ img { display: block; max-width: 100%; }
     overflow: hidden;
     clip: rect(0 0 0 0);
     white-space: nowrap;
-}
-
-.panel--oficina {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin-top: 24px;
 }
 
 /* ---------- Avisos ---------- */
@@ -968,7 +892,7 @@ img { display: block; max-width: 100%; }
 .acceso__marca img { border-radius: 50%; background: var(--blanco); }
 
 .acceso__marca h1 {
-    color: var(--blanco);
+    color: var(--sobre-color);
     font-size: 44px;
     font-weight: 800;
     letter-spacing: -0.03em;
@@ -1018,7 +942,7 @@ img { display: block; max-width: 100%; }
     display: inline-flex;
     align-items: center;
     gap: 12px;
-    color: var(--blanco);
+    color: var(--sobre-color);
     font-size: 20px;
     font-weight: 800;
     text-decoration: none;
@@ -1089,8 +1013,7 @@ img { display: block; max-width: 100%; }
     .contenido { padding: 28px 28px 40px; }
     .dos-columnas { grid-template-columns: 1fr; }
     .formulario--consumo { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .campo--material,
-    .formulario__enviar { grid-column: 1 / -1; }
+    
 }
 
 /* ---------- Móvil: barra superior + pestañas inferiores ---------- */
@@ -1116,7 +1039,7 @@ img { display: block; max-width: 100%; }
         display: flex;
         align-items: center;
         gap: 10px;
-        color: var(--blanco);
+        color: var(--sobre-color);
         font-weight: 800;
         text-decoration: none;
     }
@@ -1179,8 +1102,7 @@ img { display: block; max-width: 100%; }
     .formulario__fila { grid-template-columns: 1fr; }
     .formulario__botones .boton { flex: 1; }
 
-    .tipos { grid-template-columns: 1fr; gap: 14px; }
-    .tipo__foto { height: 110px; }
+    
 
     .barra-herramientas { padding: 14px 16px; }
     .buscador { flex: 1 1 100%; width: 100%; min-width: 0; max-width: none; }
@@ -1196,7 +1118,7 @@ img { display: block; max-width: 100%; }
     .panel__titulo--con-margen { padding: 16px; }
 
     .cifras { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .cifra--principal { grid-column: 1 / -1; }
+    
 
     .formulario--consumo { grid-template-columns: 1fr; }
 
@@ -1216,7 +1138,7 @@ img { display: block; max-width: 100%; }
     .tabla .num { text-align: left; }
     .tabla .tabla__acciones { grid-column: 1 / -1; margin-top: 6px; text-align: left; }
 
-    .boton-volver { width: 100%; }
+    
 
     .acceso { grid-template-columns: 1fr; }
     .error { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
@@ -1234,26 +1156,14 @@ img { display: block; max-width: 100%; }
     *, *::before, *::after { transition: none !important; animation: none !important; }
 }
 
-/* Fecha de entrega en los listados (junto al estado) */
-.entrega { flex-shrink: 0; color: var(--texto-suave); font-size: 13px; font-weight: 600; white-space: nowrap; }
-.entrega--cerca { color: #7A5600; }
-.entrega--vencido { color: var(--rojo); }
-@media (max-width: 760px) {
-    .fila { flex-wrap: wrap; row-gap: 6px; }
-    .fila__principal { flex-basis: calc(100% - 40px); }
-    .fila .entrega { order: 3; font-size: 12px; }
-    .fila .estado { order: 4; }
-    .fila .fila__flecha { order: 2; }
-}
+/* Familias de material (Materiales > Familias) */
+.panel__titulo--formulario { margin: 0 0 16px; }
+.panel--separado { margin-top: 24px; }
+.panel__nota { margin: 0; padding: 14px 24px; font-size: 13px; }
+.lista-simple { margin: 0; padding: 12px 24px 16px 42px; color: var(--texto); font-size: 14px; line-height: 1.7; }
 
-
-/* ==========================================================
-   Hito 3: apuntes, notas, albaranes, citas y catálogo
-   (los mismos estilos que en Gregal Trace)
-   ========================================================== */
-:root { --sobre-color: #FFFFFF; }
-
-/* Avisos de messages con botón de cerrar */
+/* Avisos que se cierran solos (main.js) */
+.avisos .aviso { position: relative; padding-right: 44px; transition: opacity 0.3s, transform 0.3s; }
 .aviso--saliendo { opacity: 0; transform: translateY(-6px); }
 .aviso__cerrar {
     position: absolute;
@@ -1272,19 +1182,92 @@ img { display: block; max-width: 100%; }
 }
 .aviso__cerrar:hover { background: var(--fondo); color: var(--texto); }
 
-/* Contador pequeño junto a un título (Notas 3, Albaranes 2...) */
-.contador {
-    min-width: 22px;
-    padding: 1px 8px;
-    border-radius: 999px;
-    background: var(--fondo);
-    color: var(--texto-suave);
-    font-size: 12px;
-    font-weight: 700;
-    text-align: center;
+/* Ventana de confirmación propia (main.js) */
+.confirmar {
+    width: min(420px, calc(100% - 32px));
+    padding: 24px;
+    border: 1px solid var(--linea);
+    border-radius: var(--radio-panel);
+    background: var(--blanco);
+    color: var(--texto);
+    box-shadow: 0 18px 50px rgba(23, 36, 15, 0.25);
 }
-.contador--grande { flex: none; padding: 3px 10px; color: var(--texto); font-size: 13px; white-space: nowrap; }
-.pestana-proyecto--activa .contador { background: var(--verde-suave); color: var(--verde-accion); }
+.confirmar::backdrop { background: rgba(23, 36, 15, 0.45); }
+.confirmar__titulo { margin: 0 0 8px; font-size: 18px; font-weight: 800; }
+.confirmar__texto { margin: 0 0 22px; color: var(--texto-suave); line-height: 1.5; }
+.confirmar__botones { display: flex; justify-content: flex-end; gap: 8px; }
+.boton--borrar { border-color: var(--rojo); background: var(--rojo); color: var(--sobre-color); }
+.boton--borrar:hover { background: #912018; border-color: #912018; }
+@media (max-width: 760px) {
+    .confirmar__botones .boton { flex: 1; }
+}
+
+/* Fecha de entrega en los listados (junto al estado) */
+.entrega { flex-shrink: 0; color: var(--texto-suave); font-size: 13px; font-weight: 600; white-space: nowrap; }
+.entrega--cerca { color: #7A5600; }
+
+@media (max-width: 760px) {
+    .fila { flex-wrap: wrap; row-gap: 6px; }
+    .fila__principal { flex-basis: calc(100% - 40px); }
+    .fila .entrega { order: 3; font-size: 12px; }
+    .fila .estado { order: 4; }
+    .fila .fila__flecha { order: 2; }
+}
+
+/* Días que faltan para la entrega */
+.entrega__dias { font-weight: 500; }
+
+/* ==========================================================
+   Modo oscuro automático: se activa si el móvil u ordenador lo tiene puesto.
+   Solo cambian las variables de color y unos pocos colores fijos.
+   ========================================================== */
+/* Modo oscuro (botón del menú; por defecto el del sistema) */
+:root[data-tema="oscuro"] {
+    color-scheme: dark;
+        --verde-noche: #0F1C0A;
+        --verde-marca: #7DB352;
+        --verde-accion: #4F8C30;
+        --verde-suave: #22331A;
+        --fondo: #0E130C;
+        --blanco: #172013;
+        --ambar-suave: #3A2F10;
+        --rojo: #F0705F;
+        --rojo-suave: #3A1A16;
+        --texto: #E6EDE1;
+        --texto-suave: #A7B59D;
+        --linea: #2C3A25;
+        --sombra-panel: 0 1px 2px rgba(0, 0, 0, 0.4);
+    }
+:where(:root[data-tema="oscuro"]) a { color: #8CC566; }
+:where(:root[data-tema="oscuro"]) .fila:hover, :where(:root[data-tema="oscuro"]) .tabla tbody tr:hover td, :where(:root[data-tema="oscuro"]) .opcion-material:hover { background: #1C2717; }
+:where(:root[data-tema="oscuro"]) .barra-herramientas, :where(:root[data-tema="oscuro"]) .tabla th, :where(:root[data-tema="oscuro"]) .lista-materiales__grupo { background: #141C11; }
+:where(:root[data-tema="oscuro"]) .entrada { border-color: #3A4A31; }
+:where(:root[data-tema="oscuro"]) .entrada input::placeholder, :where(:root[data-tema="oscuro"]) .entrada textarea::placeholder { color: #7D8B74; }
+:where(:root[data-tema="oscuro"]) .estado--proceso, :where(:root[data-tema="oscuro"]) .entrega--cerca { color: #E8C062; }
+:where(:root[data-tema="oscuro"]) .estado--terminado { color: #A6D485; }
+
+:where(:root[data-tema="oscuro"]) .buscador__boton:hover { background: #2B3F22; }
+:where(:root[data-tema="oscuro"]) .boton:hover { background: #5E9E3B; }
+:where(:root[data-tema="oscuro"]) .fila__flecha { color: #6D7F63; }
+
+:where(:root[data-tema="oscuro"]) .avatar--claro { background: #E6EDE1; color: #0F1C0A; }
+:where(:root[data-tema="oscuro"]) .confirmar::backdrop { background: rgba(0, 0, 0, 0.6); }
+
+/* ==========================================================
+   Tamaño táctil: en el móvil todo lo que se pulsa mide al menos 44 px
+   (lo recomendado para dedos, también con guantes)
+   ========================================================== */
+@media (max-width: 760px) {
+    .boton-tabla { width: 44px; height: 44px; }
+    .boton-icono { width: 44px; height: 44px; }
+    .entrada__ojo { min-width: 44px; min-height: 44px; }
+    .aviso__cerrar { width: 44px; height: 44px; margin-top: -22px; right: 2px; }
+    .segmento { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+    .familia { min-height: 44px; display: inline-flex; align-items: center; }
+    .boton, .buscador__boton { min-height: 44px; }
+    .migas { align-items: center; margin-top: -10px; margin-bottom: 0; }
+    .migas a { display: inline-flex; align-items: center; min-height: 44px; }
+}
 
 /* ==========================================================
    Materiales: clase (principal, accesorio, soporte) y orden
@@ -1540,7 +1523,21 @@ img { display: block; max-width: 100%; }
     white-space: nowrap;
 }
 
-
+/* Modo oscuro (botón del menú; por defecto el del sistema) */
+:root[data-tema="oscuro"] {
+        --clase-pri: #A6D485;
+        --clase-acc: #8DBCE6;
+        --clase-acc-suave: #1A2A38;
+        --clase-sop: #D9B98C;
+        --clase-sop-suave: #33291C;
+    }
+:where(:root[data-tema="oscuro"]) .pestanas-proyecto__barra, :where(:root[data-tema="oscuro"]) .nota-nueva, :where(:root[data-tema="oscuro"]) .subir-albaran { background: #141C11; }
+:where(:root[data-tema="oscuro"]) .albaran:hover { background: #1C2717; }
+:where(:root[data-tema="oscuro"]) .zona-pdf { border-color: #3A4A31; }
+:where(:root[data-tema="oscuro"]) .ordenar:hover, :where(:root[data-tema="oscuro"]) .ordenar--activo, :where(:root[data-tema="oscuro"]) .pestana-proyecto--activa, :where(:root[data-tema="oscuro"]) .pestana-proyecto--activa:hover { color: #A6D485; }
+:where(:root[data-tema="oscuro"]) .pestana-proyecto--activa { border-bottom-color: #7DB352; }
+:where(:root[data-tema="oscuro"]) .pestana-proyecto--activa .pestana-proyecto__numero { color: #A6D485; }
+:where(:root[data-tema="oscuro"]) .albaran__ver, :where(:root[data-tema="oscuro"]) .zona-pdf__icono, :where(:root[data-tema="oscuro"]) .fila__icono { color: #A6D485; }
 
 @media (max-width: 760px) {
     /* Los botones de clase y de apartado se deslizan en una fila */
@@ -1570,12 +1567,8 @@ img { display: block; max-width: 100%; }
 }
 
 /* Título de apartado con icono y contador (Notas, Albaranes y Apuntes de los operarios) */
-.panel__titulo--icono { display: flex; align-items: center; gap: 10px; }
-.panel__titulo--icono .icono { color: var(--verde-accion); }
 
-@media (max-width: 760px) {
-    .panel__titulo--icono { padding: 16px; }
-}
+/* Modo oscuro (botón del menú; por defecto el del sistema) */
 
 /* Cliente en los listados de proyectos */
 .fila__cliente { color: var(--texto); font-weight: 600; }
@@ -1638,7 +1631,10 @@ img { display: block; max-width: 100%; }
 .entrega { display: inline-flex; align-items: center; gap: 5px; }
 .entrega .icono { width: 15px; height: 15px; }
 
-
+/* Modo oscuro (botón del menú; por defecto el del sistema) */
+:where(:root[data-tema="oscuro"]) .cita-nueva { background: #141C11; }
+:where(:root[data-tema="oscuro"]) .cita__dia { color: #A6D485; }
+:where(:root[data-tema="oscuro"]) .cita--cercana .cita__dia, :where(:root[data-tema="oscuro"]) .cita--cercana .cita__meta strong { color: #E8C062; }
 
 @media (max-width: 760px) {
     .cita-nueva { grid-template-columns: 1fr 1fr; padding: 16px; }
@@ -1647,15 +1643,6 @@ img { display: block; max-width: 100%; }
     .citas-pasadas summary { padding: 12px 16px; min-height: 44px; }
 }
 .cita__meta strong { white-space: nowrap; }
-
-
-/* Ajustes: el botón de cerrar se coloca dentro de su aviso
-   y la tabla del catálogo (8 columnas) cabe sin desplazarse */
-.avisos .aviso { position: relative; padding-right: 48px; transition: opacity .3s, transform .3s; }
-.tabla--compacta th,
-.tabla--compacta td { padding: 12px 14px; }
-.tabla--compacta th:first-child,
-.tabla--compacta td:first-child { padding-left: 24px; }
 
 /* ==========================================================
    Calendario (Oficina): agenda de Outlook + citas de los proyectos
@@ -1720,6 +1707,11 @@ a.agenda__cuerpo:hover .agenda__titulo { color: var(--verde-accion); text-decora
 .agenda__fuente { align-self: center; flex: none; padding-right: 12px; color: var(--texto-suave); font-size: 12px; font-weight: 600; }
 .agenda__vacio { padding: 14px 0; color: var(--texto-suave); }
 
+/* Modo oscuro (botón del menú; por defecto el del sistema) */
+:root[data-tema="oscuro"] { --agenda-outlook: #6CB4F0; --agenda-outlook-suave: #16263A; }
+:where(:root[data-tema="oscuro"]) .agenda-dia--hoy { background: #141C11; }
+:where(:root[data-tema="oscuro"]) .agenda-dia--hoy .agenda-dia__numero { color: #A6D485; }
+
 @media (max-width: 760px) {
     .agenda-dia { grid-template-columns: 1fr; }
     .agenda-dia__fecha { padding: 14px 16px 4px; }
@@ -1730,58 +1722,6 @@ a.agenda__cuerpo:hover .agenda__titulo { color: var(--verde-accion); text-decora
 }
 .agenda-dia__hoy { align-self: flex-start; margin-top: 6px; font-style: normal; }
 .agenda__dia-completo { font-size: 12px; font-style: normal; white-space: nowrap; }
-
-/* ==========================================================
-   Empleados (Oficina): oficiales, peones y oficina
-   ========================================================== */
-/* Pestañas grandes entre «Oficiales y peones» y «Oficina» */
-.apartados { display: flex; gap: 4px; margin-top: 20px; border-bottom: 1px solid var(--linea); }
-.apartado {
-    margin-bottom: -1px;
-    padding: 10px 16px;
-    border-bottom: 3px solid transparent;
-    color: var(--texto-suave);
-    font-weight: 700;
-    text-decoration: none;
-}
-.apartado:hover { color: var(--texto); }
-.apartado--activo { border-bottom-color: var(--verde-accion); color: var(--verde-accion); }
-.apartado:focus-visible { outline: none; box-shadow: var(--foco); border-radius: 6px 6px 0 0; }
-
-/* Nombre con su inicial */
-.persona { display: inline-flex; align-items: center; gap: 10px; }
-.avatar--pequeno { width: 34px; height: 34px; flex: none; font-size: 14px; }
-.persona__texto { display: flex; flex-direction: column; line-height: 1.25; }
-.persona__texto span { color: var(--texto-suave); font-size: 13px; }
-
-/* Etiqueta del rol: 1 Oficial, 3 Peón, 2 Oficina, 4 Administrador */
-.rol { display: inline-block; padding: 3px 10px; border-radius: 999px; background: var(--verde-suave); color: var(--verde-accion); font-size: 12px; font-weight: 700; white-space: nowrap; }
-.rol--3 { background: #FFF3D6; color: #8A5A00; }
-.rol--2 { background: #E7EEF8; color: #2F5C8F; }
-.rol--4 { background: #EEE8F7; color: #5B3F8C; }
-
-.estado-empleado { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; }
-.estado-empleado::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--verde-marca); }
-.estado-empleado--baja { color: var(--texto-suave); }
-.estado-empleado--baja::before { background: var(--texto-suave); }
-.tabla__fila--baja td { opacity: .65; }
-
-/* Formulario del empleado */
-.grupo-campos { margin: 4px 0 0; padding: 16px; border: 1px solid var(--linea); border-radius: var(--radio-control); }
-.grupo-campos legend { padding: 0 6px; font-size: 14px; font-weight: 700; }
-.casilla { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; border-radius: var(--radio-control); background: var(--fondo); cursor: pointer; }
-.casilla input { width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--verde-accion); flex: none; }
-.casilla strong { display: block; font-size: 14px; }
-.casilla .ayuda-campo { margin: 2px 0 0; }
-.panel--peligro { margin-top: 20px; border-color: #F2C9C4; }
-.panel--peligro .pagina__texto { margin: 0 0 14px; }
-
-
-@media (max-width: 760px) {
-    .apartados { overflow-x: auto; }
-    .apartado { white-space: nowrap; }
-}
-.panel__nota { margin: 0; padding: 14px 24px; font-size: 13px; }
 
 /* ==========================================================
    Precios horas (Oficina) y varias líneas en un apunte de horas
@@ -1895,6 +1835,7 @@ a.agenda__cuerpo:hover .agenda__titulo { color: var(--verde-accion); text-decora
 .linea-horas__quitar:hover { background: var(--rojo-suave); color: var(--rojo); }
 
 /* Modo oscuro (botón del menú; por defecto el del sistema) */
+:where(:root[data-tema="oscuro"]) .precio-hora { background: #141C11; }
 @media (max-width: 760px) {
     .paso { padding: 16px 0; }
     .precio-hora__entrada { width: 100%; }
@@ -1908,6 +1849,310 @@ a.agenda__cuerpo:hover .agenda__titulo { color: var(--verde-accion); text-decora
 /* Botón de modo claro / oscuro: luna en modo claro, sol en modo oscuro */
 :root:not([data-tema="oscuro"]) .boton-tema .icono:last-of-type,
 :root[data-tema="oscuro"] .boton-tema .icono:first-of-type { display: none; }
+
+/* ==========================================================
+   Empleados (Oficina): oficiales, peones y oficina
+   ========================================================== */
+/* Pestañas grandes entre «Oficiales y peones» y «Oficina» */
+.apartados { display: flex; gap: 4px; margin-top: 20px; border-bottom: 1px solid var(--linea); }
+.apartado {
+    margin-bottom: -1px;
+    padding: 10px 16px;
+    border-bottom: 3px solid transparent;
+    color: var(--texto-suave);
+    font-weight: 700;
+    text-decoration: none;
+}
+.apartado:hover { color: var(--texto); }
+.apartado--activo { border-bottom-color: var(--verde-accion); color: var(--verde-accion); }
+.apartado:focus-visible { outline: none; box-shadow: var(--foco); border-radius: 6px 6px 0 0; }
+
+/* Nombre con su inicial */
+.persona { display: inline-flex; align-items: center; gap: 10px; }
+.avatar--pequeno { width: 34px; height: 34px; flex: none; font-size: 14px; }
+.persona__texto { display: flex; flex-direction: column; line-height: 1.25; }
+.persona__texto span { color: var(--texto-suave); font-size: 13px; }
+
+/* Etiqueta del rol: 1 Oficial, 3 Peón, 2 Oficina, 4 Administrador */
+.rol { display: inline-block; padding: 3px 10px; border-radius: 999px; background: var(--verde-suave); color: var(--verde-accion); font-size: 12px; font-weight: 700; white-space: nowrap; }
+.rol--3 { background: #FFF3D6; color: #8A5A00; }
+.rol--2 { background: #E7EEF8; color: #2F5C8F; }
+.rol--4 { background: #EEE8F7; color: #5B3F8C; }
+
+.estado-empleado { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; }
+.estado-empleado::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--verde-marca); }
+.estado-empleado--baja { color: var(--texto-suave); }
+.estado-empleado--baja::before { background: var(--texto-suave); }
+.tabla__fila--baja td { opacity: .65; }
+
+/* Formulario del empleado */
+.grupo-campos { margin: 4px 0 0; padding: 16px; border: 1px solid var(--linea); border-radius: var(--radio-control); }
+.grupo-campos legend { padding: 0 6px; font-size: 14px; font-weight: 700; }
+.casilla { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; border-radius: var(--radio-control); background: var(--fondo); cursor: pointer; }
+.casilla input { width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--verde-accion); flex: none; }
+.casilla strong { display: block; font-size: 14px; }
+.casilla .ayuda-campo { margin: 2px 0 0; }
+.panel--peligro { margin-top: 20px; border-color: #F2C9C4; }
+.panel--peligro .pagina__texto { margin: 0 0 14px; }
+
+:where(:root[data-tema="oscuro"]) .rol--3 { background: #3A2E12; color: #F2C76B; }
+:where(:root[data-tema="oscuro"]) .rol--2 { background: #1A2A38; color: #8DBCE6; }
+:where(:root[data-tema="oscuro"]) .rol--4 { background: #2A2238; color: #C2A8EC; }
+:where(:root[data-tema="oscuro"]) .panel--peligro { border-color: #5A2A24; }
+
+@media (max-width: 760px) {
+    .apartados { overflow-x: auto; }
+    .apartado { white-space: nowrap; }
+}
+
+/* Puesto fijo de oficiales y peones al apuntar horas */
+
+/* Albaranes en foto: miniatura en lugar del icono PDF */
+.albaran__icono--foto { object-fit: cover; background: var(--fondo); border: 1px solid var(--linea); }
+.albaran__icono--imagen { background: var(--verde-suave); color: var(--verde-accion); font-size: 10px; }
+
+/* ==========================================================
+   Ajustes de diseño: grises neutros, el verde de Gregal como acento
+   y esquinas de 8 px (las píldoras solo para las etiquetas de estado)
+   ========================================================== */
+:root[data-tema="oscuro"] { --sombra-flotante: 0 12px 32px rgba(0, 0, 0, 0.55); }
+
+.pagina { margin-bottom: 20px; }
+
+/* Botones: más compactos, como en cualquier programa de escritorio */
+.boton { min-height: 40px; padding: 0 16px; font-size: 14.5px; font-weight: 650; }
+.boton--ancho { min-height: 46px; }
+.boton .icono { width: 18px; height: 18px; }
+.entrada { min-height: 42px; border-color: #CBD3C3; }
+.entrada input, .entrada select { min-height: 40px; }
+
+/* Filtros y opciones: rectángulos redondeados, no píldoras */
+.familia, .chip { border-radius: var(--radio-control); }
+.familia { padding: 6px 12px; font-size: 13.5px; }
+.chip__nombre { padding: 6px 12px; font-size: 13.5px; }
+.chip__nombre:focus-visible { border-radius: var(--radio-control); }
+.panel__contador, .pestana-proyecto__numero { background: var(--fondo); color: var(--texto-suave); }
+
+/* Cabeceras de tabla discretas */
+.tabla th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* ---------- Menú lateral agrupado ---------- */
+.menu { gap: 14px; padding: 18px 12px 12px; }
+.menu__marca { font-size: 16px; }
+.menu__buscar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 38px;
+    padding: 0 10px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radio-control);
+    background: rgba(255, 255, 255, 0.06);
+    color: #BCD0AE;
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+}
+.menu__buscar:hover { background: rgba(255, 255, 255, 0.1); color: var(--sobre-color); }
+.menu__buscar .icono { width: 18px; height: 18px; }
+.menu__buscar kbd {
+    margin-left: auto;
+    padding: 1px 6px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 5px;
+    font: inherit;
+    font-size: 11px;
+}
+.menu__lista { flex: 1; overflow-y: auto; margin: 0 -4px; padding: 0 4px; scrollbar-width: thin; }
+.menu__grupo {
+    margin: 14px 10px 4px;
+    color: #8EA87D;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+}
+.menu__enlace { min-height: 38px; font-size: 14px; }
+.menu__enlace .icono { width: 18px; height: 18px; }
+.menu__enlace--activo,
+.menu__enlace--activo:hover { background: rgba(255, 255, 255, 0.12); color: var(--sobre-color); box-shadow: inset 3px 0 0 var(--verde-marca); }
+.menu__urgencia { min-height: 40px; font-size: 14px; }
+
+/* Menú del usuario (abajo): se despliega hacia arriba */
+.usuario-menu { position: relative; border-top: 1px solid rgba(255, 255, 255, 0.12); padding-top: 10px; }
+.usuario-menu__boton {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 8px;
+    border-radius: var(--radio-control);
+    cursor: pointer;
+    list-style: none;
+}
+.usuario-menu__boton::-webkit-details-marker { display: none; }
+.usuario-menu__boton:hover, .usuario-menu[open] .usuario-menu__boton { background: rgba(255, 255, 255, 0.08); }
+.usuario-menu__flecha { margin-left: auto; color: #A9C29A; transition: transform .15s; }
+.usuario-menu:not([open]) .usuario-menu__flecha { transform: rotate(180deg); }
+.usuario-menu__panel {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: calc(100% + 6px);
+    z-index: 30;
+    padding: 6px;
+    border: 1px solid var(--linea);
+    border-radius: var(--radio-panel);
+    background: var(--blanco);
+    color: var(--texto);
+    box-shadow: var(--sombra-flotante);
+}
+.usuario-menu__nota { margin: 4px 8px 6px; color: var(--texto-suave); font-size: 12px; }
+.usuario-menu__opcion {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 38px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--texto);
+    font: inherit;
+    font-size: 14px;
+    text-align: left;
+    cursor: pointer;
+}
+.usuario-menu__opcion:hover { background: var(--fondo); }
+.usuario-menu__opcion .icono { width: 18px; height: 18px; color: var(--texto-suave); }
+.usuario-menu form { margin: 0; }
+
+/* ---------- Avisos flotantes (abajo a la derecha) ---------- */
+.avisos {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 70;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: min(420px, calc(100vw - 32px));
+    margin: 0;
+}
+.avisos .aviso { margin: 0; box-shadow: var(--sombra-flotante); font-size: 14px; animation: aviso-entra .2s ease-out; }
+@keyframes aviso-entra { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+@media (max-width: 760px) {
+    .contenido { padding: 20px 16px 96px; }
+    .pagina__titulo { font-size: 22px; }
+    .avisos { right: 16px; left: 16px; bottom: 88px; width: auto; }
+}
+@media (prefers-reduced-motion: reduce) { .avisos .aviso { animation: none; } }
+
+/* ---------- Inicio: tablero ---------- */
+.pagina__antetitulo { margin: 0 0 2px; color: var(--texto-suave); font-size: 13px; font-weight: 600; }
+.indicadores { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.indicador {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px 18px;
+    border: 1px solid var(--linea);
+    border-radius: var(--radio-panel);
+    background: var(--blanco);
+    box-shadow: var(--sombra-panel);
+    color: var(--texto);
+    text-decoration: none;
+}
+a.indicador:hover { border-color: var(--verde-marca); }
+.indicador__nombre { color: var(--texto-suave); font-size: 13px; font-weight: 600; }
+.indicador__valor { font-size: 24px; font-weight: 750; letter-spacing: -0.01em; }
+.indicador--aviso { border-left: 3px solid var(--ambar); }
+
+.tablero { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 20px; align-items: start; }
+.tablero .panel { margin-bottom: 20px; }
+.panel__cabecera { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--linea); }
+.panel__cabecera .panel__titulo { margin: 0; }
+.panel__enlace { font-size: 13px; font-weight: 700; color: var(--verde-accion); text-decoration: none; }
+.panel__enlace:hover { text-decoration: underline; }
+
+.agenda-corta { margin: 0; padding: 4px 0; list-style: none; }
+.agenda-corta__fila { display: flex; align-items: center; gap: 12px; padding: 8px 20px; color: var(--texto); text-decoration: none; }
+.agenda-corta__fila:hover { background: var(--fondo); }
+.agenda-corta__dia { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: none; width: 42px; height: 44px; border: 1px solid var(--linea); border-radius: 8px; line-height: 1.05; }
+.agenda-corta__dia strong { font-size: 16px; }
+.agenda-corta__dia span { color: var(--texto-suave); font-size: 11px; text-transform: uppercase; }
+.agenda-corta__dia--hoy { border-color: var(--verde-accion); background: var(--verde-accion); color: var(--sobre-color); }
+.agenda-corta__dia--hoy span { color: inherit; opacity: .85; }
+.agenda-corta__texto { display: flex; flex-direction: column; min-width: 0; font-size: 14px; }
+.agenda-corta__texto span { color: var(--texto-suave); font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.atajos { margin: 0; padding: 4px 0; list-style: none; }
+.atajo { display: flex; align-items: center; gap: 12px; padding: 9px 20px; color: var(--texto); text-decoration: none; }
+.atajo:hover { background: var(--fondo); }
+.atajo__icono { display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 8px; background: var(--verde-suave); color: var(--verde-accion); }
+.atajo__icono .icono { width: 18px; height: 18px; }
+.atajo__nombre { flex: 1; font-weight: 650; }
+.atajo__dato { color: var(--texto-suave); font-size: 13px; }
+.atajo--urgencia .atajo__icono { background: var(--ambar-suave); color: #8A6100; }
+
+@media (max-width: 1024px) { .tablero { grid-template-columns: 1fr; } }
+@media (max-width: 760px) {
+    .indicadores { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .indicador { padding: 12px 14px; }
+    .indicador__valor { font-size: 20px; }
+     .agenda-corta__fila, .atajo { padding-left: 16px; padding-right: 16px; }
+}
+
+/* ---------- Ficha del proyecto ---------- */
+.ficha .pagina__acciones { align-items: center; }
+.boton--icono { width: 40px; padding: 0; }
+.mas-acciones { position: relative; }
+.mas-acciones > summary { list-style: none; }
+.mas-acciones > summary::-webkit-details-marker { display: none; }
+.mas-acciones__panel {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 6px);
+    z-index: 30;
+    min-width: 200px;
+    padding: 6px;
+    border: 1px solid var(--linea);
+    border-radius: var(--radio-panel);
+    background: var(--blanco);
+    box-shadow: var(--sombra-flotante);
+}
+.mas-acciones__panel form { margin: 0; }
+.mas-acciones__opcion {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 38px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--texto);
+    font: inherit;
+    font-size: 14px;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+}
+.mas-acciones__opcion:hover { background: var(--fondo); }
+.mas-acciones__opcion .icono { width: 18px; height: 18px; color: var(--texto-suave); }
+.mas-acciones__opcion--peligro, .mas-acciones__opcion--peligro .icono { color: var(--rojo); }
+.mas-acciones__opcion--peligro:hover { background: var(--rojo-suave); }
+
+.indicadores--ficha { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+.panel__cuerpo { padding: 24px; }
+.aviso--en-panel { margin: 16px 20px 0; }
+.pestana-proyecto { min-height: 50px; font-size: 14px; }
+.pestana-proyecto .icono { width: 18px; height: 18px; }
+.pestanas-proyecto__barra { background: transparent; }
+.pestanas-proyecto--activas .pestanas-proyecto__panel > .panel__titulo.pestanas-proyecto__titulo { margin: 0; }
 
 /* Tiempos habituales debajo de las ruedas */
 .tiempos-rapidos { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
@@ -1926,12 +2171,86 @@ a.agenda__cuerpo:hover .agenda__titulo { color: var(--verde-accion); text-decora
 }
 .tiempo-rapido:hover { border-color: var(--verde-marca); color: var(--verde-accion); }
 
+/* Paginación de los listados */
+.paginas { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 20px; border-top: 1px solid var(--linea); color: var(--texto-suave); font-size: 13px; }
+.paginas__botones { display: flex; align-items: center; gap: 8px; }
+.paginas__actual { font-weight: 600; color: var(--texto); }
 
-/* Albaranes con foto: miniatura, etiqueta FOTO y «Foto de la obra» */
-.albaran__icono--foto { object-fit: cover; background: var(--fondo); border: 1px solid var(--linea); }
-.albaran__icono--imagen { font-size: 10px; }
-.etiqueta { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; background: var(--verde-suave, #e8f3ec); color: var(--verde-accion, #1f7a45); font-size: 11.5px; font-weight: 700; vertical-align: 1px; }
+/* Etiqueta pequeña (p. ej. «Foto de la obra») */
+.etiqueta { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; background: var(--verde-suave); color: var(--verde-accion); font-size: 11.5px; font-weight: 700; vertical-align: 1px; }
 .subir-albaran__tipo { margin-bottom: 12px; }
+
+/* Buscador global (Ctrl+K) */
+.buscador-global {
+    width: min(620px, calc(100vw - 32px));
+    max-height: min(560px, calc(100vh - 120px));
+    margin: 12vh auto auto;
+    padding: 0;
+    border: 1px solid var(--linea);
+    border-radius: 12px;
+    background: var(--blanco);
+    color: var(--texto);
+    box-shadow: var(--sombra-flotante);
+    overflow: hidden;
+}
+.buscador-global[open] { display: flex; flex-direction: column; }
+.buscador-global::backdrop { background: rgba(14, 22, 10, 0.45); }
+.buscador-global__entrada { display: flex; align-items: center; gap: 10px; padding: 0 16px; border-bottom: 1px solid var(--linea); }
+.buscador-global__entrada .icono { color: var(--texto-suave); }
+.buscador-global__entrada input { flex: 1; min-height: 54px; border: 0; background: transparent; color: var(--texto); font: inherit; font-size: 16px; outline: none; }
+.buscador-global__entrada kbd { padding: 1px 6px; border: 1px solid var(--linea); border-radius: 5px; color: var(--texto-suave); font: inherit; font-size: 11px; }
+.buscador-global__resultados { overflow-y: auto; padding: 6px; }
+.buscador-global__grupo { margin: 8px 10px 4px; color: var(--texto-suave); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.buscador-global__resultado { display: flex; flex-direction: column; padding: 8px 10px; border-radius: 8px; color: var(--texto); text-decoration: none; }
+.buscador-global__resultado span { color: var(--texto-suave); font-size: 13px; }
+.buscador-global__resultado:hover, .buscador-global__resultado--elegido { background: var(--verde-suave); }
+.buscador-global__vacio { margin: 0; padding: 22px 12px; color: var(--texto-suave); text-align: center; }
+
+@media (max-width: 760px) {
+    .panel__cuerpo { padding: 16px; }
+    .pestanas-proyecto__barra { padding: 0 4px; }
+    .pestana-proyecto { flex: none; padding: 0 12px; }
+    .ficha .pagina__acciones { width: 100%; }
+    .ficha .pagina__acciones form:first-child { flex: 1; }
+    .ficha .pagina__acciones form:first-child .boton { width: 100%; }
+    .buscador-global { margin-top: 8vh; }
+    .paginas { padding: 12px 16px; }
+}
+.acceso__lema { margin-top: 18px; font-size: 15px !important; font-style: italic; opacity: .8; }
+.buscador-global__entrada input:focus, .buscador-global__entrada input:focus-visible { outline: none; box-shadow: none; }
+
+/* Tablas: menos relleno entre columnas y margen a los lados, para que las de muchas columnas
+   (Materiales) quepan y los botones de editar y borrar no toquen el borde */
+.tabla th, .tabla td { padding: 12px 14px; }
+.tabla th:first-child, .tabla td:first-child { padding-left: 24px; }
+.tabla th:last-child, .tabla td:last-child { padding-right: 24px; }
+.tabla__acciones { width: 1%; }
+.tabla__acciones form { margin-left: 6px; }
+@media (max-width: 760px) {
+    /* En el móvil las tablas son tarjetas: las celdas sin relleno, como antes */
+    .tabla td, .tabla td:first-child, .tabla td:last-child { padding: 0; }
+}
+.tabla__doble span:first-child { display: block; }
+.tabla .num { white-space: nowrap; }
+
+/* Inicio de Oficina: próximas citas por día */
+.indicador--destacado { border-left: 3px solid var(--verde-accion); }
+.citas-dia + .citas-dia { border-top: 1px solid var(--linea); }
+.citas-dia__fecha { display: flex; align-items: baseline; gap: 8px; margin: 0; padding: 12px 20px 4px; font-size: 14px; font-weight: 750; }
+.citas-dia__fecha span { color: var(--texto-suave); font-size: 13px; font-weight: 500; }
+.citas-dia__fecha--hoy { color: var(--verde-accion); }
+.citas-dia__lista { margin: 0 0 8px; padding: 0; list-style: none; }
+.cita-fila { display: flex; align-items: center; gap: 14px; padding: 8px 20px; color: var(--texto); text-decoration: none; }
+.cita-fila:hover { background: var(--fondo); }
+.cita-fila__hora { flex: none; width: 64px; color: var(--texto-suave); font-size: 13px; font-weight: 700; }
+.cita-fila__texto { display: flex; flex-direction: column; flex: 1; min-width: 0; font-size: 14px; }
+.cita-fila__texto span { color: var(--texto-suave); font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cita-fila > .icono { flex: none; width: 18px; height: 18px; color: var(--texto-suave); }
+@media (max-width: 760px) {
+    .citas-dia__fecha { padding-left: 16px; padding-right: 16px; }
+    .cita-fila { padding-left: 16px; padding-right: 16px; gap: 10px; }
+    .cita-fila__hora { width: 52px; }
+}
 
 /* Apartado Citas */
 .cita-campos { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 0.8fr) minmax(0, 1.6fr); gap: 16px; align-items: start; }
@@ -1939,8 +2258,118 @@ a.agenda__cuerpo:hover .agenda__titulo { color: var(--verde-accion); text-decora
 .entrada--filtro { min-height: 36px; background: var(--fondo); border-color: var(--linea); }
 .entrada--filtro .icono { width: 16px; height: 16px; color: var(--texto-suave); }
 .entrada--filtro input { min-height: 34px; font-size: 13.5px; }
+.panel__enlaces { display: flex; gap: 16px; }
 .tabla--citas a { color: var(--texto); font-weight: 650; text-decoration: none; }
 .tabla--citas a:hover { color: var(--verde-accion); text-decoration: underline; }
 .tabla--citas .tabla__doble > * { display: block; }
 @media (max-width: 1024px) { .cita-campos { grid-template-columns: 1fr 1fr; } .cita-campos__trabajo { grid-column: 1 / -1; } }
 @media (max-width: 760px) { .cita-campos { grid-template-columns: 1fr; } }
+
+/* Propio de TFG: contadores de la lista de albaranes y tabla compacta de materiales */
+.contador {
+    min-width: 22px;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: var(--fondo);
+    color: var(--texto-suave);
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+}
+.contador--grande { flex: none; padding: 3px 10px; color: var(--texto); font-size: 13px; white-space: nowrap; }
+@media (min-width: 761px) {
+    .tabla--compacta th,
+    .tabla--compacta td { padding: 12px 14px; }
+    .tabla--compacta th:first-child,
+    .tabla--compacta td:first-child { padding-left: 24px; }
+}
+
+/* ==========================================================
+   Móvil: que nada se salga de la pantalla ni se pise
+   ========================================================== */
+/* Los hijos de grid y flex no encogen por debajo de su contenido si no se les dice */
+.contenido > *, .tablero > *, .panel, .pestanas-proyecto, .pestanas-proyecto__panel, .campo { min-width: 0; }
+@media (max-width: 1024px) { .tablero { grid-template-columns: minmax(0, 1fr); } }
+
+@media (max-width: 760px) {
+    /* Pestañas de la ficha: se deslizan en vez de apretarse */
+    .pestana-proyecto { flex: none; }
+
+    /* Puesto, campo y tipo de albarán: todas las opciones a la vista, en varias filas */
+    .campo .familias, .familias--formulario { flex-wrap: wrap; overflow: visible; }
+
+    /* Se lee el texto entero (trabajo, cliente, dirección) en vez de cortarlo con «…» */
+    .cita-fila__texto span, .agenda-corta__texto span { white-space: normal; }
+    .fila__titulo, .fila__meta { overflow-wrap: anywhere; }
+
+    /* Cabecera de un panel con enlaces: los enlaces bajan debajo del título */
+    .panel__cabecera { flex-wrap: wrap; row-gap: 6px; }
+
+    /* Acciones de la ficha: el botón ocupa el ancho y «Más» se queda a su lado sin aplastarse */
+    .pagina__acciones { width: 100%; }
+    .mas-acciones > summary { flex: none; min-width: 44px; }
+
+    /* Que el último contenido no quede debajo de la barra inferior */
+    .contenido { padding-bottom: 96px; }
+
+    /* Pestañas de la ficha: un difuminado a la derecha avisa de que hay más deslizando */
+    .pestanas-proyecto__barra { -webkit-mask-image: linear-gradient(to right, #000 85%, transparent); mask-image: linear-gradient(to right, #000 85%, transparent); scrollbar-width: none; }
+
+    /* Botones de la cabecera (Materiales: Familias, Tipos, Precios horas, Nuevo): de dos en dos */
+    .pagina__acciones:has(> :nth-child(3)) { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pagina__acciones:has(> :nth-child(3)) > * { flex: 1 1 auto; width: auto; padding-left: 12px; padding-right: 12px; }
+    .pagina__acciones:has(> :nth-child(3)) > :last-child { flex-basis: 100%; }
+
+    /* Tarjetas de las tablas: las celdas vacías («—») no ocupan una línea */
+    .tabla td:has(> .tabla__nada:only-child) { display: none; }
+
+    /* Citas: fecha y hora arriba, motivo y trabajo debajo */
+    .tabla--citas tr { grid-template-columns: auto 1fr; align-items: baseline; }
+    .tabla--citas td:nth-child(3), .tabla--citas td:nth-child(4) { grid-column: 1 / -1; }
+    .tabla--citas td:nth-child(3) { font-weight: 700; }
+    .tabla--citas td:nth-child(2) .tabla__nada { display: inline; }
+    .tabla--citas td:has(> .tabla__nada:only-child) { display: block; }
+}
+
+/* ==========================================================
+   Barra inferior del móvil por perfil: Oficina con grupos (como el menú de la web)
+   y oficiales y peones con accesos directos
+   ========================================================== */
+@media (max-width: 760px) {
+    .pestanas--cuatro { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .pestana-grupo { position: static; display: flex; }
+    .pestana-grupo > summary { flex: 1; list-style: none; cursor: pointer; }
+    .pestana-grupo > summary::-webkit-details-marker { display: none; }
+    .pestana-grupo[open] > summary { color: var(--verde-accion); }
+
+    /* Panel que sube desde la barra con los apartados del grupo */
+    .pestana-grupo__panel {
+        position: fixed;
+        right: 8px;
+        bottom: calc(72px + env(safe-area-inset-bottom));
+        left: 8px;
+        z-index: 31;
+        display: grid;
+        gap: 2px;
+        padding: 10px;
+        border: 1px solid var(--linea);
+        border-radius: 14px;
+        background: var(--blanco);
+        box-shadow: var(--sombra-flotante, 0 12px 32px rgba(23, 36, 15, 0.18));
+    }
+    .pestana-grupo__titulo { margin: 2px 8px 6px; color: var(--texto-suave); font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+    .pestana-grupo__enlace {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 48px;
+        padding: 0 12px;
+        border-radius: 10px;
+        color: var(--texto);
+        font-weight: 650;
+        text-decoration: none;
+    }
+    .pestana-grupo__enlace:active, .pestana-grupo__enlace--activo { background: var(--verde-suave); color: var(--verde-accion); }
+    .pestana-grupo__numero { margin-left: auto; padding: 1px 8px; border-radius: 999px; background: var(--fondo); color: var(--texto-suave); font-size: 12px; font-weight: 700; }
+}
+:where(:root[data-tema="oscuro"]) .pestana-grupo__panel { background: #141C11; }

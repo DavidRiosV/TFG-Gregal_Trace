@@ -1,0 +1,15 @@
+{# Navegación entre páginas de un listado. Recibe: pagina (de Paginator) y base_paginas («?estado=PRO&pagina=») #}
+{% if pagina.has_other_pages %}
+    <nav class="paginas" aria-label="Páginas">
+        <span class="paginas__texto">{{ pagina.start_index }}–{{ pagina.end_index }} de {{ pagina.paginator.count }}</span>
+        <span class="paginas__botones">
+            {% if pagina.has_previous %}
+                <a class="boton-tabla" href="{{ base_paginas }}{{ pagina.previous_page_number }}" aria-label="Página anterior" title="Anterior">{% include "gestion/icono.html" with nombre="volver" %}</a>
+            {% endif %}
+            <span class="paginas__actual">Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}</span>
+            {% if pagina.has_next %}
+                <a class="boton-tabla" href="{{ base_paginas }}{{ pagina.next_page_number }}" aria-label="Página siguiente" title="Siguiente">{% include "gestion/icono.html" with nombre="siguiente" %}</a>
+            {% endif %}
+        </span>
+    </nav>
+{% endif %}

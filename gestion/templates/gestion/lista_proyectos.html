@@ -4,7 +4,6 @@
 
 {% block contenido %}
 {% url 'index' as url_inicio %}
-
 <header class="pagina">
     {% include "gestion/migas.html" with miga_actual=titulo %}
     <div class="pagina__fila">
@@ -19,12 +18,15 @@
 
 <section class="panel panel--lista">
     <div class="barra-herramientas">
-        {% include "gestion/buscador.html" with texto_buscador="Buscar por nombre o descripción" %}
+        {% include "gestion/buscador.html" with texto_buscador="Buscar por nombre, cliente o descripción" %}
 
         <nav class="segmentos" aria-label="Filtrar por estado">
-            <a href="?estado=PRO&q={{ busqueda }}" class="segmento{% if estado_actual == 'PRO' %} segmento--activo{% endif %}">En proceso</a>
-            <a href="?estado=TER&q={{ busqueda }}" class="segmento{% if estado_actual == 'TER' %} segmento--activo{% endif %}">Terminados</a>
-            <a href="?estado=todos&q={{ busqueda }}" class="segmento{% if estado_actual == 'todos' %} segmento--activo{% endif %}">Todos</a>
+            <a href="?estado=PRO{% if busqueda %}&q={{ busqueda|urlencode }}{% endif %}"
+               class="segmento{% if estado_actual == 'PRO' %} segmento--activo{% endif %}"{% if estado_actual == 'PRO' %} aria-current="true"{% endif %}>En proceso</a>
+            <a href="?estado=TER{% if busqueda %}&q={{ busqueda|urlencode }}{% endif %}"
+               class="segmento{% if estado_actual == 'TER' %} segmento--activo{% endif %}"{% if estado_actual == 'TER' %} aria-current="true"{% endif %}>Terminados</a>
+            <a href="?estado=todos{% if busqueda %}&q={{ busqueda|urlencode }}{% endif %}"
+               class="segmento{% if estado_actual == 'todos' %} segmento--activo{% endif %}"{% if estado_actual == 'todos' %} aria-current="true"{% endif %}>Todos</a>
         </nav>
     </div>
 
@@ -34,13 +36,16 @@
                 <a class="fila" href="{% url 'detalle_proyecto' proyecto.pk %}">
                     <span class="fila__principal">
                         <span class="fila__titulo">{{ proyecto.nombre }}</span>
-                        <span class="fila__meta">{% if proyecto.cliente %}<span class="fila__cliente">{{ proyecto.cliente }}</span> · {% endif %}Inicio {{ proyecto.fecha_inicio|date:"d/m/Y" }}{% if proyecto.fecha_fin %}, fin {{ proyecto.fecha_fin|date:"d/m/Y" }}{% endif %}</span>
+                        <span class="fila__meta">
+                            {% if proyecto.cliente %}<span class="fila__cliente">{{ proyecto.cliente }}</span> · {% endif %}Inicio {{ proyecto.fecha_inicio|date:"d/m/Y" }}{% if proyecto.fecha_fin %}, fin {{ proyecto.fecha_fin|date:"d/m/Y" }}{% endif %}
+                        </span>
                     </span>
                     {# Próxima cita junto al estado (en ámbar si es hoy o mañana). Los proyectos van ordenados por ella #}
                     {% with cita=proyecto.siguiente_cita %}
-                        {% if cita and proyecto.estado == 'PRO' %}
+                        {% if cita and not proyecto.esta_terminado %}
                             <span class="entrega{% if cita.es_cercana %} entrega--cerca{% endif %}" title="Próxima cita{% if cita.motivo %}: {{ cita.motivo }}{% endif %}">
-                                {% include "gestion/icono.html" with nombre="cita" %}{{ cita.fecha|date:"d/m/Y" }}{% if cita.hora %} · {{ cita.hora|time:"H:i" }}{% endif %} · {{ cita.dias }}
+                                {% include "gestion/icono.html" with nombre="cita" %}{{ cita.fecha|date:"d/m/Y" }}{% if cita.hora %} · {{ cita.hora|time:"H:i" }}{% endif %}
+                                <span class="entrega__dias">· {{ cita.dias }}</span>
                             </span>
                         {% endif %}
                     {% endwith %}
@@ -53,12 +58,18 @@
                 {% if busqueda %}
                     <p>No hay proyectos que coincidan con «{{ busqueda }}».</p>
                     <a href="?estado={{ estado_actual }}">Quitar la búsqueda</a>
+                {% elif estado_actual == 'PRO' %}
+                    <p>No hay {{ titulo|lower }} en proceso ahora mismo.</p>
+                    <a href="?estado=TER">Ver las terminadas</a>
+                {% elif estado_actual == 'TER' %}
+                    <p>Todavía no hay {{ titulo|lower }} terminadas.</p>
                 {% else %}
-                    <p>No hay proyectos en este estado.</p>
+                    <p>Todavía no hay {{ titulo|lower }}.</p>
                 {% endif %}
             </li>
         {% endfor %}
     </ul>
+    {% include "gestion/paginas.html" %}
 </section>
 
 {% include "gestion/volver.html" with volver_url=url_inicio volver_texto="Volver al inicio" %}

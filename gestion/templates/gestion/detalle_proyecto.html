@@ -5,10 +5,11 @@
 {% block contenido %}
 {% if proyecto.tipo == 'URG' %}{% url 'urgencias' as url_lista %}{% else %}{% url 'lista_proyectos' slug_volver as url_lista %}{% endif %}
 
-<header class="pagina">
+{# ---------- Cabecera: nombre, estado, datos clave y acciones ---------- #}
+<header class="pagina ficha">
     {% include "gestion/migas.html" with miga_url=url_lista miga_texto=proyecto.get_tipo_display miga_actual=proyecto.nombre %}
     <div class="pagina__fila">
-        <div>
+        <div class="ficha__titulo">
             <div class="pagina__titulo-con-estado">
                 <h1 class="pagina__titulo">{{ proyecto.nombre }}</h1>
                 {% include "gestion/estado.html" %}
@@ -17,7 +18,7 @@
                 {% if proyecto.cliente %}<div><dt>Cliente</dt><dd>{{ proyecto.cliente }}</dd></div>{% endif %}
                 <div><dt>Tipo</dt><dd>{{ proyecto.get_tipo_display }}{% if proyecto.tipo == 'URG' and proyecto.tipo_destino %}, pasará a {{ proyecto.get_tipo_destino_display|lower }}{% endif %}</dd></div>
                 <div><dt>Inicio</dt><dd>{{ proyecto.fecha_inicio|date:"d/m/Y" }}</dd></div>
-                {% with cita=citas_proximas.0 %}{% if cita %}<div><dt>Próxima cita</dt><dd><a href="#citas">{{ cita.fecha|date:"d/m/Y" }}{% if cita.hora %} a las {{ cita.hora|time:"H:i" }}{% endif %}</a> <span class="entrega{% if cita.es_cercana %} entrega--cerca{% endif %}">({{ cita.dias }})</span></dd></div>{% endif %}{% endwith %}
+                {% with cita=citas_proximas.0 %}{% if cita %}<div><dt>Próxima cita</dt><dd><a href="#citas" data-ir-pestana="citas">{{ cita.fecha|date:"d/m/Y" }}{% if cita.hora %} · {{ cita.hora|time:"H:i" }}{% endif %}</a> <span class="entrega{% if cita.es_cercana %} entrega--cerca{% endif %}">({{ cita.dias }})</span></dd></div>{% endif %}{% endwith %}
                 {% if proyecto.fecha_fin %}<div><dt>Fin</dt><dd>{{ proyecto.fecha_fin|date:"d/m/Y" }}</dd></div>{% endif %}
                 {% if proyecto.creado_por %}<div><dt>Abierto por</dt><dd>{{ proyecto.creado_por.get_full_name|default:proyecto.creado_por.username }}</dd></div>{% endif %}
             </dl>
@@ -25,10 +26,9 @@
         {% if perms.gestion.change_proyecto or perms.gestion.delete_proyecto %}
             <div class="pagina__acciones">
                 {% if perms.gestion.change_proyecto %}
-                    <a class="boton boton--secundario" href="{% url 'proyecto_editar' proyecto.pk %}">Editar</a>
                     <form method="post" action="{% url 'cambiar_estado' proyecto.pk %}">
                         {% csrf_token %}
-                        {% if proyecto.estado == 'TER' %}
+                        {% if proyecto.esta_terminado %}
                             <button type="submit" class="boton boton--secundario">Volver a poner en proceso</button>
                         {% elif proyecto.tipo == 'URG' and proyecto.tipo_destino %}
                             <button type="submit" class="boton">Terminar y pasar a {{ proyecto.get_tipo_destino_display|lower }}</button>
@@ -37,143 +37,155 @@
                         {% endif %}
                     </form>
                 {% endif %}
-                {% if perms.gestion.delete_proyecto %}
-                    <form method="post" action="{% url 'proyecto_eliminar' proyecto.pk %}">
-                        {% csrf_token %}
-                        <button type="submit" class="boton boton--peligro" onclick="return eliminar();">Eliminar</button>
-                    </form>
-                {% endif %}
+                {# Editar y eliminar, en un menú «Más» para no llenar la cabecera de botones #}
+                <details class="mas-acciones">
+                    <summary class="boton boton--secundario boton--icono" aria-label="Más acciones" title="Más acciones">
+                        <svg class="icono" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>
+                    </summary>
+                    <div class="mas-acciones__panel">
+                        {% if perms.gestion.change_proyecto %}
+                            <a class="mas-acciones__opcion" href="{% url 'proyecto_editar' proyecto.pk %}">{% include "gestion/icono.html" with nombre="editar" %}Editar datos</a>
+                        {% endif %}
+                        {% if perms.gestion.delete_proyecto %}
+                            {# Eliminar: formulario POST y confirmación en JavaScript (diapositivas 80-81) #}
+                            <form method="post" action="{% url 'proyecto_eliminar' proyecto.pk %}">
+                                {% csrf_token %}
+                                <button type="submit" class="mas-acciones__opcion mas-acciones__opcion--peligro" onclick="return confirm('Se borrará «{{ proyecto.nombre|escapejs }}» con todos sus apuntes, notas y albaranes. No se puede deshacer.');">{% include "gestion/icono.html" with nombre="borrar" %}Eliminar</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </details>
             </div>
         {% endif %}
     </div>
-    {% if proyecto.descripcion %}<p class="pagina__texto pagina__texto--descripcion">{{ proyecto.descripcion }}</p>{% endif %}
+    {% if proyecto.descripcion %}<p class="pagina__texto pagina__texto--descripcion">{{ proyecto.descripcion|linebreaksbr }}</p>{% endif %}
 </header>
 
-<div class="cifras">
-    <div class="cifra">
-        <span class="cifra__valor">{{ consumos|length }}</span>
-        <span class="cifra__nombre">Apuntes</span>
+<div class="indicadores indicadores--ficha">
+    <div class="indicador">
+        <span class="indicador__nombre">Horas</span>
+        <span class="indicador__valor">{{ horas_texto }}</span>
     </div>
-    <div class="cifra">
-        <span class="cifra__valor">{{ horas_texto }}</span>
-        <span class="cifra__nombre">Horas</span>
+    <div class="indicador">
+        <span class="indicador__nombre">Apuntes</span>
+        <span class="indicador__valor">{{ consumos|length }}</span>
     </div>
-    {% if es_oficina %}
-        <div class="cifra cifra--principal">
-            <span class="cifra__valor">{{ coste_total|floatformat:"2g" }} €</span>
-            <span class="cifra__nombre">Coste total</span>
+    {% if perms.gestion.change_material %}
+        <div class="indicador">
+            <span class="indicador__nombre">Coste total</span>
+            <span class="indicador__valor">{{ coste_total|floatformat:"2g" }} €</span>
         </div>
     {% endif %}
 </div>
 
-{# Citas: Oficina las añade y las quita; los operarios las ven si hay alguna #}
-{% if perms.gestion.add_cita or citas_proximas or citas_pasadas %}
-<section class="panel panel--lista" id="citas">
-    <h2 class="panel__titulo panel__titulo--con-margen panel__titulo--icono">{% include "gestion/icono.html" with nombre="cita" %}Citas <span class="contador">{{ citas_proximas|length }}</span></h2>
-    {% if perms.gestion.add_cita %}
-        <form method="post" class="cita-nueva" novalidate>
-            {% csrf_token %}
-            <input type="hidden" name="apunte" value="cita">
-            {% include "gestion/campo_widget.html" with campo=formulario_cita.fecha %}
-            {% include "gestion/campo_widget.html" with campo=formulario_cita.hora %}
-            {% include "gestion/campo_widget.html" with campo=formulario_cita.motivo %}
-            <button type="submit" class="boton">{% include "gestion/icono.html" with nombre="mas" %}Añadir cita</button>
-        </form>
-    {% endif %}
-    <ul class="citas">
-        {% for cita in citas_proximas %}
-            {% include "gestion/cita.html" %}
-        {% empty %}
-            <li class="vacio vacio--corto"><p>No hay citas pendientes.</p></li>
-        {% endfor %}
-    </ul>
-    {% if citas_pasadas %}
-        <details class="citas-pasadas">
-            <summary>Citas pasadas ({{ citas_pasadas|length }})</summary>
-            <ul class="citas">
-                {% for cita in citas_pasadas %}{% include "gestion/cita.html" %}{% endfor %}
-            </ul>
-        </details>
-    {% endif %}
-</section>
-{% endif %}
-
-{% if proyecto.estado == 'TER' %}
-    <p class="aviso aviso--info">Este proyecto está terminado, así que ya no admite apuntes nuevos.</p>
-{% endif %}
-
-{% if puede_apuntar %}
-<section class="panel" id="horas">
-    <h2 class="panel__titulo">Horas de trabajo</h2>
-    <form method="post" class="formulario" novalidate>
-        {% csrf_token %}
-        <input type="hidden" name="apunte" value="horas">
-        {% include "gestion/selector_horas.html" with formulario=formulario_horas con_lineas=True %}
-        <button type="submit" class="boton boton--ancho" data-lineas-enviar>Apuntar horas</button>
-    </form>
-</section>
-{% endif %}
-
-{# Operarios: Notas y Albaranes son apartados propios, justo después de las horas #}
-{% if not es_oficina %}
-    <section class="panel panel--lista" id="notas">
-        <h2 class="panel__titulo panel__titulo--con-margen panel__titulo--icono">{% include "gestion/icono.html" with nombre="nota" %}Notas <span class="contador">{{ notas|length }}</span></h2>
-        {% include "gestion/bloque_notas.html" %}
-    </section>
-    <section class="panel panel--lista" id="albaranes">
-        <h2 class="panel__titulo panel__titulo--con-margen panel__titulo--icono">{% include "gestion/icono.html" with nombre="albaran" %}Albaranes y fotos <span class="contador">{{ albaranes|length }}</span></h2>
-        {% include "gestion/bloque_albaranes.html" %}
-    </section>
-{% endif %}
-
-{# Material: solo Oficina #}
-{% if puede_apuntar_material %}
-<section class="panel" id="apuntar">
-    <h2 class="panel__titulo">Material</h2>
-    {% include "gestion/elegir_material.html" with ancla="apuntar" %}
-
-    <form method="post" class="formulario" novalidate data-opciones-material>
-        {% csrf_token %}
-        <input type="hidden" name="apunte" value="material">
-        {% include "gestion/filtros_ocultos.html" %}
-        {% include "gestion/opciones_material.html" %}
-
-        <div class="formulario--consumo">
-            {% include "gestion/campo_cantidad.html" %}
-            {% include "gestion/campo_widget.html" with campo=formulario.fecha %}
-        </div>
-        <button type="submit" class="boton boton--ancho">Apuntar material</button>
-    </form>
-</section>
-{% endif %}
-
-{% if es_oficina %}
-{# Oficina: abajo, en pestañas, Apuntes, Notas y Albaranes. Sin JavaScript se ven las tres seguidas #}
-<section class="panel panel--lista pestanas-proyecto" data-pestanas data-pestana-inicial="{{ pestana }}">
-    <div class="pestanas-proyecto__barra" role="tablist">
-        <a class="pestana-proyecto" href="#apuntes" role="tab" data-pestana="apuntes">{% include "gestion/icono.html" with nombre="materiales" %}<span>Apuntes</span> <span class="contador">{{ consumos|length }}</span></a>
-        <a class="pestana-proyecto" href="#notas" role="tab" data-pestana="notas">{% include "gestion/icono.html" with nombre="nota" %}<span>Notas</span> <span class="contador">{{ notas|length }}</span></a>
-        <a class="pestana-proyecto" href="#albaranes" role="tab" data-pestana="albaranes">{% include "gestion/icono.html" with nombre="albaran" %}<span>Albaranes y fotos</span> <span class="contador">{{ albaranes|length }}</span></a>
+{# ---------- Pestañas. Sin JavaScript se ven todos los apartados seguidos ---------- #}
+<section class="panel panel--lista pestanas-proyecto" data-pestanas data-pestana-inicial="{{ pestana }}"{% if request.method == 'POST' %} data-mover="1"{% endif %}>
+    <div class="pestanas-proyecto__barra" role="tablist" aria-label="Apartados del proyecto">
+        {% if puede_apuntar %}
+            <a class="pestana-proyecto" href="#horas" role="tab" data-pestana="horas">{% include "gestion/icono.html" with nombre="reloj" %}<span>Horas</span></a>
+        {% endif %}
+        {% if puede_apuntar_material %}
+            <a class="pestana-proyecto" href="#apuntar" role="tab" data-pestana="apuntar">{% include "gestion/icono.html" with nombre="materiales" %}<span>Material</span></a>
+        {% endif %}
+        <a class="pestana-proyecto" href="#apuntes" role="tab" data-pestana="apuntes">{% include "gestion/icono.html" with nombre="presupuesto" %}<span>Apuntes</span><span class="pestana-proyecto__numero">{{ consumos|length }}</span></a>
+        {% if perms.gestion.view_nota %}
+            <a class="pestana-proyecto" href="#notas" role="tab" data-pestana="notas">{% include "gestion/icono.html" with nombre="nota" %}<span>Notas</span><span class="pestana-proyecto__numero">{{ notas|length }}</span></a>
+        {% endif %}
+        {% if perms.gestion.view_albaran %}
+            <a class="pestana-proyecto" href="#albaranes" role="tab" data-pestana="albaranes">{% include "gestion/icono.html" with nombre="albaran" %}<span>Albaranes y fotos</span><span class="pestana-proyecto__numero">{{ albaranes|length }}</span></a>
+        {% endif %}
+        {% if perms.gestion.add_cita or citas_proximas or citas_pasadas %}
+            <a class="pestana-proyecto" href="#citas" role="tab" data-pestana="citas">{% include "gestion/icono.html" with nombre="cita" %}<span>Citas</span><span class="pestana-proyecto__numero">{{ citas_proximas|length }}</span></a>
+        {% endif %}
     </div>
+
+    {% if puede_apuntar %}
+        <div class="pestanas-proyecto__panel" id="horas" role="tabpanel">
+            <h2 class="panel__titulo pestanas-proyecto__titulo">Horas de trabajo</h2>
+            <div class="panel__cuerpo">
+                <form method="post" class="formulario" novalidate>
+                    {% csrf_token %}
+                    <input type="hidden" name="apunte" value="horas">
+                    {% include "gestion/selector_horas.html" with formulario=formulario_horas con_lineas=True %}
+                    <button type="submit" class="boton boton--ancho" data-lineas-enviar>Apuntar horas</button>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if puede_apuntar_material %}
+        <div class="pestanas-proyecto__panel" id="apuntar" role="tabpanel">
+            <h2 class="panel__titulo pestanas-proyecto__titulo">Material</h2>
+            <div class="panel__cuerpo">
+                {% include "gestion/elegir_material.html" with ancla="apuntar" %}
+                <form method="post" class="formulario" novalidate data-opciones-material>
+                    {% csrf_token %}
+                    <input type="hidden" name="apunte" value="material">
+                    {% include "gestion/filtros_ocultos.html" %}
+                    {% include "gestion/opciones_material.html" %}
+                    <div class="formulario--consumo">
+                        {% include "gestion/campo_cantidad.html" %}
+                        {% include "gestion/campo_widget.html" with campo=formulario.fecha %}
+                    </div>
+                    <button type="submit" class="boton boton--ancho">Apuntar material</button>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+
     <div class="pestanas-proyecto__panel" id="apuntes" role="tabpanel">
-        <h2 class="panel__titulo panel__titulo--con-margen pestanas-proyecto__titulo">Apuntes</h2>
+        <h2 class="panel__titulo pestanas-proyecto__titulo">Apuntes</h2>
+        {% if proyecto.esta_terminado %}<p class="aviso aviso--info aviso--en-panel">Este proyecto está terminado, así que ya no admite apuntes nuevos.</p>{% endif %}
         {% include "gestion/bloque_apuntes.html" %}
     </div>
-    <div class="pestanas-proyecto__panel" id="notas" role="tabpanel">
-        <h2 class="panel__titulo panel__titulo--con-margen pestanas-proyecto__titulo">Notas</h2>
-        {% include "gestion/bloque_notas.html" %}
-    </div>
-    <div class="pestanas-proyecto__panel" id="albaranes" role="tabpanel">
-        <h2 class="panel__titulo panel__titulo--con-margen pestanas-proyecto__titulo">Albaranes y fotos</h2>
-        {% include "gestion/bloque_albaranes.html" %}
-    </div>
-</section>
-{% else %}
-<section class="panel panel--lista" id="apuntes">
-    <h2 class="panel__titulo panel__titulo--con-margen panel__titulo--icono">{% include "gestion/icono.html" with nombre="materiales" %}Apuntes <span class="contador">{{ consumos|length }}</span></h2>
-    {% include "gestion/bloque_apuntes.html" %}
-</section>
-{% endif %}
 
-{% include "gestion/volver.html" with volver_url=url_lista volver_texto="Volver al listado" %}
+    {% if perms.gestion.view_nota %}
+        {# Notas: las escribe cualquiera; cada uno borra las suyas y Oficina, todas #}
+        <div class="pestanas-proyecto__panel" id="notas" role="tabpanel">
+            <h2 class="panel__titulo pestanas-proyecto__titulo">Notas</h2>
+            {% include "gestion/bloque_notas.html" %}
+        </div>
+    {% endif %}
+
+    {% if perms.gestion.view_albaran %}
+        {# Albaranes y fotos de la obra: los sube cualquiera; los borra Oficina #}
+        <div class="pestanas-proyecto__panel" id="albaranes" role="tabpanel">
+            <h2 class="panel__titulo pestanas-proyecto__titulo">Albaranes y fotos</h2>
+            {% include "gestion/bloque_albaranes.html" %}
+        </div>
+    {% endif %}
+
+    {% if perms.gestion.add_cita or citas_proximas or citas_pasadas %}
+        {# Citas: Oficina las añade y las quita; los operarios las ven #}
+        <div class="pestanas-proyecto__panel" id="citas" role="tabpanel">
+            <h2 class="panel__titulo pestanas-proyecto__titulo">Citas</h2>
+            {% if perms.gestion.add_cita %}
+                <form method="post" class="cita-nueva" novalidate>
+                    {% csrf_token %}
+                    <input type="hidden" name="apunte" value="cita">
+                    {% include "gestion/campo_widget.html" with campo=formulario_cita.fecha %}
+                    {% include "gestion/campo_widget.html" with campo=formulario_cita.hora %}
+                    {% include "gestion/campo_widget.html" with campo=formulario_cita.motivo %}
+                    <button type="submit" class="boton">{% include "gestion/icono.html" with nombre="mas" %}Añadir cita</button>
+                </form>
+            {% endif %}
+            <ul class="citas">
+                {% for cita in citas_proximas %}
+                    {% include "gestion/cita.html" %}
+                {% empty %}
+                    <li class="vacio vacio--corto"><p>No hay citas pendientes.</p></li>
+                {% endfor %}
+            </ul>
+            {% if citas_pasadas %}
+                <details class="citas-pasadas">
+                    <summary>Citas pasadas ({{ citas_pasadas|length }})</summary>
+                    <ul class="citas">
+                        {% for cita in citas_pasadas %}{% include "gestion/cita.html" %}{% endfor %}
+                    </ul>
+                </details>
+            {% endif %}
+        </div>
+    {% endif %}
+
+</section>
 {% endblock %}

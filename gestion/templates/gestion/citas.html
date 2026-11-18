@@ -81,6 +81,7 @@
                 </tbody>
             </table>
         </div>
+        {% include "gestion/paginas.html" %}
     {% else %}
         <div class="vacio"><p>{% if busqueda %}Ninguna cita coincide con «{{ busqueda }}».{% elif ver_actual == 'proximas' %}No hay citas pendientes. Agenda la primera arriba.{% elif ver_actual == 'pasadas' %}Todavía no hay citas pasadas.{% else %}Todavía no hay citas.{% endif %}</p></div>
     {% endif %}

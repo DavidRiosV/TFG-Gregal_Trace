@@ -1,9 +1,76 @@
 {% load static %}
 <aside class="menu" aria-label="Menú principal">
     <a class="menu__marca" href="{% url 'index' %}">
-        <img src="{% static 'img/logo.png' %}" alt="" width="40" height="40">
+        <img src="{% static 'img/logo.png' %}" alt="" width="36" height="36">
         <span>Gregal Trace</span>
     </a>
+
+    {# Buscador global: abre el cuadro de búsqueda (también con Ctrl+K) #}
+    <button type="button" class="menu__buscar" data-abrir-buscador>
+        {% include "gestion/icono.html" with nombre="buscar" %}
+        <span>Buscar</span>
+        <kbd>Ctrl K</kbd>
+    </button>
+
+    <nav class="menu__lista">
+        <a class="menu__enlace{% if seccion == 'inicio' %} menu__enlace--activo{% endif %}" href="{% url 'index' %}"{% if seccion == 'inicio' %} aria-current="page"{% endif %}>
+            {% include "gestion/icono.html" with nombre="inicio" %}
+            <span>Inicio</span>
+        </a>
+
+        <p class="menu__grupo">Trabajos</p>
+        {% for slug, tipo in nav_tipos.items %}
+            <a class="menu__enlace{% if seccion == slug %} menu__enlace--activo{% endif %}" href="{% url 'lista_proyectos' slug %}"{% if seccion == slug %} aria-current="page"{% endif %}>
+                {% include "gestion/icono.html" with nombre=slug %}
+                <span>{{ tipo.titulo }}</span>
+                {% if tipo.en_proceso %}<span class="menu__contador" title="En proceso">{{ tipo.en_proceso }}</span>{% endif %}
+            </a>
+        {% endfor %}
+        <a class="menu__enlace{% if seccion == 'urgencias' %} menu__enlace--activo{% endif %}" href="{% url 'urgencias' %}"{% if seccion == 'urgencias' %} aria-current="page"{% endif %}>
+            {% include "gestion/icono.html" with nombre="urgencias" %}
+            <span>Urgencias</span>
+        </a>
+
+        {% if perms.gestion.change_material or perms.gestion.view_usuario or perms.gestion.change_albaran or perms.gestion.change_cita %}
+            <p class="menu__grupo">Gestión</p>
+            {% if perms.gestion.change_material %}
+                <a class="menu__enlace{% if seccion == 'materiales' %} menu__enlace--activo{% endif %}" href="{% url 'lista_materiales' %}"{% if seccion == 'materiales' %} aria-current="page"{% endif %}>
+                    {% include "gestion/icono.html" with nombre="materiales" %}
+                    <span>Materiales</span>
+                </a>
+                <a class="menu__enlace{% if seccion == 'precios_horas' %} menu__enlace--activo{% endif %}" href="{% url 'precios_horas' %}"{% if seccion == 'precios_horas' %} aria-current="page"{% endif %}>
+                    {% include "gestion/icono.html" with nombre="reloj" %}
+                    <span>Precios horas</span>
+                </a>
+            {% endif %}
+            {% if perms.gestion.change_cita %}
+                <a class="menu__enlace{% if seccion == 'citas' %} menu__enlace--activo{% endif %}" href="{% url 'lista_citas' %}"{% if seccion == 'citas' %} aria-current="page"{% endif %}>
+                    {% include "gestion/icono.html" with nombre="agenda" %}
+                    <span>Citas</span>
+                </a>
+            {% endif %}
+            {% if perms.gestion.view_usuario %}
+                <a class="menu__enlace{% if seccion == 'empleados' %} menu__enlace--activo{% endif %}" href="{% url 'lista_empleados' %}"{% if seccion == 'empleados' %} aria-current="page"{% endif %}>
+                    {% include "gestion/icono.html" with nombre="personas" %}
+                    <span>Empleados</span>
+                </a>
+            {% endif %}
+            {% if perms.gestion.change_albaran %}
+                <a class="menu__enlace{% if seccion == 'albaranes' %} menu__enlace--activo{% endif %}" href="{% url 'lista_albaranes' %}"{% if seccion == 'albaranes' %} aria-current="page"{% endif %}>
+                    {% include "gestion/icono.html" with nombre="albaran" %}
+                    <span>Albaranes</span>
+                </a>
+            {% endif %}
+        {% endif %}
+
+        {% if perms.gestion.change_proyecto %}
+            <p class="menu__grupo">Herramientas</p>
+            <a class="menu__enlace{% if seccion == 'calendario' %} menu__enlace--activo{% endif %}" href="{% url 'calendario' %}"{% if seccion == 'calendario' %} aria-current="page"{% endif %}>
+                {% include "gestion/icono.html" with nombre="cita" %}
+                <span>Calendario</span>
+            </a>
+        {% endif %}
+    </nav>
 
     {% if perms.gestion.add_proyecto %}
         <a class="menu__urgencia" href="{% url 'urgencias' %}">
@@ -12,76 +79,30 @@
         </a>
     {% endif %}
 
-    <nav class="menu__lista">
-        <a class="menu__enlace{% if seccion == 'inicio' %} menu__enlace--activo{% endif %}" href="{% url 'index' %}">
-            {% include "gestion/icono.html" with nombre="inicio" %}
-            <span>Inicio</span>
-        </a>
-        {% for slug, tipo in nav_tipos.items %}
-            <a class="menu__enlace{% if seccion == slug %} menu__enlace--activo{% endif %}" href="{% url 'lista_proyectos' slug %}">
-                {% include "gestion/icono.html" with nombre=slug %}
-                <span>{{ tipo.titulo }}</span>
-                {% if tipo.en_proceso %}<span class="menu__contador" title="En proceso">{{ tipo.en_proceso }}</span>{% endif %}
-            </a>
-        {% endfor %}
-        <a class="menu__enlace{% if seccion == 'urgencias' %} menu__enlace--activo{% endif %}" href="{% url 'urgencias' %}">
-            {% include "gestion/icono.html" with nombre="urgencias" %}
-            <span>Urgencias</span>
-        </a>
-        {# Apartados de Oficina #}
-        {% if perms.gestion.change_material %}
-            <a class="menu__enlace{% if seccion == 'materiales' %} menu__enlace--activo{% endif %}" href="{% url 'lista_materiales' %}">
-                {% include "gestion/icono.html" with nombre="materiales" %}
-                <span>Materiales</span>
-            </a>
-        {% endif %}
-        {% if perms.gestion.change_material %}
-            <a class="menu__enlace{% if seccion == 'precios_horas' %} menu__enlace--activo{% endif %}" href="{% url 'precios_horas' %}">
-                {% include "gestion/icono.html" with nombre="reloj" %}
-                <span>Precios horas</span>
-            </a>
-        {% endif %}
-        {% if perms.gestion.view_usuario %}
-            <a class="menu__enlace{% if seccion == 'empleados' %} menu__enlace--activo{% endif %}" href="{% url 'lista_empleados' %}">
-                {% include "gestion/icono.html" with nombre="personas" %}
-                <span>Empleados</span>
-            </a>
-        {% endif %}
-        {% if perms.gestion.change_proyecto %}
-            <a class="menu__enlace{% if seccion == 'calendario' %} menu__enlace--activo{% endif %}" href="{% url 'calendario' %}">
-                {% include "gestion/icono.html" with nombre="cita" %}
-                <span>Calendario</span>
-            </a>
-        {% endif %}
-        {% if perms.gestion.change_cita %}
-            <a class="menu__enlace{% if seccion == 'citas' %} menu__enlace--activo{% endif %}" href="{% url 'lista_citas' %}">
-                {% include "gestion/icono.html" with nombre="cita" %}
-                <span>Citas</span>
-            </a>
-        {% endif %}
-        {% if perms.gestion.change_albaran %}
-            <a class="menu__enlace{% if seccion == 'albaranes' %} menu__enlace--activo{% endif %}" href="{% url 'lista_albaranes' %}">
-                {% include "gestion/icono.html" with nombre="albaran" %}
-                <span>Albaranes</span>
-            </a>
-        {% endif %}
-    </nav>
-
-    <div class="menu__usuario">
-        <span class="avatar" aria-hidden="true">{{ user.first_name|default:user.username|slice:":1"|upper }}</span>
-        <span class="menu__persona">
-            <strong>{{ user.get_full_name|default:user.username }}</strong>
-            <span>{% if user.is_superuser %}Administrador{% else %}{{ user.get_rol_display }}{% endif %}</span>
-            {% if request.session.fecha_inicio %}
-                <span>{{ request.session.fecha_inicio }}</span>
-            {% endif %}
-        </span>
-        <form method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit" class="boton-icono" aria-label="Cerrar sesión" title="Cerrar sesión">
-                {% include "gestion/icono.html" with nombre="salir" %}
+    {# Menú del usuario: se abre hacia arriba con el modo oscuro y cerrar sesión #}
+    <details class="usuario-menu">
+        <summary class="usuario-menu__boton">
+            <span class="avatar" aria-hidden="true">{{ user.first_name|default:user.username|slice:":1"|upper }}</span>
+            <span class="menu__persona">
+                <strong>{{ user.get_full_name|default:user.username }}</strong>
+                <span>{% if user.is_superuser %}Administrador{% else %}{{ user.get_rol_display }}{% endif %}</span>
+            </span>
+            <svg class="usuario-menu__flecha" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m7 15 5-5 5 5"/></svg>
+        </summary>
+        <div class="usuario-menu__panel">
+            {# Valor guardado en la sesión desde index (Sesiones, diapositiva 6) #}
+            {% if request.session.fecha_inicio %}<p class="usuario-menu__nota">Sesión iniciada el {{ request.session.fecha_inicio }}</p>{% endif %}
+            <button type="button" class="usuario-menu__opcion boton-tema" data-cambiar-tema aria-label="Activar modo oscuro">
+                {% include "gestion/icono.html" with nombre="luna" %}{% include "gestion/icono.html" with nombre="sol" %}
+                <span data-texto-tema>Modo oscuro</span>
             </button>
-        </form>
-    </div>
-
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="usuario-menu__opcion">
+                    {% include "gestion/icono.html" with nombre="salir" %}
+                    <span>Cerrar sesión</span>
+                </button>
+            </form>
+        </div>
+    </details>
 </aside>

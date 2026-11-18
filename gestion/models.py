@@ -82,6 +82,9 @@ class Proyecto(models.Model):
     creado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
                                    null=True, blank=True, related_name='proyectos_creados')
 
+    def esta_terminado(self):
+        return self.estado == 'TER'
+
     def __str__(self):
         return f"{self.nombre} ({self.get_tipo_display()})"
 
