@@ -11,9 +11,9 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
 from .calendario import descargar_ics, dias_del_evento, leer_eventos, url_outlook_web
-from .forms import (AlbaranForm, CategoriaForm, EmpleadoForm, CitaForm, ConsumoForm, HorasForm, MaterialForm, NotaForm,
+from .forms import (AlbaranForm, CampoHoraForm, CategoriaForm, EmpleadoForm, PuestoForm, TarifaForm, CitaForm, ConsumoForm, HorasForm, MaterialForm, NotaForm,
                     ProyectoForm, RegistroForm, TipoForm, UrgenciaForm)
-from .models import (Albaran, Categoria, Cita, Consumo, Material, Nota, Oficina, Operario, Proyecto, Tipo, Usuario,
+from .models import (Albaran, CampoHora, Categoria, TarifaHora, precio_hora, Cita, Consumo, Material, Nota, Oficina, Operario, Proyecto, Tipo, Usuario,
                      buscar_materiales, horas_texto, sin_tildes)
 
 
@@ -153,6 +153,32 @@ def url_con_filtros(pk, filtros, ancla):
         url += '?' + urlencode(parametros)
     return url + ancla
 
+def puesto_del_rol(usuario):
+    """Puesto con el que apunta horas un oficial («Hora Oficial») o un peón («Hora Peón»).
+    None para Oficina y el administrador, que sí eligen el puesto (o si ese puesto no existe)."""
+    nombre = {Usuario.OFICIAL: 'Hora Oficial', Usuario.PEON: 'Hora Peón'}.get(usuario.rol)
+    return Material.objects.filter(unidad='H', nombre=nombre).first() if nombre else None
+
+
+def lineas_de_horas(post):
+    """Datos de cada línea de un apunte de horas. Con JavaScript llegan varias líneas en listas
+    (linea_material, linea_campo, linea_cantidad); sin líneas, se apunta lo elegido en el formulario."""
+    materiales = post.getlist('linea_material')
+    if not materiales:
+        return [post]
+    campos = post.getlist('linea_campo')
+    cantidades = post.getlist('linea_cantidad')
+    lineas = []
+    for numero, material in enumerate(materiales):
+        lineas.append({
+            'material': material,
+            'campo': campos[numero] if numero < len(campos) else '',
+            'cantidad': cantidades[numero] if numero < len(cantidades) else '',
+            'fecha': post.get('fecha'),
+        })
+    return lineas
+
+
 @permission_required('gestion.view_proyecto')
 def detalle_proyecto(request, pk):
     proyecto = get_object_or_404(Proyecto.objects.select_related('creado_por'), pk=pk)
@@ -170,7 +196,9 @@ def detalle_proyecto(request, pk):
     opciones = {'categoria': filtros['categoria_actual'], 'tipo': filtros['tipo_actual'], 'busqueda': filtros['busqueda_material']}
 
     formulario = ConsumoForm(**opciones)
-    formulario_horas = HorasForm()
+    # Oficiales y peones no eligen puesto: se apunta el de su rol
+    puesto_fijo = puesto_del_rol(request.user)
+    formulario_horas = HorasForm(puesto_fijo=puesto_fijo)
     formulario_nota = NotaForm()
     formulario_albaran = AlbaranForm()
     formulario_cita = CitaForm()
@@ -215,15 +243,25 @@ def detalle_proyecto(request, pk):
                 return redirect(reverse('detalle_proyecto', args=[proyecto.pk]) + '#albaranes')
 
         elif enviado == 'horas' and puede_apuntar:
-            formulario_horas = HorasForm(request.POST)
-            if formulario_horas.is_valid():
-                consumo = formulario_horas.save(commit=False)
-                consumo.proyecto = proyecto
-                consumo.trabajador = request.user
-                consumo.precio_unitario = consumo.material.precio
-                consumo.save()
-                messages.success(request, f'Apuntado: {consumo.cantidad_texto()} de {consumo.material.nombre}.')
+            # Un apunte de horas puede llevar varias líneas (Oficial · Electricidad 4 h + Oficial · Fontanería 2 h).
+            # Cada línea se valida con su propio HorasForm; si alguna falla no se guarda ninguna.
+            formularios = [HorasForm(datos, puesto_fijo=puesto_fijo) for datos in lineas_de_horas(request.POST)]
+            invalidos = [f for f in formularios if not f.is_valid()]
+            if formularios and not invalidos:
+                textos = []
+                for formulario_linea in formularios:
+                    consumo = formulario_linea.save(commit=False)
+                    consumo.proyecto = proyecto
+                    consumo.trabajador = request.user
+                    # El precio sale de la combinación puesto + campo y se congela en el apunte
+                    consumo.precio_unitario = precio_hora(consumo.material, consumo.campo)
+                    consumo.save()
+                    textos.append(f'{consumo.cantidad_texto()} de {consumo.descripcion()}')
+                messages.success(request, 'Apuntado: ' + '; '.join(textos) + '.')
                 return redirect(reverse('detalle_proyecto', args=[proyecto.pk]) + '#horas')
+            formulario_horas = invalidos[0] if invalidos else HorasForm(request.POST, puesto_fijo=puesto_fijo)
+            if len(formularios) > 1:
+                messages.error(request, 'Alguna línea no es válida y no se ha apuntado ninguna. Revísalas y vuelve a intentarlo.')
 
         elif enviado == 'material' and puede_apuntar_material:
             formulario = ConsumoForm(request.POST, **opciones)
@@ -243,7 +281,7 @@ def detalle_proyecto(request, pk):
             messages.error(request, 'El material lo apunta Oficina. Tú puedes apuntar horas, notas y albaranes.')
             return redirect('detalle_proyecto', pk=proyecto.pk)
 
-    consumos = proyecto.consumos.select_related('material', 'trabajador').order_by('-fecha', '-id')
+    consumos = proyecto.consumos.select_related('material', 'trabajador', 'campo').order_by('-fecha', '-id')
     # Total de horas: suma de las cantidades de los apuntes cuya unidad es Hora
     horas = consumos.filter(material__unidad='H').aggregate(Sum('cantidad'))['cantidad__sum'] or 0
 
@@ -428,28 +466,34 @@ def consumo_editar(request, pk):
         return redirect('detalle_proyecto', pk=consumo.proyecto.pk)
 
     material_antes = consumo.material
+    campo_antes = consumo.campo
     # Un apunte de horas se edita con el selector de horas; uno de material, con la lista
     es_horas = material_antes.unidad == 'H'
+    # Un oficial o un peón no cambia el puesto del apunte (solo campo, tiempo y fecha)
+    puesto_fijo = material_antes if es_horas and request.user.es_operario() else None
     # Por defecto se abre la familia del material que ya tiene el apunte
     filtros = filtros_material(request, consumo.material.categoria_id)
     opciones = {'categoria': filtros['categoria_actual'], 'tipo': filtros['tipo_actual'], 'busqueda': filtros['busqueda_material']}
 
     if request.method == 'POST':
         if es_horas:
-            formulario = HorasForm(request.POST, instance=consumo)
+            formulario = HorasForm(request.POST, instance=consumo, puesto_fijo=puesto_fijo)
         else:
             formulario = ConsumoForm(request.POST, instance=consumo, **opciones)
         if formulario.is_valid():
             consumo = formulario.save(commit=False)
-            # Si cambia el material se toma el precio de hoy; si no, se mantiene el congelado
-            if consumo.material != material_antes:
+            # Si cambia el material (o en las horas el puesto o el campo) se toma el precio de hoy;
+            # si no, se mantiene el que se guardó al apuntar
+            if es_horas and (consumo.material != material_antes or consumo.campo != campo_antes):
+                consumo.precio_unitario = precio_hora(consumo.material, consumo.campo)
+            elif consumo.material != material_antes:
                 consumo.precio_unitario = consumo.material.precio
             consumo.save()
-            messages.success(request, f'Apunte de {consumo.material.nombre} actualizado.')
+            messages.success(request, f'Apunte de {consumo.descripcion()} actualizado.')
             return redirect('detalle_proyecto', pk=consumo.proyecto.pk)
     else:
         if es_horas:
-            formulario = HorasForm(instance=consumo)
+            formulario = HorasForm(instance=consumo, puesto_fijo=puesto_fijo)
         else:
             formulario = ConsumoForm(instance=consumo, **opciones)
 
@@ -470,7 +514,7 @@ def consumo_eliminar(request, pk):
     consumo = get_object_or_404(Consumo.objects.select_related('proyecto', 'material'), pk=pk)
     if request.method == 'POST':
         if puede_tocar_apunte(request.user, consumo):
-            nombre = consumo.material.nombre
+            nombre = consumo.descripcion()
             consumo.delete()
             messages.success(request, f'Apunte de {nombre} eliminado.')
         else:
@@ -488,9 +532,13 @@ def consumo_repetir(request, pk):
         elif original.material.unidad != 'H' and not request.user.has_perm('gestion.change_proyecto'):
             messages.error(request, 'El material lo apunta Oficina. Tú puedes repetir apuntes de horas.')
         else:
-            nuevo = Consumo.objects.create(proyecto=proyecto, material=original.material, cantidad=original.cantidad,
-                                           precio_unitario=original.material.precio, trabajador=request.user, fecha=date.today())
-            messages.success(request, f'Repetido: {nuevo.cantidad_texto()} de {nuevo.material.nombre}, con fecha de hoy.')
+            # Precio de hoy, como cualquier apunte nuevo (en las horas, el del puesto + campo)
+            precio = (precio_hora(original.material, original.campo) if original.material.unidad == 'H'
+                      else original.material.precio)
+            nuevo = Consumo.objects.create(proyecto=proyecto, material=original.material, campo=original.campo,
+                                           cantidad=original.cantidad, precio_unitario=precio,
+                                           trabajador=request.user, fecha=date.today())
+            messages.success(request, f'Repetido: {nuevo.cantidad_texto()} de {nuevo.descripcion()}, con fecha de hoy.')
     return redirect(reverse('detalle_proyecto', args=[proyecto.pk]) + '#apuntes')
 
 
@@ -1095,3 +1143,142 @@ def empleado_eliminar(request, pk):
             messages.error(request, f'{nombre} no se puede eliminar porque tiene apuntes o albaranes. Desmarca «Puede entrar en la aplicación» para darle de baja.')
             return redirect('empleado_editar', pk=empleado.pk)
     return redirect('lista_empleados')
+
+
+# ---------------------------------------------------------------------------
+# Precios horas (Oficina): el precio de una hora depende del puesto (Oficial, Peón...)
+# y del campo (Electricidad, Fontanería...). Aquí se crean puestos y campos y se fija
+# el precio de cada combinación.
+# ---------------------------------------------------------------------------
+def elegido(consulta, datos, nombre):
+    """Objeto elegido en la URL (?puesto=3) o en el formulario enviado; None si no llega o no existe."""
+    valor = datos.get(nombre, '')
+    return consulta.filter(pk=valor).first() if valor.isdigit() else None
+
+
+def url_precios(puesto=None, campo=None):
+    """Dirección de Precios horas con el puesto y el campo elegidos."""
+    parametros = {}
+    if puesto:
+        parametros['puesto'] = puesto.pk
+    if campo:
+        parametros['campo'] = campo.pk
+    url = reverse('precios_horas')
+    return url + ('?' + urlencode(parametros) if parametros else '') + '#fijar'
+
+
+@permission_required('gestion.change_material')
+def precios_horas(request):
+    puestos = Material.objects.filter(unidad='H').annotate(num_apuntes=Count('consumos')).order_by('nombre')
+    campos = CampoHora.objects.annotate(num_apuntes=Count('consumos'))
+    puesto = elegido(puestos, request.GET, 'puesto')
+    campo = elegido(campos, request.GET, 'campo')
+    tarifa = TarifaHora.objects.filter(puesto=puesto, campo=campo).first() if puesto and campo else None
+
+    formulario_puesto = PuestoForm()
+    formulario_campo = CampoHoraForm()
+    formulario_tarifa = TarifaForm(initial={
+        'puesto': puesto,
+        'campo': campo,
+        'precio': tarifa.precio if tarifa else (puesto.precio if puesto else None),
+    })
+    # Qué bloque abrir al volver con errores
+    abierto = ''
+
+    if request.method == 'POST':
+        accion = request.POST.get('accion')
+        if accion == 'puesto':
+            formulario_puesto = PuestoForm(request.POST)
+            if formulario_puesto.is_valid():
+                # Mano de obra si existe esa familia; si no, Otros
+                familia = 'MOB' if Categoria.objects.filter(pk='MOB').exists() else 'OTR'
+                tipo_horas, _ = Tipo.objects.get_or_create(nombre='Horas', categoria_id=familia)
+                nuevo = Material.objects.create(
+                    nombre=f"Hora {formulario_puesto.cleaned_data['nombre']}",
+                    categoria_id=familia,
+                    tipo=tipo_horas,
+                    unidad='H',
+                    clase='',
+                    precio=formulario_puesto.cleaned_data['precio'],
+                )
+                messages.success(request, f'Puesto «{nuevo.nombre_puesto()}» creado.')
+                return redirect(url_precios(nuevo, campo))
+            abierto = 'puesto'
+        elif accion == 'campo':
+            formulario_campo = CampoHoraForm(request.POST)
+            if formulario_campo.is_valid():
+                nuevo = formulario_campo.save()
+                messages.success(request, f'Campo «{nuevo.nombre}» creado.')
+                return redirect(url_precios(puesto, nuevo))
+            abierto = 'campo'
+        elif accion == 'tarifa':
+            formulario_tarifa = TarifaForm(request.POST)
+            if formulario_tarifa.is_valid():
+                datos = formulario_tarifa.cleaned_data
+                # update_or_create: si la combinación ya tenía precio se cambia; si no, se crea
+                tarifa, creada = TarifaHora.objects.update_or_create(
+                    puesto=datos['puesto'], campo=datos['campo'], defaults={'precio': datos['precio']},
+                )
+                accion_texto = 'fijado' if creada else 'actualizado'
+                precio_texto = f'{tarifa.precio:.2f}'.replace('.', ',')
+                messages.success(request, f'Precio {accion_texto}: {tarifa.puesto.nombre_puesto()} · {tarifa.campo.nombre}, {precio_texto} €/h.')
+                return redirect(url_precios(tarifa.puesto, tarifa.campo))
+            # Con errores se sigue mostrando la combinación que se estaba fijando
+            puesto = puesto or elegido(puestos, request.POST, 'puesto')
+            campo = campo or elegido(campos, request.POST, 'campo')
+
+    tarifas = TarifaHora.objects.select_related('puesto', 'campo')
+    return render(request, 'gestion/precios_horas.html', {
+        'puestos': puestos,
+        'campos': campos,
+        'puesto_actual': puesto,
+        'campo_actual': campo,
+        'tarifa_actual': tarifa,
+        'formulario_puesto': formulario_puesto,
+        'formulario_campo': formulario_campo,
+        'formulario_tarifa': formulario_tarifa,
+        'abierto': abierto,
+        'tarifas': tarifas,
+        'combinaciones_sin_precio': puestos.count() * campos.count() - tarifas.count(),
+        'seccion': 'precios_horas',
+        'nav_tipos': datos_menu(),
+    })
+
+
+@permission_required('gestion.change_material')
+def puesto_eliminar(request, pk):
+    puesto = get_object_or_404(Material, pk=pk, unidad='H')
+    if request.method == 'POST':
+        # Un puesto con horas apuntadas no se borra: se perderían esas horas (on_delete=PROTECT en Consumo)
+        num_apuntes = puesto.consumos.count()
+        if num_apuntes:
+            messages.error(request, f'«{puesto.nombre_puesto()}» no se puede eliminar porque tiene {num_apuntes} apuntes de horas.')
+        else:
+            nombre = puesto.nombre_puesto()
+            puesto.delete()   # sus precios por campo se borran con él (CASCADE)
+            messages.success(request, f'Puesto «{nombre}» eliminado.')
+    return redirect(reverse('precios_horas') + '#fijar')
+
+
+@permission_required('gestion.change_material')
+def campo_hora_eliminar(request, pk):
+    campo = get_object_or_404(CampoHora, pk=pk)
+    if request.method == 'POST':
+        num_apuntes = campo.consumos.count()
+        if num_apuntes:
+            messages.error(request, f'«{campo.nombre}» no se puede eliminar porque tiene {num_apuntes} apuntes de horas.')
+        else:
+            nombre = campo.nombre
+            campo.delete()
+            messages.success(request, f'Campo «{nombre}» eliminado.')
+    return redirect(reverse('precios_horas') + '#fijar')
+
+
+@permission_required('gestion.change_material')
+def tarifa_eliminar(request, pk):
+    tarifa = get_object_or_404(TarifaHora.objects.select_related('puesto', 'campo'), pk=pk)
+    if request.method == 'POST':
+        texto = f'{tarifa.puesto.nombre_puesto()} · {tarifa.campo.nombre}'
+        tarifa.delete()
+        messages.success(request, f'Precio de {texto} quitado. Esas horas usarán el precio base del puesto.')
+    return redirect(reverse('precios_horas') + '#precios')

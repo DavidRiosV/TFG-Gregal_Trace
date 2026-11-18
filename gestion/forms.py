@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.password_validation import validate_password
 
-from .models import Albaran, Categoria, Cita, Consumo, Material, Nota, Proyecto, Tipo, Usuario, buscar_materiales
+from .models import Albaran, CampoHora, Categoria, Cita, Consumo, Material, Nota, Proyecto, Tipo, Usuario, buscar_materiales
 
 
 class RegistroForm(UserCreationForm):
@@ -149,24 +149,53 @@ class ApunteForm(forms.ModelForm):
 
 
 class HorasForm(ApunteForm):
-    """Apuntar horas: tipo de hora (Oficial, Pareja, Peón o Subcontrata) y tiempo."""
+    """Apuntar horas de trabajo: puesto (Oficial, Pareja, Peón, Subcontrata...), campo
+    (Electricidad, Fontanería...) y cuánto tiempo. El precio sale de la combinación puesto + campo."""
 
-    def __init__(self, *args, **kwargs):
+    class Meta(ApunteForm.Meta):
+        fields = ['material', 'campo', 'cantidad', 'fecha']
+        labels = dict(ApunteForm.Meta.labels, campo='Campo')
+
+    def __init__(self, *args, puesto_fijo=None, **kwargs):
+        # puesto_fijo: los oficiales y peones no eligen puesto, se apunta el de su rol.
+        # Aunque alguien cambie el formulario a mano, se pone siempre ese puesto.
+        if puesto_fijo and args and args[0] is not None:
+            datos = args[0].copy()
+            datos['material'] = puesto_fijo.pk
+            args = (datos,) + args[1:]
         super().__init__(*args, **kwargs)
+        self.puesto_fijo = puesto_fijo
         horas = Material.objects.filter(unidad='H').order_by('nombre')
+        if puesto_fijo:
+            horas = horas.filter(pk=puesto_fijo.pk)
+            self.initial['material'] = puesto_fijo.pk
         # Botones de opción en vez de desplegable, sin la opción vacía «---------»
         self.fields['material'].widget = forms.RadioSelect()
         self.fields['material'].empty_label = None
-        # En los botones sale «Oficial» en vez de «Hora Oficial (Hora)»
-        self.fields['material'].label_from_instance = lambda material: material.nombre.replace('Hora ', '')
+        # En los botones sale «Oficial», «Pareja», «Peón» y «Subcontrata» en vez de «Hora Oficial (Hora)»
+        self.fields['material'].label_from_instance = lambda material: material.nombre_puesto()
         self.fields['material'].queryset = horas
-        self.fields['material'].label = 'Tipo de hora'
+        self.fields['material'].label = 'Puesto'
+        if puesto_fijo:
+            # El puesto va oculto: la plantilla solo lo enseña como texto
+            self.fields['material'].widget = forms.HiddenInput()
+
+        # Campo del trabajo, también con botones. Obligatorio en cuanto Oficina ha creado alguno
+        # (primero el widget y luego la consulta: al poner la consulta se pasan las opciones al widget)
+        campos = CampoHora.objects.all()
+        self.fields['campo'].widget = forms.RadioSelect()
+        self.fields['campo'].empty_label = None
+        self.fields['campo'].queryset = campos
+        self.fields['campo'].required = campos.exists()
+        self.fields['campo'].error_messages['required'] = 'Elige el campo del trabajo.'
+
         # La cantidad la escribe el selector de horas y minutos (main.js)
         self.fields['cantidad'].widget = forms.HiddenInput()
         if not self.is_bound and not self.instance.pk:
             self.initial['cantidad'] = 1
             if horas:
-                self.initial['material'] = horas[0].pk
+                # Si la vista no ha propuesto un puesto (el del rol del empleado), el primero
+                self.initial.setdefault('material', horas[0].pk)
 
 
 class ConsumoForm(ApunteForm):
@@ -362,6 +391,53 @@ class TipoForm(forms.ModelForm):
             if categoria and repetido.exists():
                 self.add_error('nombre', f'Ya hay un tipo «{nombre}» en {categoria.nombre}.')
         return self.cleaned_data
+
+
+# ---------------------------------------------------------------------------
+# Precios horas (Oficina): puestos, campos y el precio de cada combinación
+# ---------------------------------------------------------------------------
+def nombre_limpio(nombre):
+    """Quita espacios de más y pone la primera letra en mayúscula: «  peón   ayudante» -> «Peón ayudante»."""
+    nombre = ' '.join(nombre.split())
+    return nombre[:1].upper() + nombre[1:]
+
+
+class PuestoForm(forms.Form):
+    """Nuevo puesto (Encargado, Aprendiz...). Se guarda como un material de horas «Hora ...»
+    para que se apunte igual que los demás. El precio base se usa si no hay precio para un campo."""
+    nombre = forms.CharField(label='Nombre del puesto', max_length=60)
+    precio = forms.DecimalField(label='Precio base por hora (€)', max_digits=8, decimal_places=2, min_value=0,
+                                help_text='Se usa en los campos que aún no tengan un precio fijado.')
+
+    def clean_nombre(self):
+        nombre = nombre_limpio(self.cleaned_data['nombre']).removeprefix('Hora ').strip()
+        if not nombre:
+            raise forms.ValidationError('Escribe el nombre del puesto.')
+        if Material.objects.filter(nombre__iexact=f'Hora {nombre}').exists():
+            raise forms.ValidationError('Ya existe ese puesto.')
+        return nombre
+
+
+class CampoHoraForm(forms.ModelForm):
+    """Nuevo campo de trabajo para las horas (Electricidad, Fontanería...)."""
+    class Meta:
+        model = CampoHora
+        fields = ['nombre']
+        labels = {'nombre': 'Nombre del campo'}
+
+    def clean_nombre(self):
+        nombre = nombre_limpio(self.cleaned_data['nombre'])
+        if CampoHora.objects.filter(nombre__iexact=nombre).exists():
+            raise forms.ValidationError('Ya existe ese campo.')
+        return nombre
+
+
+class TarifaForm(forms.Form):
+    """Precio de una hora para la combinación puesto + campo elegida."""
+    puesto = forms.ModelChoiceField(queryset=Material.objects.filter(unidad='H'), widget=forms.HiddenInput())
+    campo = forms.ModelChoiceField(queryset=CampoHora.objects.all(), widget=forms.HiddenInput())
+    precio = forms.DecimalField(label='Precio por hora (€)', max_digits=8, decimal_places=2, min_value=0,
+                                widget=forms.NumberInput(attrs={'step': '0.01', 'min': '0', 'inputmode': 'decimal'}))
 
 
 # ---------------------------------------------------------------------------

@@ -1782,3 +1782,147 @@ a.agenda__cuerpo:hover .agenda__titulo { color: var(--verde-accion); text-decora
     .apartado { white-space: nowrap; }
 }
 .panel__nota { margin: 0; padding: 14px 24px; font-size: 13px; }
+
+/* ==========================================================
+   Precios horas (Oficina) y varias líneas en un apunte de horas
+   ========================================================== */
+.tabla__detalle { display: block; color: var(--texto-suave); font-size: 13px; font-weight: 500; }
+
+/* Pasos 1, 2 y 3 del fijador de precio */
+.paso { padding: 20px 0; border-top: 1px solid var(--linea); }
+.paso--ultimo { padding-bottom: 4px; }
+.paso__titulo { display: flex; align-items: center; gap: 10px; margin: 0 0 14px; font-size: 15px; }
+.paso__numero {
+    display: inline-grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--verde-suave);
+    color: var(--verde-accion);
+    font-size: 13px;
+    font-weight: 800;
+}
+.paso__vacio { margin: 0; color: var(--texto-suave); }
+
+/* Botones de puesto y campo con su × para borrarlos */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    border: 1px solid var(--linea);
+    border-radius: 999px;
+    background: var(--blanco);
+    transition: border-color .15s, background .15s;
+}
+.chip:hover { border-color: var(--verde-marca); }
+.chip__nombre { padding: 8px 14px; color: var(--texto-suave); font-size: 14px; font-weight: 600; text-decoration: none; }
+.chip:hover .chip__nombre { color: var(--texto); }
+.chip__nombre:focus-visible { outline: none; border-radius: 999px; box-shadow: var(--foco); }
+.chip form { display: flex; }
+.chip__borrar {
+    width: 28px;
+    height: 28px;
+    margin: 0 6px 0 -8px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--texto-suave);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+}
+.chip__borrar:hover { background: var(--rojo-suave); color: var(--rojo); }
+.chip--activo, .chip--activo:hover { border-color: var(--verde-accion); background: var(--verde-accion); }
+.chip--activo .chip__nombre, .chip--activo:hover .chip__nombre { color: var(--sobre-color); }
+.chip--activo .chip__borrar { color: var(--sobre-color); opacity: .8; }
+
+/* «Nuevo puesto» / «Nuevo campo» desplegable */
+.nuevo { margin-top: 12px; }
+.nuevo__boton {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 36px;
+    color: var(--verde-accion);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    list-style: none;
+}
+.nuevo__boton::-webkit-details-marker { display: none; }
+.nuevo__boton .icono { width: 18px; height: 18px; }
+.nuevo[open] .nuevo__boton { color: var(--texto-suave); }
+.nuevo__formulario { margin-top: 10px; padding: 16px; border-radius: var(--radio-control); background: var(--fondo); max-width: 640px; }
+
+/* Paso 3: la combinación y su precio */
+.precio-hora { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 16px; border: 1px solid var(--linea); border-left: 4px solid var(--verde-accion); border-radius: var(--radio-control); background: #FAFCF8; }
+.precio-hora__combinacion { display: flex; flex-direction: column; gap: 2px; }
+.precio-hora__combinacion strong { font-size: 17px; }
+.precio-hora__combinacion span { color: var(--texto-suave); font-size: 13px; }
+.precio-hora__entrada { display: flex; align-items: center; gap: 10px; }
+.precio-hora__entrada .entrada { position: relative; width: 150px; }
+.precio-hora__entrada input { width: 100%; min-width: 0; padding: 10px 44px 10px 12px; text-align: right; font-weight: 700; }
+.precio-hora__entrada input { -moz-appearance: textfield; appearance: textfield; }
+.precio-hora__entrada input::-webkit-inner-spin-button,
+.precio-hora__entrada input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.entrada__sufijo { position: absolute; top: 50%; right: 12px; transform: translateY(-50%); color: var(--texto-suave); font-size: 13px; pointer-events: none; }
+.precio-hora .error-campo { flex-basis: 100%; margin: 0; }
+.tabla__fila--activa td { background: var(--verde-suave); }
+
+/* Varias líneas en un apunte de horas */
+.lineas-horas { margin: 4px 0 14px; }
+.lineas-horas__cabecera { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.lineas-horas__ayuda { flex: 1 1 260px; margin: 0; color: var(--texto-suave); font-size: 13px; }
+.lineas-horas__ayuda--error { color: var(--rojo); font-weight: 600; }
+.boton--pequeno { min-height: 38px; padding: 8px 14px; font-size: 14px; }
+.lineas-horas__lista { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.lineas-horas--con-lineas .lineas-horas__lista { margin-top: 12px; }
+.linea-horas {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 6px 6px 14px;
+    border: 1px solid var(--verde-marca);
+    border-radius: var(--radio-control);
+    background: var(--verde-suave);
+}
+.linea-horas__texto { display: flex; flex-direction: column; font-size: 13px; line-height: 1.25; }
+.linea-horas__texto strong { font-size: 14px; }
+.linea-horas__quitar { width: 30px; height: 30px; border: 0; border-radius: 50%; background: transparent; color: var(--texto-suave); font-size: 18px; cursor: pointer; }
+.linea-horas__quitar:hover { background: var(--rojo-suave); color: var(--rojo); }
+
+/* Modo oscuro (botón del menú; por defecto el del sistema) */
+@media (max-width: 760px) {
+    .paso { padding: 16px 0; }
+    .precio-hora__entrada { width: 100%; }
+    .precio-hora__entrada { flex-wrap: wrap; }
+    .precio-hora__entrada .entrada { flex: 1 1 100%; width: auto; }
+    .precio-hora__entrada .boton { flex: 1 1 100%; }
+    .tabla__fila--activa { background: var(--verde-suave); }
+    .tabla__fila--activa td { background: transparent; }
+}
+
+/* Botón de modo claro / oscuro: luna en modo claro, sol en modo oscuro */
+:root:not([data-tema="oscuro"]) .boton-tema .icono:last-of-type,
+:root[data-tema="oscuro"] .boton-tema .icono:first-of-type { display: none; }
+
+/* Tiempos habituales debajo de las ruedas */
+.tiempos-rapidos { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.tiempo-rapido {
+    min-width: 48px;
+    min-height: 34px;
+    padding: 0 10px;
+    border: 1px solid var(--linea);
+    border-radius: var(--radio-control);
+    background: var(--blanco);
+    color: var(--texto);
+    font: inherit;
+    font-size: 13.5px;
+    font-weight: 650;
+    cursor: pointer;
+}
+.tiempo-rapido:hover { border-color: var(--verde-marca); color: var(--verde-accion); }
+

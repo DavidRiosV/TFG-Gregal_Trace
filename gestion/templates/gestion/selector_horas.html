@@ -1,16 +1,35 @@
 {% comment %}
-Horas de trabajo: tipo de hora (Oficial, Pareja, Peón o Subcontrata), tiempo con dos ruedas
-(main.js escribe el resultado en el campo oculto «cantidad») y fecha. Recibe: formulario (HorasForm).
+Apartado de horas de trabajo: puesto (Oficial, Pareja, Peón...), campo (Electricidad, Fontanería...),
+tiempo con las ruedas deslizables (main.js escribe el resultado en el campo oculto «cantidad») y fecha.
+Recibe: formulario (HorasForm) y, opcionalmente, con_lineas para poder apuntar varias líneas a la vez.
 {% endcomment %}
-<div class="campo">
-    <span class="campo__titulo">{{ formulario.material.label }}</span>
-    <div class="familias" role="radiogroup" aria-label="{{ formulario.material.label }}">
-        {% for opcion in formulario.material %}
-            <label class="familia familia--opcion">{{ opcion.tag }} {{ opcion.choice_label }}</label>
-        {% endfor %}
+{% if formulario.puesto_fijo %}
+    {# Oficiales y peones: se apunta el puesto de su rol, sin enseñarlo ni poder elegirlo #}
+    {{ formulario.material }}
+    <span hidden data-puesto-fijo="{{ formulario.puesto_fijo.nombre_puesto }}"></span>
+{% else %}
+    <div class="campo">
+        <span class="campo__titulo">{{ formulario.material.label }}</span>
+        <div class="familias" role="radiogroup" aria-label="{{ formulario.material.label }}">
+            {% for opcion in formulario.material %}
+                <label class="familia familia--opcion">{{ opcion.tag }} {{ opcion.choice_label }}</label>
+            {% endfor %}
+        </div>
+        {% for error in formulario.material.errors %}<p class="error-campo">{{ error }}</p>{% endfor %}
     </div>
-    {% for error in formulario.material.errors %}<p class="error-campo">{{ error }}</p>{% endfor %}
-</div>
+{% endif %}
+
+{% if formulario.fields.campo.queryset.exists %}
+    <div class="campo">
+        <span class="campo__titulo">{{ formulario.campo.label }}</span>
+        <div class="familias" role="radiogroup" aria-label="{{ formulario.campo.label }}">
+            {% for opcion in formulario.campo %}
+                <label class="familia familia--opcion">{{ opcion.tag }} {{ opcion.choice_label }}</label>
+            {% endfor %}
+        </div>
+        {% for error in formulario.campo.errors %}<p class="error-campo">{{ error }}</p>{% endfor %}
+    </div>
+{% endif %}
 
 <div class="formulario__fila formulario__fila--horas">
     <div class="campo">
@@ -22,7 +41,26 @@ Horas de trabajo: tipo de hora (Oficial, Pareja, Peón o Subcontrata), tiempo co
             <div class="reloj__marco"><div class="reloj__rueda" data-reloj-minutos tabindex="0" role="listbox" aria-label="Minutos"></div></div>
             <span class="reloj__unidad">min</span>
         </div>
+        {# Tiempos habituales de un toque (main.js mueve las ruedas) #}
+        <div class="tiempos-rapidos" aria-label="Tiempos habituales">
+            <button type="button" class="tiempo-rapido" data-tiempo="0.5">½ h</button>
+            <button type="button" class="tiempo-rapido" data-tiempo="1">1 h</button>
+            <button type="button" class="tiempo-rapido" data-tiempo="2">2 h</button>
+            <button type="button" class="tiempo-rapido" data-tiempo="4">4 h</button>
+            <button type="button" class="tiempo-rapido" data-tiempo="8">8 h</button>
+        </div>
         {% for error in formulario.cantidad.errors %}<p class="error-campo">{{ error }}</p>{% endfor %}
     </div>
     {% include "gestion/campo_widget.html" with campo=formulario.fecha %}
 </div>
+
+{% if con_lineas %}
+    {# Varias líneas en el mismo apunte (main.js). Sin JavaScript se apunta solo lo elegido arriba #}
+    <div class="lineas-horas" data-lineas-horas hidden>
+        <div class="lineas-horas__cabecera">
+            <button type="button" class="boton boton--secundario boton--pequeno" data-lineas-anadir>{% include "gestion/icono.html" with nombre="mas" %}Añadir a la lista</button>
+            <p class="lineas-horas__ayuda" data-lineas-ayuda>{% if formulario.puesto_fijo %}¿Varios campos el mismo día? Elige cada uno con su tiempo y añádelo a la lista; luego apúntalos todos juntos.{% else %}¿Varios puestos o campos el mismo día? Elige cada combinación y añádela a la lista; luego apúntalas todas juntas.{% endif %}</p>
+        </div>
+        <ul class="lineas-horas__lista" data-lineas-lista aria-live="polite"></ul>
+    </div>
+{% endif %}

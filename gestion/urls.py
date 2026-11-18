@@ -18,6 +18,10 @@ urlpatterns = [
     # Notas, citas y albaranes
     path('nota/<int:pk>/eliminar/', views.nota_eliminar, name='nota_eliminar'),
     path('cita/<int:pk>/eliminar/', views.cita_eliminar, name='cita_eliminar'),
+    path('precios-horas/', views.precios_horas, name='precios_horas'),
+    path('precios-horas/puesto/<int:pk>/eliminar/', views.puesto_eliminar, name='puesto_eliminar'),
+    path('precios-horas/campo/<int:pk>/eliminar/', views.campo_hora_eliminar, name='campo_hora_eliminar'),
+    path('precios-horas/precio/<int:pk>/eliminar/', views.tarifa_eliminar, name='tarifa_eliminar'),
     path('empleados/', views.lista_empleados, name='lista_empleados'),
     path('empleados/oficina/', views.empleados_oficina, name='empleados_oficina'),
     path('empleados/nuevo/', views.empleado_crear, name='empleado_crear'),

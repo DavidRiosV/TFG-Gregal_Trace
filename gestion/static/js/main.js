@@ -114,6 +114,16 @@ document.querySelectorAll("[data-reloj]").forEach(function (reloj) {
         cantidad.value = (h + m / 60).toFixed(2);
     }
 
+    // Botones de tiempos habituales (½ h, 1 h, 4 h, 8 h...): mueven las ruedas
+    reloj.closest(".campo").querySelectorAll("[data-tiempo]").forEach(function (boton) {
+        boton.addEventListener("click", function () {
+            var tiempo = parseFloat(boton.dataset.tiempo);
+            horas.elegir(Math.floor(tiempo), true);
+            minutos.elegir(Math.round((tiempo - Math.floor(tiempo)) * 4), true);
+            escribir();
+        });
+    });
+
     // Coloca las ruedas en lo que ya hubiera (1 h al empezar, o el valor al editar)
     var valor = parseFloat(String(cantidad.value).replace(",", ".")) || 1;
     var horaInicial = Math.min(24, Math.floor(valor));
@@ -208,6 +218,78 @@ document.querySelectorAll("[data-zona-pdf]").forEach(function (zona) {
             entrada.files = evento.dataTransfer.files;
             mostrar();
         }
+    });
+});
+
+// Horas: varias líneas en el mismo apunte (Oficial · Electricidad 4 h + Peón · Fontanería 6 h).
+// «Añadir a la lista» guarda lo elegido como una línea con campos ocultos linea_material,
+// linea_campo y linea_cantidad; la vista las lee con request.POST.getlist(). Si la lista está
+// vacía, se apunta solo lo elegido, como siempre.
+document.querySelectorAll("[data-lineas-horas]").forEach(function (zona) {
+    var formulario = zona.closest("form");
+    var lista = zona.querySelector("[data-lineas-lista]");
+    var ayuda = zona.querySelector("[data-lineas-ayuda]");
+    var enviar = formulario.querySelector("[data-lineas-enviar]");
+    var textoAyuda = ayuda.textContent;
+    zona.hidden = false;
+
+    function elegido(nombre) { return formulario.querySelector("input[name=" + nombre + "]:checked"); }
+    function nombreDe(opcion) { return opcion ? opcion.closest("label").textContent.trim() : ""; }
+    function horasTexto(valor) {
+        var minutos = Math.round(valor * 60);
+        var h = Math.floor(minutos / 60), m = minutos % 60;
+        if (h && m) { return h + " h " + m + " min"; }
+        return m ? m + " min" : h + " h";
+    }
+    function oculto(nombre, valor) {
+        var campo = document.createElement("input");
+        campo.type = "hidden"; campo.name = nombre; campo.value = valor;
+        return campo;
+    }
+    function actualizar() {
+        var n = lista.children.length;
+        enviar.textContent = n ? "Apuntar " + n + (n === 1 ? " línea" : " líneas") : "Apuntar horas";
+        zona.classList.toggle("lineas-horas--con-lineas", n > 0);
+    }
+
+    zona.querySelector("[data-lineas-anadir]").addEventListener("click", function () {
+        // Oficiales y peones: el puesto va en un campo oculto (el de su rol)
+        var puestoFijo = formulario.querySelector("[data-puesto-fijo]");
+        var puesto = puestoFijo ? formulario.querySelector("input[type=hidden][name=material]") : elegido("material");
+        var campo = elegido("campo");
+        var hayCampos = formulario.querySelector("input[name=campo]") !== null;
+        var cantidad = parseFloat(formulario.querySelector("input[name=cantidad]").value) || 0;
+        if (!puesto || (hayCampos && !campo) || cantidad <= 0) {
+            ayuda.textContent = "Elige puesto" + (hayCampos ? ", campo" : "") + " y un tiempo mayor que 0 antes de añadir.";
+            ayuda.classList.add("lineas-horas__ayuda--error");
+            return;
+        }
+        ayuda.textContent = textoAyuda;
+        ayuda.classList.remove("lineas-horas__ayuda--error");
+
+        var linea = document.createElement("li");
+        linea.className = "linea-horas";
+        var texto = document.createElement("span");
+        texto.className = "linea-horas__texto";
+        var titulo = document.createElement("strong");
+        // Con el puesto fijo solo se enseña el campo (el puesto no lo ve el empleado)
+        titulo.textContent = puestoFijo ? (campo ? nombreDe(campo) : "Horas") : nombreDe(puesto) + (campo ? " · " + nombreDe(campo) : "");
+        texto.appendChild(titulo);
+        texto.appendChild(document.createTextNode(horasTexto(cantidad)));
+        var quitar = document.createElement("button");
+        quitar.type = "button";
+        quitar.className = "linea-horas__quitar";
+        quitar.setAttribute("aria-label", "Quitar " + titulo.textContent + " de la lista");
+        quitar.textContent = "×";
+        quitar.addEventListener("click", function () { linea.remove(); actualizar(); });
+
+        linea.appendChild(texto);
+        linea.appendChild(quitar);
+        linea.appendChild(oculto("linea_material", puesto.value));
+        linea.appendChild(oculto("linea_campo", campo ? campo.value : ""));
+        linea.appendChild(oculto("linea_cantidad", cantidad.toFixed(2)));
+        lista.appendChild(linea);
+        actualizar();
     });
 });
 

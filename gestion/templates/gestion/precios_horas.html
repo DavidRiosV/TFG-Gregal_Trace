@@ -1,0 +1,155 @@
+{% extends "gestion/principal.html" %}
+
+{% block titulo %}Precios horas · Gregal Trace{% endblock %}
+
+{% block contenido %}
+{% url 'index' as url_inicio %}
+<header class="pagina">
+    {% include "gestion/migas.html" with miga_actual="Precios horas" %}
+    <h1 class="pagina__titulo">Precios de las horas</h1>
+</header>
+
+<section class="panel" id="fijar">
+    <h2 class="panel__titulo">Fijar un precio</h2>
+
+    {# Paso 1: puesto #}
+    <div class="paso">
+        <h3 class="paso__titulo"><span class="paso__numero">1</span>Puesto</h3>
+        <div class="chips">
+            {% for puesto in puestos %}
+                <span class="chip{% if puesto == puesto_actual %} chip--activo{% endif %}">
+                    <a class="chip__nombre" href="?puesto={{ puesto.pk }}{% if campo_actual %}&campo={{ campo_actual.pk }}{% endif %}#fijar"{% if puesto == puesto_actual %} aria-current="true"{% endif %}>{{ puesto.nombre_puesto }}</a>
+                    {% if not puesto.num_apuntes %}
+                        <form method="post" action="{% url 'puesto_eliminar' puesto.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="chip__borrar" aria-label="Eliminar el puesto {{ puesto.nombre_puesto }}" title="Eliminar" onclick="return confirm('Se borrará el puesto «{{ puesto.nombre_puesto|escapejs }}» y sus precios.');">×</button>
+                        </form>
+                    {% endif %}
+                </span>
+            {% empty %}
+                <p class="paso__vacio">Todavía no hay puestos.</p>
+            {% endfor %}
+        </div>
+        <details class="nuevo"{% if abierto == 'puesto' %} open{% endif %}>
+            <summary class="nuevo__boton">{% include "gestion/icono.html" with nombre="mas" %}Nuevo puesto</summary>
+            <form method="post" class="formulario nuevo__formulario" novalidate>
+                {% csrf_token %}
+                <input type="hidden" name="accion" value="puesto">
+                <div class="formulario__fila">
+                    {% include "gestion/campo.html" with campo=formulario_puesto.nombre %}
+                    {% include "gestion/campo_widget.html" with campo=formulario_puesto.precio %}
+                </div>
+                <div class="formulario__botones">
+                    <button type="submit" class="boton">Crear puesto</button>
+                </div>
+            </form>
+        </details>
+    </div>
+
+    {# Paso 2: campo #}
+    <div class="paso">
+        <h3 class="paso__titulo"><span class="paso__numero">2</span>Campo</h3>
+        <div class="chips">
+            {% for campo in campos %}
+                <span class="chip{% if campo == campo_actual %} chip--activo{% endif %}">
+                    <a class="chip__nombre" href="?{% if puesto_actual %}puesto={{ puesto_actual.pk }}&{% endif %}campo={{ campo.pk }}#fijar"{% if campo == campo_actual %} aria-current="true"{% endif %}>{{ campo.nombre }}</a>
+                    {% if not campo.num_apuntes %}
+                        <form method="post" action="{% url 'campo_hora_eliminar' campo.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="chip__borrar" aria-label="Eliminar el campo {{ campo.nombre }}" title="Eliminar" onclick="return confirm('Se borrará el campo «{{ campo.nombre|escapejs }}» y sus precios.');">×</button>
+                        </form>
+                    {% endif %}
+                </span>
+            {% empty %}
+                <p class="paso__vacio">Todavía no hay campos.</p>
+            {% endfor %}
+        </div>
+        <details class="nuevo"{% if abierto == 'campo' %} open{% endif %}>
+            <summary class="nuevo__boton">{% include "gestion/icono.html" with nombre="mas" %}Nuevo campo</summary>
+            <form method="post" class="formulario nuevo__formulario" novalidate>
+                {% csrf_token %}
+                <input type="hidden" name="accion" value="campo">
+                <div class="formulario__fila">
+                    {% include "gestion/campo.html" with campo=formulario_campo.nombre %}
+                </div>
+                <div class="formulario__botones">
+                    <button type="submit" class="boton">Crear campo</button>
+                </div>
+            </form>
+        </details>
+    </div>
+
+    {# Paso 3: precio de la combinación #}
+    <div class="paso paso--ultimo">
+        <h3 class="paso__titulo"><span class="paso__numero">3</span>Precio por hora</h3>
+        {% if puesto_actual and campo_actual %}
+            <form method="post" class="precio-hora" novalidate>
+                {% csrf_token %}
+                <input type="hidden" name="accion" value="tarifa">
+                {{ formulario_tarifa.puesto }}{{ formulario_tarifa.campo }}
+                <div class="precio-hora__combinacion">
+                    <strong>{{ puesto_actual.nombre_puesto }} · {{ campo_actual.nombre }}</strong>
+                    {% if tarifa_actual %}
+                        <span>Ahora: {{ tarifa_actual.precio }} €/h</span>
+                    {% else %}
+                        <span>Sin precio propio: se usa el precio base del puesto ({{ puesto_actual.precio }} €/h)</span>
+                    {% endif %}
+                </div>
+                <div class="precio-hora__entrada">
+                    <div class="entrada{% if formulario_tarifa.precio.errors %} entrada--error{% endif %}">
+                        <input type="number" name="precio" id="id_precio" step="0.01" min="0" inputmode="decimal" required
+                               value="{{ formulario_tarifa.precio.value|default_if_none:''|stringformat:'s' }}" aria-label="Precio por hora en euros">
+                        <span class="entrada__sufijo">€/h</span>
+                    </div>
+                    <button type="submit" class="boton">{% if tarifa_actual %}Cambiar precio{% else %}Fijar precio{% endif %}</button>
+                </div>
+                {% for error in formulario_tarifa.precio.errors %}<p class="error-campo">{{ error }}</p>{% endfor %}
+            </form>
+        {% else %}
+            <p class="paso__vacio">Elige {% if not puesto_actual %}un puesto{% if not campo_actual %} y {% endif %}{% endif %}{% if not campo_actual %}un campo{% endif %} para fijar su precio.</p>
+        {% endif %}
+    </div>
+</section>
+
+<section class="panel panel--lista panel--separado" id="precios">
+    <h2 class="panel__titulo panel__titulo--con-margen">Precios fijados <span class="panel__contador">{{ tarifas|length }}</span></h2>
+    {% if tarifas %}
+        <div class="tabla-contenedor">
+            <table class="tabla">
+                <thead>
+                    <tr>
+                        <th scope="col">Puesto</th>
+                        <th scope="col">Campo</th>
+                        <th scope="col" class="num">Precio por hora</th>
+                        <th scope="col" class="num"><span class="solo-lector">Acciones</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tarifa in tarifas %}
+                        <tr{% if tarifa == tarifa_actual %} class="tabla__fila--activa"{% endif %}>
+                            <td class="tabla__material">{{ tarifa.puesto.nombre_puesto }}</td>
+                            <td>{{ tarifa.campo.nombre }}</td>
+                            <td class="num">{{ tarifa.precio }} €/h</td>
+                            <td class="tabla__acciones">
+                                <a class="boton-tabla" href="?puesto={{ tarifa.puesto_id }}&campo={{ tarifa.campo_id }}#fijar" aria-label="Cambiar el precio de {{ tarifa.puesto.nombre_puesto }} · {{ tarifa.campo.nombre }}" title="Cambiar precio">{% include "gestion/icono.html" with nombre="editar" %}</a>
+                                <form method="post" action="{% url 'tarifa_eliminar' tarifa.pk %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="boton-tabla boton-tabla--peligro" aria-label="Quitar el precio de {{ tarifa.puesto.nombre_puesto }} · {{ tarifa.campo.nombre }}" title="Quitar precio" onclick="return confirm('Se quitará el precio de {{ tarifa.puesto.nombre_puesto|escapejs }} · {{ tarifa.campo.nombre|escapejs }}. Esas horas usarán el precio base del puesto.');">{% include "gestion/icono.html" with nombre="borrar" %}</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="vacio"><p>Todavía no hay precios fijados. Elige un puesto y un campo arriba.</p></div>
+    {% endif %}
+    <p class="pagina__texto panel__nota">
+        {% if combinaciones_sin_precio > 0 %}{{ combinaciones_sin_precio }} combinaci{{ combinaciones_sin_precio|pluralize:"ón,ones" }} sin precio propio: usan el precio base del puesto. {% endif %}
+        Los puestos y campos con horas apuntadas no se pueden eliminar. Cambiar un precio no altera las horas ya apuntadas.
+    </p>
+</section>
+
+{% include "gestion/volver.html" with volver_url=url_inicio volver_texto="Volver al inicio" %}
+{% endblock %}

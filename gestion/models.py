@@ -180,6 +180,10 @@ class Material(models.Model):
     ]
     clase = models.CharField(max_length=3, choices=CLASES, blank=True, default='PRI')
 
+    def nombre_puesto(self):
+        """En las horas, el puesto sin la palabra «Hora»: «Hora Oficial» -> «Oficial»."""
+        return self.nombre.removeprefix('Hora ').strip()
+
     def abreviatura(self):
         # Unidad corta para mostrar junto a la cantidad: 2 h, 3 ud, 40 m
         return {'UD': 'ud', 'M': 'm', 'M2': 'm²', 'KG': 'kg', 'L': 'l', 'H': 'h'}.get(self.unidad, '')
@@ -188,6 +192,45 @@ class Material(models.Model):
         return f"{self.nombre} ({self.get_unidad_display()})"
 
 #Clase para apuntar: qué material se ha gastado, en qué proyecto y quién lo apuntó.
+class CampoHora(models.Model):
+    """Campo o especialidad de una hora de trabajo (Electricidad, Fontanería...).
+    Junto con el puesto (Oficial, Peón...) decide el precio de la hora. Lista propia
+    que Oficina crea y borra desde «Precios horas»."""
+    nombre = models.CharField(max_length=60, unique=True)
+
+    class Meta:
+        ordering = ['nombre']
+
+    def __str__(self):
+        return self.nombre
+
+
+class TarifaHora(models.Model):
+    """Precio de una hora según la combinación puesto + campo (Oficial + Electricidad = 32 €/h).
+    El puesto es uno de los materiales de horas (unidad «Hora»): Hora Oficial, Hora Peón..."""
+    puesto = models.ForeignKey(Material, on_delete=models.CASCADE, related_name='tarifas',
+                               limit_choices_to={'unidad': 'H'})
+    campo = models.ForeignKey(CampoHora, on_delete=models.CASCADE, related_name='tarifas')
+    precio = models.DecimalField(max_digits=8, decimal_places=2)
+
+    class Meta:
+        # Una sola tarifa por combinación
+        unique_together = ('puesto', 'campo')
+        ordering = ['puesto__nombre', 'campo__nombre']
+
+    def __str__(self):
+        return f'{self.puesto.nombre} · {self.campo.nombre}: {self.precio} €/h'
+
+
+def precio_hora(puesto, campo):
+    """Precio de una hora de ese puesto en ese campo. Si Oficina no ha fijado esa combinación,
+    se usa el precio base del puesto (el del material «Hora ...»)."""
+    if campo:
+        tarifa = TarifaHora.objects.filter(puesto=puesto, campo=campo).first()
+        if tarifa:
+            return tarifa.precio
+    return puesto.precio
+
 class Consumo(models.Model):
     proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE, related_name='consumos')
     material = models.ForeignKey(Material, on_delete=models.PROTECT, related_name='consumos')
@@ -195,9 +238,18 @@ class Consumo(models.Model):
     cantidad = models.DecimalField(max_digits=10, decimal_places=2)
     precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
     fecha = models.DateField(default=timezone.now)
+    # Solo en las horas: campo del trabajo (Electricidad, Fontanería...). Con el puesto decide el precio.
+    # PROTECT: no se puede borrar un campo que ya tiene horas apuntadas (se perderían en las estadísticas).
+    campo = models.ForeignKey(CampoHora, on_delete=models.PROTECT, null=True, blank=True, related_name='consumos')
 
     def total(self):
         return self.cantidad * self.precio_unitario
+
+    def descripcion(self):
+        """Qué se apuntó: «Tubería PPR 25 mm» o, en las horas, «Hora Oficial · Electricidad»."""
+        if self.campo_id:
+            return f'{self.material.nombre} · {self.campo.nombre}'
+        return self.material.nombre
 
     def cantidad_texto(self):
         # Las horas como «2 h 30 min»; el resto como «3 ud» o «12,5 m»

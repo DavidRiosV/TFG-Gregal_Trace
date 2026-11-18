@@ -108,8 +108,8 @@
     <form method="post" class="formulario" novalidate>
         {% csrf_token %}
         <input type="hidden" name="apunte" value="horas">
-        {% include "gestion/selector_horas.html" with formulario=formulario_horas %}
-        <button type="submit" class="boton boton--ancho">Apuntar horas</button>
+        {% include "gestion/selector_horas.html" with formulario=formulario_horas con_lineas=True %}
+        <button type="submit" class="boton boton--ancho" data-lineas-enviar>Apuntar horas</button>
     </form>
 </section>
 {% endif %}
