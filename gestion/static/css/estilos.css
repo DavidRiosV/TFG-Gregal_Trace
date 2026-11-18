@@ -1932,3 +1932,15 @@ a.agenda__cuerpo:hover .agenda__titulo { color: var(--verde-accion); text-decora
 .albaran__icono--imagen { font-size: 10px; }
 .etiqueta { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; background: var(--verde-suave, #e8f3ec); color: var(--verde-accion, #1f7a45); font-size: 11.5px; font-weight: 700; vertical-align: 1px; }
 .subir-albaran__tipo { margin-bottom: 12px; }
+
+/* Apartado Citas */
+.cita-campos { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 0.8fr) minmax(0, 1.6fr); gap: 16px; align-items: start; }
+.cita-campos__trabajo .entrada + .entrada { margin-top: 6px; }
+.entrada--filtro { min-height: 36px; background: var(--fondo); border-color: var(--linea); }
+.entrada--filtro .icono { width: 16px; height: 16px; color: var(--texto-suave); }
+.entrada--filtro input { min-height: 34px; font-size: 13.5px; }
+.tabla--citas a { color: var(--texto); font-weight: 650; text-decoration: none; }
+.tabla--citas a:hover { color: var(--verde-accion); text-decoration: underline; }
+.tabla--citas .tabla__doble > * { display: block; }
+@media (max-width: 1024px) { .cita-campos { grid-template-columns: 1fr 1fr; } .cita-campos__trabajo { grid-column: 1 / -1; } }
+@media (max-width: 760px) { .cita-campos { grid-template-columns: 1fr; } }

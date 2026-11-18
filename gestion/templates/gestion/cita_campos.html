@@ -1,0 +1,16 @@
+{% comment %} Campos de una cita (apartado Citas): trabajo con buscador, día, hora y motivo. Recibe: formulario (CitaGestionForm) {% endcomment %}
+<div class="cita-campos">
+    <div class="campo cita-campos__trabajo">
+        <label for="{{ formulario.proyecto.id_for_label }}">{{ formulario.proyecto.label }}</label>
+        {# Escribir aquí filtra el desplegable (main.js): con muchos trabajos se encuentra antes #}
+        <div class="entrada entrada--filtro">
+            {% include "gestion/icono.html" with nombre="buscar" %}
+            <input type="search" placeholder="Filtrar por nombre o cliente" aria-label="Filtrar trabajos" data-filtrar-select="{{ formulario.proyecto.id_for_label }}" autocomplete="off">
+        </div>
+        <div class="entrada{% if formulario.proyecto.errors %} entrada--error{% endif %}">{{ formulario.proyecto }}</div>
+        {% for error in formulario.proyecto.errors %}<p class="error-campo">{{ error }}</p>{% endfor %}
+    </div>
+    {% include "gestion/campo_widget.html" with campo=formulario.fecha %}
+    {% include "gestion/campo_widget.html" with campo=formulario.hora %}
+    {% include "gestion/campo_widget.html" with campo=formulario.motivo %}
+</div>

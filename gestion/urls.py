@@ -17,6 +17,8 @@ urlpatterns = [
     path('apunte/<int:pk>/repetir/', views.consumo_repetir, name='consumo_repetir'),
     # Notas, citas y albaranes
     path('nota/<int:pk>/eliminar/', views.nota_eliminar, name='nota_eliminar'),
+    path('citas/', views.lista_citas, name='lista_citas'),
+    path('cita/<int:pk>/editar/', views.cita_editar, name='cita_editar'),
     path('cita/<int:pk>/eliminar/', views.cita_eliminar, name='cita_eliminar'),
     path('precios-horas/', views.precios_horas, name='precios_horas'),
     path('precios-horas/puesto/<int:pk>/eliminar/', views.puesto_eliminar, name='puesto_eliminar'),

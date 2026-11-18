@@ -1,0 +1,88 @@
+{% extends "gestion/principal.html" %}
+
+{% block titulo %}Citas · Gregal Trace{% endblock %}
+
+{% block contenido %}
+<header class="pagina">
+    {% include "gestion/migas.html" with miga_actual="Citas" %}
+    <div class="pagina__fila">
+        <h1 class="pagina__titulo">Citas</h1>
+        <div class="pagina__acciones">
+            <a class="boton boton--secundario" href="{% url 'calendario' %}">{% include "gestion/icono.html" with nombre="cita" %}Ver en el calendario</a>
+        </div>
+    </div>
+</header>
+
+{# ---------- Agendar una cita ---------- #}
+<section class="panel" id="nueva">
+    <h2 class="panel__titulo">Nueva cita</h2>
+    <form method="post" class="formulario" novalidate>
+        {% csrf_token %}
+        {% include "gestion/cita_campos.html" %}
+        <div class="formulario__botones">
+            <button type="submit" class="boton">{% include "gestion/icono.html" with nombre="mas" %}Agendar cita</button>
+        </div>
+    </form>
+</section>
+
+{# ---------- Lista de citas ---------- #}
+<section class="panel panel--lista">
+    <div class="barra-herramientas">
+        <form class="buscador" method="get" role="search">
+            <input type="hidden" name="ver" value="{{ ver_actual }}">
+            {% include "gestion/icono.html" with nombre="buscar" %}
+            <input type="search" name="q" value="{{ busqueda }}" placeholder="Buscar por motivo, trabajo o cliente" aria-label="Buscar citas">
+            <button type="submit" class="buscador__boton">Buscar</button>
+        </form>
+        <nav class="segmentos" aria-label="Qué citas ver">
+            {% for boton in botones_ver %}
+                <a href="{{ boton.url }}" class="segmento{% if boton.activo %} segmento--activo{% endif %}"{% if boton.activo %} aria-current="true"{% endif %}>{{ boton.texto }} <span class="segmento__numero">{{ boton.n }}</span></a>
+            {% endfor %}
+        </nav>
+    </div>
+
+    {% if citas %}
+        <div class="tabla-contenedor">
+            <table class="tabla tabla--citas">
+                <thead>
+                    <tr>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Hora</th>
+                        <th scope="col">Motivo</th>
+                        <th scope="col">Trabajo</th>
+                        <th scope="col" class="num"><span class="solo-lector">Acciones</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cita in citas %}
+                        <tr{% if cita.fecha == hoy %} class="tabla__fila--activa"{% elif cita.es_pasada %} class="tabla__fila--baja"{% endif %}>
+                            <td class="tabla__doble">
+                                <span class="tabla__material">{% if cita.fecha == hoy %}Hoy{% else %}{{ cita.fecha|date:"D j M"|capfirst }}{% endif %}</span>
+                                <span class="tabla__detalle">{{ cita.fecha|date:"d/m/Y" }} · {{ cita.dias }}</span>
+                            </td>
+                            <td>{% if cita.hora %}{{ cita.hora|time:"H:i" }}{% else %}<span class="tabla__nada">Sin hora</span>{% endif %}</td>
+                            <td>{{ cita.motivo|default:"Cita" }}</td>
+                            <td class="tabla__doble">
+                                <a href="{% url 'detalle_proyecto' cita.proyecto.pk %}#citas">{{ cita.proyecto.nombre }}</a>
+                                <span class="tabla__detalle">{{ cita.proyecto.get_tipo_display }}{% if cita.proyecto.cliente %} · {{ cita.proyecto.cliente }}{% endif %}</span>
+                            </td>
+                            <td class="tabla__acciones">
+                                <a class="boton-tabla" href="{% url 'cita_editar' cita.pk %}" aria-label="Cambiar la cita" title="Cambiar">{% include "gestion/icono.html" with nombre="editar" %}</a>
+                                {% if perms.gestion.delete_cita %}
+                                    <form method="post" action="{% url 'cita_eliminar' cita.pk %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="volver" value="{{ request.get_full_path }}">
+                                        <button type="submit" class="boton-tabla boton-tabla--peligro" aria-label="Eliminar la cita" title="Eliminar" onclick="return confirm('Se borrará la cita del {{ cita.fecha|date:'d/m/Y' }}{% if cita.motivo %} ({{ cita.motivo|escapejs }}){% endif %} de {{ cita.proyecto.nombre|escapejs }}.');">{% include "gestion/icono.html" with nombre="borrar" %}</button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="vacio"><p>{% if busqueda %}Ninguna cita coincide con «{{ busqueda }}».{% elif ver_actual == 'proximas' %}No hay citas pendientes. Agenda la primera arriba.{% elif ver_actual == 'pasadas' %}Todavía no hay citas pasadas.{% else %}Todavía no hay citas.{% endif %}</p></div>
+    {% endif %}
+</section>
+{% endblock %}

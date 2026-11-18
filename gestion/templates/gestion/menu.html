@@ -53,6 +53,12 @@
                 <span>Calendario</span>
             </a>
         {% endif %}
+        {% if perms.gestion.change_cita %}
+            <a class="menu__enlace{% if seccion == 'citas' %} menu__enlace--activo{% endif %}" href="{% url 'lista_citas' %}">
+                {% include "gestion/icono.html" with nombre="cita" %}
+                <span>Citas</span>
+            </a>
+        {% endif %}
         {% if perms.gestion.change_albaran %}
             <a class="menu__enlace{% if seccion == 'albaranes' %} menu__enlace--activo{% endif %}" href="{% url 'lista_albaranes' %}">
                 {% include "gestion/icono.html" with nombre="albaran" %}

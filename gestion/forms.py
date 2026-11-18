@@ -316,6 +316,34 @@ class CitaForm(forms.ModelForm):
         return limpiar_texto(self.cleaned_data['motivo'])
 
 
+class CitaGestionForm(CitaForm):
+    # Cita desde el apartado Citas (Oficina): además del día, la hora y el motivo, se elige el trabajo
+
+    class Meta(CitaForm.Meta):
+        fields = ['proyecto', 'fecha', 'hora', 'motivo']
+        labels = dict(CitaForm.Meta.labels, proyecto='Trabajo')
+        error_messages = dict(CitaForm.Meta.error_messages, proyecto={'required': 'Elige a qué trabajo va la cita.'})
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Se ofrecen los trabajos en proceso (y el de la cita, si se está editando y ya está terminado)
+        trabajos = Proyecto.objects.exclude(estado='TER')
+        if self.instance.pk:
+            trabajos = trabajos | Proyecto.objects.filter(pk=self.instance.proyecto_id)
+        trabajos = trabajos.order_by('nombre')
+        self.fields['proyecto'].queryset = trabajos
+        # En el desplegable, agrupados por tipo: Obras, Intervenciones, Mantenimientos, Urgencias
+        grupos = {}
+        for trabajo in trabajos:
+            texto = trabajo.nombre + (f' · {trabajo.cliente}' if trabajo.cliente else '')
+            grupos.setdefault(trabajo.get_tipo_display(), []).append((trabajo.pk, texto))
+        orden = ['Obra', 'Intervención', 'Mantenimiento', 'Urgencia']
+        plurales = {'Obra': 'Obras', 'Intervención': 'Intervenciones', 'Mantenimiento': 'Mantenimientos', 'Urgencia': 'Urgencias'}
+        self.fields['proyecto'].widget.choices = [('', 'Elige el trabajo…')] + [
+            (plurales[tipo], grupos[tipo]) for tipo in orden if tipo in grupos
+        ]
+
+
 # ---------------------------------------------------------------------------
 # Catálogo (Oficina): materiales, familias y tipos
 # ---------------------------------------------------------------------------

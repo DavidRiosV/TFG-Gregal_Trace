@@ -293,3 +293,25 @@ document.querySelectorAll("[data-lineas-horas]").forEach(function (zona) {
     });
 });
 
+// Apartado Citas: escribir en el filtro deja en el desplegable solo los trabajos que coinciden
+document.querySelectorAll("[data-filtrar-select]").forEach(function (entrada) {
+    var lista = document.getElementById(entrada.dataset.filtrarSelect);
+    if (!lista) { return; }
+    function sinTildes(texto) { return texto.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase(); }
+    entrada.addEventListener("input", function () {
+        var palabras = sinTildes(entrada.value).split(/\s+/).filter(Boolean);
+        var primera = null;
+        lista.querySelectorAll("option").forEach(function (opcion) {
+            if (!opcion.value) { return; }
+            var vale = palabras.every(function (p) { return sinTildes(opcion.textContent).indexOf(p) !== -1; });
+            opcion.hidden = !vale;
+            if (vale && !primera) { primera = opcion; }
+        });
+        lista.querySelectorAll("optgroup").forEach(function (grupo) {
+            grupo.hidden = !grupo.querySelector("option:not([hidden])");
+        });
+        // Si solo queda uno (o el elegido ya no sale), se elige el primero que coincide
+        var elegida = lista.options[lista.selectedIndex];
+        if (primera && (!elegida || !elegida.value || elegida.hidden)) { lista.value = primera.value; }
+    });
+});

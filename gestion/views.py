@@ -5,13 +5,14 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.models import Group
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.db.models import ProtectedError, Count, F, Max, Min, Q, Sum
 from django.http import FileResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
 from .calendario import descargar_ics, dias_del_evento, leer_eventos, url_outlook_web
-from .forms import (AlbaranForm, CampoHoraForm, CategoriaForm, EmpleadoForm, PuestoForm, TarifaForm, CitaForm, ConsumoForm, HorasForm, MaterialForm, NotaForm,
+from .forms import (AlbaranForm, CampoHoraForm, CategoriaForm, EmpleadoForm, PuestoForm, TarifaForm, CitaForm, CitaGestionForm, ConsumoForm, HorasForm, MaterialForm, NotaForm,
                     ProyectoForm, RegistroForm, TipoForm, UrgenciaForm)
 from .models import (Albaran, CampoHora, Categoria, TarifaHora, precio_hora, Cita, Consumo, Material, Nota, Oficina, Operario, Proyecto, Tipo, Usuario,
                      buscar_materiales, horas_texto, sin_tildes)
@@ -564,6 +565,10 @@ def cita_eliminar(request, pk):
         fecha = cita.fecha
         cita.delete()
         messages.success(request, f'Cita del {fecha:%d/%m/%Y} eliminada.')
+        # Desde el apartado Citas se vuelve a la lista; desde un proyecto, a sus citas
+        volver = request.POST.get('volver', '')
+        if volver and url_has_allowed_host_and_scheme(volver, allowed_hosts={request.get_host()}):
+            return redirect(volver)
     return redirect(reverse('detalle_proyecto', args=[cita.proyecto.pk]) + '#citas')
 
 @permission_required('gestion.view_albaran')
@@ -1284,3 +1289,82 @@ def tarifa_eliminar(request, pk):
         tarifa.delete()
         messages.success(request, f'Precio de {texto} quitado. Esas horas usarán el precio base del puesto.')
     return redirect(reverse('precios_horas') + '#precios')
+
+
+# ---------------------------------------------------------------------------
+# Citas (Oficina): agendar, revisar y cambiar las citas de todos los trabajos en un solo sitio.
+# El calendario las enseña junto a Outlook; aquí se gestionan.
+# ---------------------------------------------------------------------------
+@permission_required('gestion.change_cita')
+def lista_citas(request):
+    hoy = date.today()
+    ver = request.GET.get('ver', 'proximas')
+    if ver not in ('proximas', 'pasadas', 'todas'):
+        ver = 'proximas'
+    busqueda = request.GET.get('q', '').strip()
+
+    if request.method == 'POST':
+        formulario = CitaGestionForm(request.POST)
+        if formulario.is_valid():
+            cita = formulario.save(commit=False)
+            cita.creada_por = request.user
+            cita.save()
+            messages.success(request, f'Cita del {cita.fecha:%d/%m/%Y} añadida a {cita.proyecto.nombre} ({cita.dias()}).')
+            return redirect(request.get_full_path())
+    else:
+        # Si se llega desde un proyecto (?proyecto=12), ya sale elegido
+        inicial = {'fecha': hoy}
+        if request.GET.get('proyecto', '').isdigit():
+            inicial['proyecto'] = int(request.GET['proyecto'])
+        formulario = CitaGestionForm(initial=inicial)
+
+    citas = Cita.objects.select_related('proyecto', 'creada_por')
+    if ver == 'proximas':
+        citas = citas.filter(fecha__gte=hoy)
+    elif ver == 'pasadas':
+        citas = citas.filter(fecha__lt=hoy).order_by('-fecha', '-hora', '-id')
+    if busqueda:
+        citas = citas.filter(Q(motivo__icontains=busqueda) | Q(proyecto__nombre__icontains=busqueda)
+                             | Q(proyecto__cliente__icontains=busqueda))
+
+    totales = {
+        'proximas': Cita.objects.filter(fecha__gte=hoy).count(),
+        'pasadas': Cita.objects.filter(fecha__lt=hoy).count(),
+        'todas': Cita.objects.count(),
+    }
+    botones = []
+    for codigo, texto in (('proximas', 'Próximas'), ('pasadas', 'Pasadas'), ('todas', 'Todas')):
+        parametros = {'ver': codigo}
+        if busqueda:
+            parametros['q'] = busqueda
+        botones.append({'texto': texto, 'n': totales[codigo], 'url': '?' + urlencode(parametros), 'activo': codigo == ver})
+
+    return render(request, 'gestion/citas.html', {
+        'formulario': formulario,
+        'citas': citas,
+        'botones_ver': botones,
+        'ver_actual': ver,
+        'busqueda': busqueda,
+        'hoy': hoy,
+        'seccion': 'citas',
+        'nav_tipos': datos_menu(),
+    })
+
+
+@permission_required('gestion.change_cita')
+def cita_editar(request, pk):
+    cita = get_object_or_404(Cita.objects.select_related('proyecto'), pk=pk)
+    if request.method == 'POST':
+        formulario = CitaGestionForm(request.POST, instance=cita)
+        if formulario.is_valid():
+            cita = formulario.save()
+            messages.success(request, f'Cita del {cita.fecha:%d/%m/%Y} guardada ({cita.dias()}).')
+            return redirect('lista_citas')
+    else:
+        formulario = CitaGestionForm(instance=cita)
+    return render(request, 'gestion/cita_form.html', {
+        'formulario': formulario,
+        'cita': cita,
+        'seccion': 'citas',
+        'nav_tipos': datos_menu(),
+    })

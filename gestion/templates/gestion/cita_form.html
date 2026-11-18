@@ -1,0 +1,23 @@
+{% extends "gestion/principal.html" %}
+
+{% block titulo %}Cambiar cita · Gregal Trace{% endblock %}
+
+{% block contenido %}
+{% url 'lista_citas' as url_lista %}
+<header class="pagina">
+    {% include "gestion/migas.html" with miga_url=url_lista miga_texto="Citas" miga_actual="Cambiar cita" %}
+    <h1 class="pagina__titulo">Cambiar cita</h1>
+    <p class="pagina__texto">{{ cita.proyecto.nombre }} · {{ cita.fecha|date:"d/m/Y" }}{% if cita.hora %} a las {{ cita.hora|time:"H:i" }}{% endif %}</p>
+</header>
+
+<section class="panel panel--formulario">
+    <form method="post" class="formulario" novalidate>
+        {% csrf_token %}
+        {% include "gestion/cita_campos.html" %}
+        <div class="formulario__botones">
+            <button type="submit" class="boton">Guardar cambios</button>
+            <a class="boton boton--secundario" href="{{ url_lista }}">Cancelar</a>
+        </div>
+    </form>
+</section>
+{% endblock %}
