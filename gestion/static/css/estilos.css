@@ -1926,3 +1926,9 @@ a.agenda__cuerpo:hover .agenda__titulo { color: var(--verde-accion); text-decora
 }
 .tiempo-rapido:hover { border-color: var(--verde-marca); color: var(--verde-accion); }
 
+
+/* Albaranes con foto: miniatura, etiqueta FOTO y «Foto de la obra» */
+.albaran__icono--foto { object-fit: cover; background: var(--fondo); border: 1px solid var(--linea); }
+.albaran__icono--imagen { font-size: 10px; }
+.etiqueta { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; background: var(--verde-suave, #e8f3ec); color: var(--verde-accion, #1f7a45); font-size: 11.5px; font-weight: 700; vertical-align: 1px; }
+.subir-albaran__tipo { margin-bottom: 12px; }

@@ -568,14 +568,16 @@ def cita_eliminar(request, pk):
 
 @permission_required('gestion.view_albaran')
 def albaran_ver(request, pk):
-    # Abre el PDF en el navegador. Pasa por esta vista (y no por una URL pública de /media/)
+    # Abre el PDF o la foto en el navegador. Pasa por esta vista (y no por una URL pública de /media/)
     # para que solo lo vean usuarios con sesión iniciada
     albaran = get_object_or_404(Albaran, pk=pk)
     try:
         archivo = albaran.archivo.open('rb')
     except FileNotFoundError:
-        raise Http404('El PDF de este albarán ya no está en el servidor')
-    return FileResponse(archivo, content_type='application/pdf', filename=albaran.nombre_archivo())
+        raise Http404('El archivo de este albarán ya no está en el servidor')
+    # Las fotos HEIC no se ven en el navegador: se descargan
+    return FileResponse(archivo, content_type=albaran.tipo_mime(), filename=albaran.nombre_archivo(),
+                        as_attachment=not albaran.se_ve_en_navegador())
 
 @permission_required('gestion.delete_albaran')
 def albaran_eliminar(request, pk):

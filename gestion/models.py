@@ -307,12 +307,31 @@ def ruta_albaran(albaran, nombre):
     return f'albaranes/proyecto_{albaran.proyecto_id}/{nombre}'
 
 
-# Albaranes en PDF de un proyecto. Los sube cualquiera; los borra Oficina
+# Formatos que se aceptan como albarán: el PDF escaneado o una foto hecha con el móvil.
+# Para cada extensión, el tipo que se le dice al navegador al abrirlo
+FORMATOS_ALBARAN = {
+    '.pdf': 'application/pdf',
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.png': 'image/png',
+    '.webp': 'image/webp',
+    '.heic': 'image/heic',   # fotos del iPhone
+    '.heif': 'image/heif',
+}
+
+
+# Albaranes (PDF o foto) y fotos de la obra de un proyecto. Los sube cualquiera; los borra Oficina
 class Albaran(models.Model):
     proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE, related_name='albaranes')
     archivo = models.FileField(upload_to=ruta_albaran)
     # Proveedor o número de albarán, para reconocerlo sin abrirlo
     descripcion = models.CharField(max_length=120, blank=True)
+    # Albarán de un proveedor o foto de la obra (antes, durante o después del trabajo)
+    TIPOS = [
+        ('ALB', 'Albarán'),
+        ('FOT', 'Foto de la obra'),
+    ]
+    tipo = models.CharField(max_length=3, choices=TIPOS, default='ALB')
     subido_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='albaranes')
     fecha = models.DateTimeField(auto_now_add=True)
 
@@ -322,6 +341,24 @@ class Albaran(models.Model):
     def nombre_archivo(self):
         # «albaranes/proyecto_12/factura.pdf» -> «factura.pdf»
         return os.path.basename(self.archivo.name)
+
+    def extension(self):
+        # «.pdf», «.jpg»... en minúsculas
+        return os.path.splitext(self.archivo.name)[1].lower()
+
+    def es_imagen(self):
+        return self.extension() != '.pdf'
+
+    def se_ve_en_navegador(self):
+        # Los navegadores no saben enseñar las fotos HEIC del iPhone: esas se descargan
+        return self.extension() not in ('.heic', '.heif')
+
+    def tipo_mime(self):
+        return FORMATOS_ALBARAN.get(self.extension(), 'application/octet-stream')
+
+    def etiqueta(self):
+        # Texto del icono de la lista: PDF o FOTO
+        return 'FOTO' if self.es_imagen() else 'PDF'
 
     def tamano_texto(self):
         # Tamaño del PDF para mostrarlo: «240 KB», «1,3 MB». Vacío si el archivo ya no está

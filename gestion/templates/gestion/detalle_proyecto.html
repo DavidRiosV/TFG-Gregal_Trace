@@ -121,7 +121,7 @@
         {% include "gestion/bloque_notas.html" %}
     </section>
     <section class="panel panel--lista" id="albaranes">
-        <h2 class="panel__titulo panel__titulo--con-margen panel__titulo--icono">{% include "gestion/icono.html" with nombre="albaran" %}Albaranes <span class="contador">{{ albaranes|length }}</span></h2>
+        <h2 class="panel__titulo panel__titulo--con-margen panel__titulo--icono">{% include "gestion/icono.html" with nombre="albaran" %}Albaranes y fotos <span class="contador">{{ albaranes|length }}</span></h2>
         {% include "gestion/bloque_albaranes.html" %}
     </section>
 {% endif %}
@@ -153,7 +153,7 @@
     <div class="pestanas-proyecto__barra" role="tablist">
         <a class="pestana-proyecto" href="#apuntes" role="tab" data-pestana="apuntes">{% include "gestion/icono.html" with nombre="materiales" %}<span>Apuntes</span> <span class="contador">{{ consumos|length }}</span></a>
         <a class="pestana-proyecto" href="#notas" role="tab" data-pestana="notas">{% include "gestion/icono.html" with nombre="nota" %}<span>Notas</span> <span class="contador">{{ notas|length }}</span></a>
-        <a class="pestana-proyecto" href="#albaranes" role="tab" data-pestana="albaranes">{% include "gestion/icono.html" with nombre="albaran" %}<span>Albaranes</span> <span class="contador">{{ albaranes|length }}</span></a>
+        <a class="pestana-proyecto" href="#albaranes" role="tab" data-pestana="albaranes">{% include "gestion/icono.html" with nombre="albaran" %}<span>Albaranes y fotos</span> <span class="contador">{{ albaranes|length }}</span></a>
     </div>
     <div class="pestanas-proyecto__panel" id="apuntes" role="tabpanel">
         <h2 class="panel__titulo panel__titulo--con-margen pestanas-proyecto__titulo">Apuntes</h2>
@@ -164,7 +164,7 @@
         {% include "gestion/bloque_notas.html" %}
     </div>
     <div class="pestanas-proyecto__panel" id="albaranes" role="tabpanel">
-        <h2 class="panel__titulo panel__titulo--con-margen pestanas-proyecto__titulo">Albaranes</h2>
+        <h2 class="panel__titulo panel__titulo--con-margen pestanas-proyecto__titulo">Albaranes y fotos</h2>
         {% include "gestion/bloque_albaranes.html" %}
     </div>
 </section>

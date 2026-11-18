@@ -1,20 +1,29 @@
-{# Subir albarán (cualquiera) y lista de albaranes (borrar: solo Oficina) #}
+{# Subir albarán o foto (cualquiera) y lista (borrar: solo Oficina) #}
 {% if perms.gestion.add_albaran %}
     {# enctype multipart/form-data: obligatorio para enviar archivos (Formularios, diapositiva 4) #}
     <form method="post" enctype="multipart/form-data" class="subir-albaran" novalidate>
         {% csrf_token %}
         <input type="hidden" name="apunte" value="albaran">
+        {# Albarán de un proveedor o foto de la obra #}
+        <div class="familias familias--formulario subir-albaran__tipo" role="radiogroup" aria-label="{{ formulario_albaran.tipo.label }}">
+            {% for opcion in formulario_albaran.tipo %}
+                <label class="familia familia--opcion">{{ opcion.tag }} {{ opcion.choice_label }}</label>
+            {% endfor %}
+        </div>
         <label class="zona-pdf{% if formulario_albaran.archivo.errors %} zona-pdf--error{% endif %}" data-zona-pdf>
             {{ formulario_albaran.archivo }}
             <span class="zona-pdf__icono">{% include "gestion/icono.html" with nombre="subir" %}</span>
             <span class="zona-pdf__texto">
-                <strong data-zona-pdf-nombre>Elige el PDF del albarán</strong>
-                <span>Solo PDF, hasta 10 MB</span>
+                <strong data-zona-pdf-nombre>Elige un PDF o haz una foto</strong>
+                <span><span class="solo-escritorio">o arrástralo aquí · </span>PDF o foto (JPG, PNG, HEIC), hasta 10 MB</span>
             </span>
         </label>
         {% for error in formulario_albaran.archivo.errors %}<p class="error-campo">{{ error }}</p>{% endfor %}
         <div class="subir-albaran__fila">
-            {% include "gestion/campo_widget.html" with campo=formulario_albaran.descripcion %}
+            <div class="campo">
+                <label for="{{ formulario_albaran.descripcion.id_for_label }}">Descripción <span class="campo__opcional">(opcional)</span></label>
+                <div class="entrada"><input type="text" name="{{ formulario_albaran.descripcion.html_name }}" id="{{ formulario_albaran.descripcion.id_for_label }}" value="{{ formulario_albaran.descripcion.value|default_if_none:'' }}" maxlength="120" placeholder="Ej.: Saltoki 4512 o cuadro eléctrico terminado"></div>
+            </div>
             <button type="submit" class="boton">{% include "gestion/icono.html" with nombre="subir" %}Subir albarán</button>
         </div>
     </form>
@@ -23,9 +32,14 @@
     {% for albaran in albaranes %}
         <li class="albaran">
             <a class="albaran__abrir" href="{% url 'albaran_ver' albaran.pk %}" target="_blank" rel="noopener">
-                <span class="albaran__icono" aria-hidden="true">PDF</span>
+                {% if albaran.es_imagen and albaran.se_ve_en_navegador %}
+                    {# Las fotos se ven en miniatura #}
+                    <img class="albaran__icono albaran__icono--foto" src="{% url 'albaran_ver' albaran.pk %}" alt="" loading="lazy">
+                {% else %}
+                    <span class="albaran__icono{% if albaran.es_imagen %} albaran__icono--imagen{% endif %}" aria-hidden="true">{{ albaran.etiqueta }}</span>
+                {% endif %}
                 <span class="albaran__datos">
-                    <span class="albaran__titulo">{{ albaran.descripcion|default:albaran.nombre_archivo }}</span>
+                    <span class="albaran__titulo">{{ albaran.descripcion|default:albaran.nombre_archivo }}{% if albaran.tipo == 'FOT' %} <span class="etiqueta">Foto de la obra</span>{% endif %}</span>
                     <span class="albaran__meta">{% if albaran.descripcion %}{{ albaran.nombre_archivo }} · {% endif %}{% with tamano=albaran.tamano_texto %}{% if tamano %}{{ tamano }} · {% endif %}{% endwith %}{{ albaran.subido_por.get_full_name|default:albaran.subido_por.username }}, {{ albaran.fecha|date:"d/m/Y H:i" }}</span>
                 </span>
                 <span class="albaran__ver">{% include "gestion/icono.html" with nombre="abrir" %}<span>Ver</span></span>
@@ -33,11 +47,11 @@
             {% if perms.gestion.delete_albaran %}
                 <form method="post" action="{% url 'albaran_eliminar' albaran.pk %}">
                     {% csrf_token %}
-                    <button type="submit" class="boton-tabla boton-tabla--peligro" aria-label="Eliminar albarán" title="Eliminar" onclick="return confirm('¿Eliminar este albarán y su PDF?');">{% include "gestion/icono.html" with nombre="borrar" %}</button>
+                    <button type="submit" class="boton-tabla boton-tabla--peligro" aria-label="Eliminar albarán" title="Eliminar" onclick="return confirm('Se borrará «{{ albaran.descripcion|default:albaran.nombre_archivo|escapejs }}» y su archivo.');">{% include "gestion/icono.html" with nombre="borrar" %}</button>
                 </form>
             {% endif %}
         </li>
     {% empty %}
-        <li class="vacio vacio--corto"><p>Todavía no hay albaranes en este proyecto.</p></li>
+        <li class="vacio vacio--corto"><p>Todavía no hay albaranes ni fotos en este proyecto.</p></li>
     {% endfor %}
 </ul>

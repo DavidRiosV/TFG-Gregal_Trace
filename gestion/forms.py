@@ -1,8 +1,10 @@
+import os
+
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.password_validation import validate_password
 
-from .models import Albaran, CampoHora, Categoria, Cita, Consumo, Material, Nota, Proyecto, Tipo, Usuario, buscar_materiales
+from .models import Albaran, CampoHora, Categoria, Cita, Consumo, Material, Nota, Proyecto, Tipo, Usuario, FORMATOS_ALBARAN, buscar_materiales
 
 
 class RegistroForm(UserCreationForm):
@@ -242,33 +244,52 @@ class NotaForm(forms.ModelForm):
         }
 
 
+def cabecera_valida(extension, cabecera):
+    # ¿Los primeros bytes del archivo son los de su formato? Así no vale cambiarle la extensión a cualquier archivo
+    if extension == '.pdf':
+        return cabecera.startswith(b'%PDF-')
+    if extension in ('.jpg', '.jpeg'):
+        return cabecera.startswith(b'\xff\xd8\xff')
+    if extension == '.png':
+        return cabecera.startswith(b'\x89PNG\r\n\x1a\n')
+    if extension == '.webp':
+        return cabecera[:4] == b'RIFF' and cabecera[8:12] == b'WEBP'
+    if extension in ('.heic', '.heif'):
+        return cabecera[4:8] == b'ftyp'
+    return False
+
+
 class AlbaranForm(forms.ModelForm):
+    # Subir un albarán a un proyecto (todos los usuarios): el PDF o una foto hecha con el móvil
     TAMANO_MAXIMO = 10 * 1024 * 1024   # 10 MB
 
     class Meta:
         model = Albaran
-        fields = ['archivo', 'descripcion']
+        fields = ['tipo', 'archivo', 'descripcion']
         labels = {
-            'archivo': 'Albarán en PDF',
-            'descripcion': 'Proveedor o número de albarán',
+            'tipo': 'Qué es',
+            'archivo': 'Archivo (PDF o foto)',
+            'descripcion': 'Descripción',
         }
         widgets = {
-            # accept: el móvil y el ordenador solo ofrecen archivos PDF al elegir
-            'archivo': forms.FileInput(attrs={'accept': 'application/pdf,.pdf'}),
+            # accept: solo se ofrecen PDF e imágenes; en el móvil sale también la opción de hacer una foto
+            'archivo': forms.FileInput(attrs={'accept': 'application/pdf,.pdf,image/*,.heic,.heif'}),
+            'tipo': forms.RadioSelect(),
         }
-        error_messages = {'archivo': {'required': 'Elige el PDF del albarán.'}}
+        error_messages = {'archivo': {'required': 'Elige el PDF o la foto del albarán.'}}
 
     def clean_archivo(self):
         archivo = self.cleaned_data['archivo']
-        # Se comprueba la extensión, el tamaño y que de verdad sea un PDF (empieza por «%PDF-»)
-        if not archivo.name.lower().endswith('.pdf'):
-            raise forms.ValidationError('Solo se pueden subir archivos PDF.')
+        # Se comprueba la extensión, el tamaño y que el contenido sea de verdad de ese tipo
+        extension = os.path.splitext(archivo.name)[1].lower()
+        if extension not in FORMATOS_ALBARAN:
+            raise forms.ValidationError('Solo se pueden subir PDF o fotos (JPG, PNG, WEBP o HEIC).')
         if archivo.size > self.TAMANO_MAXIMO:
-            raise forms.ValidationError('El PDF ocupa más de 10 MB.')
-        cabecera = archivo.read(5)
+            raise forms.ValidationError('El archivo ocupa más de 10 MB. Prueba con una foto o un escaneo de menos calidad.')
+        cabecera = archivo.read(16)
         archivo.seek(0)
-        if cabecera != b'%PDF-':
-            raise forms.ValidationError('El archivo no es un PDF válido.')
+        if not cabecera_valida(extension, cabecera):
+            raise forms.ValidationError('El archivo no es un PDF ni una foto válida.')
         return archivo
 
     def clean_descripcion(self):
