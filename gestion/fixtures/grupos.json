@@ -236,6 +236,26 @@
                 "view_tipo",
                 "gestion",
                 "tipo"
+            ],
+            [
+                "view_usuario",
+                "gestion",
+                "usuario"
+            ],
+            [
+                "add_usuario",
+                "gestion",
+                "usuario"
+            ],
+            [
+                "change_usuario",
+                "gestion",
+                "usuario"
+            ],
+            [
+                "delete_usuario",
+                "gestion",
+                "usuario"
             ]
         ]
     }

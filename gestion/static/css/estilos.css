@@ -1730,3 +1730,55 @@ a.agenda__cuerpo:hover .agenda__titulo { color: var(--verde-accion); text-decora
 }
 .agenda-dia__hoy { align-self: flex-start; margin-top: 6px; font-style: normal; }
 .agenda__dia-completo { font-size: 12px; font-style: normal; white-space: nowrap; }
+
+/* ==========================================================
+   Empleados (Oficina): oficiales, peones y oficina
+   ========================================================== */
+/* Pestañas grandes entre «Oficiales y peones» y «Oficina» */
+.apartados { display: flex; gap: 4px; margin-top: 20px; border-bottom: 1px solid var(--linea); }
+.apartado {
+    margin-bottom: -1px;
+    padding: 10px 16px;
+    border-bottom: 3px solid transparent;
+    color: var(--texto-suave);
+    font-weight: 700;
+    text-decoration: none;
+}
+.apartado:hover { color: var(--texto); }
+.apartado--activo { border-bottom-color: var(--verde-accion); color: var(--verde-accion); }
+.apartado:focus-visible { outline: none; box-shadow: var(--foco); border-radius: 6px 6px 0 0; }
+
+/* Nombre con su inicial */
+.persona { display: inline-flex; align-items: center; gap: 10px; }
+.avatar--pequeno { width: 34px; height: 34px; flex: none; font-size: 14px; }
+.persona__texto { display: flex; flex-direction: column; line-height: 1.25; }
+.persona__texto span { color: var(--texto-suave); font-size: 13px; }
+
+/* Etiqueta del rol: 1 Oficial, 3 Peón, 2 Oficina, 4 Administrador */
+.rol { display: inline-block; padding: 3px 10px; border-radius: 999px; background: var(--verde-suave); color: var(--verde-accion); font-size: 12px; font-weight: 700; white-space: nowrap; }
+.rol--3 { background: #FFF3D6; color: #8A5A00; }
+.rol--2 { background: #E7EEF8; color: #2F5C8F; }
+.rol--4 { background: #EEE8F7; color: #5B3F8C; }
+
+.estado-empleado { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; }
+.estado-empleado::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--verde-marca); }
+.estado-empleado--baja { color: var(--texto-suave); }
+.estado-empleado--baja::before { background: var(--texto-suave); }
+.tabla__fila--baja td { opacity: .65; }
+
+/* Formulario del empleado */
+.grupo-campos { margin: 4px 0 0; padding: 16px; border: 1px solid var(--linea); border-radius: var(--radio-control); }
+.grupo-campos legend { padding: 0 6px; font-size: 14px; font-weight: 700; }
+.casilla { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; border-radius: var(--radio-control); background: var(--fondo); cursor: pointer; }
+.casilla input { width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--verde-accion); flex: none; }
+.casilla strong { display: block; font-size: 14px; }
+.casilla .ayuda-campo { margin: 2px 0 0; }
+.panel--peligro { margin-top: 20px; border-color: #F2C9C4; }
+.panel--peligro .pagina__texto { margin: 0 0 14px; }
+
+
+@media (max-width: 760px) {
+    .apartados { overflow-x: auto; }
+    .apartado { white-space: nowrap; }
+}
+.panel__nota { margin: 0; padding: 14px 24px; font-size: 13px; }

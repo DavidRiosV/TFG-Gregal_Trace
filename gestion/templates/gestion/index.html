@@ -53,6 +53,7 @@
         <div class="pagina__acciones">
             <a class="boton boton--secundario" href="{% url 'lista_materiales' %}">{% include "gestion/icono.html" with nombre="materiales" %}Materiales</a>
             <a class="boton boton--secundario" href="{% url 'calendario' %}">{% include "gestion/icono.html" with nombre="cita" %}Calendario</a>
+            {% if perms.gestion.view_usuario %}<a class="boton boton--secundario" href="{% url 'lista_empleados' %}">{% include "gestion/icono.html" with nombre="personas" %}Empleados</a>{% endif %}
             <a class="boton boton--secundario" href="{% url 'lista_albaranes' %}">{% include "gestion/icono.html" with nombre="albaran" %}Albaranes</a>
         </div>
     </section>

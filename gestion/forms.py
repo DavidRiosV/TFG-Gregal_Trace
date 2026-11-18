@@ -1,13 +1,15 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.password_validation import validate_password
 
 from .models import Albaran, Categoria, Cita, Consumo, Material, Nota, Proyecto, Tipo, Usuario, buscar_materiales
 
 
 class RegistroForm(UserCreationForm):
-    # Solo se ofrece Operario: las cuentas de Oficina las crea la empresa desde el admin
+    # Solo se ofrecen los roles de obra: las cuentas de Oficina las crea la empresa desde el admin
     roles = (
-        (Usuario.OPERARIO, 'Operario'),
+        (Usuario.OFICIAL, 'Oficial'),
+        (Usuario.PEON, 'Peón'),
     )
     rol = forms.ChoiceField(choices=roles, label='Rol')
 
@@ -360,3 +362,68 @@ class TipoForm(forms.ModelForm):
             if categoria and repetido.exists():
                 self.add_error('nombre', f'Ya hay un tipo «{nombre}» en {categoria.nombre}.')
         return self.cleaned_data
+
+
+# ---------------------------------------------------------------------------
+# Empleados (Oficina): alta, edición y baja de oficiales y peones
+# ---------------------------------------------------------------------------
+class EmpleadoForm(forms.ModelForm):
+    """Datos de un oficial o un peón. La contraseña es obligatoria al crearlo;
+    al editarlo solo se cambia si se escribe una nueva."""
+    rol = forms.TypedChoiceField(
+        label='Rol', coerce=int, widget=forms.RadioSelect(),
+        choices=[(Usuario.OFICIAL, 'Oficial'), (Usuario.PEON, 'Peón')],
+    )
+    password1 = forms.CharField(label='Contraseña', required=False, strip=False, widget=forms.PasswordInput())
+    password2 = forms.CharField(label='Repite la contraseña', required=False, strip=False, widget=forms.PasswordInput())
+
+    class Meta:
+        model = Usuario
+        fields = ['first_name', 'last_name', 'username', 'email', 'rol', 'is_active']
+        labels = {
+            'first_name': 'Nombre',
+            'last_name': 'Apellidos',
+            'username': 'Usuario',
+            'email': 'Correo electrónico',
+            'is_active': 'Puede entrar en la aplicación',
+        }
+        help_texts = {
+            'username': 'Con él inicia sesión. Sin espacios.',
+            'is_active': 'Si lo desmarcas no podrá entrar, pero se conservan sus apuntes.',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # El nombre aparece en cada apunte, así que es obligatorio
+        self.fields['first_name'].required = True
+        if self.instance.pk:
+            self.fields['password1'].label = 'Nueva contraseña'
+            self.fields['password1'].help_text = 'Déjala en blanco para no cambiarla.'
+        else:
+            self.fields['password1'].required = True
+            self.fields['password2'].required = True
+            # Un empleado nuevo empieza pudiendo entrar
+            self.initial.setdefault('is_active', True)
+
+    def clean(self):
+        super().clean()
+        clave1 = self.cleaned_data.get('password1')
+        clave2 = self.cleaned_data.get('password2')
+        if clave1 or clave2:
+            if clave1 != clave2:
+                self.add_error('password2', 'Las dos contraseñas no coinciden.')
+            else:
+                # Las mismas reglas que el registro (largo mínimo, no demasiado común...)
+                try:
+                    validate_password(clave1, self.instance)
+                except forms.ValidationError as error:
+                    self.add_error('password1', error)
+        return self.cleaned_data
+
+    def save(self, commit=True):
+        empleado = super().save(commit=False)
+        if self.cleaned_data.get('password1'):
+            empleado.set_password(self.cleaned_data['password1'])
+        if commit:
+            empleado.save()
+        return empleado

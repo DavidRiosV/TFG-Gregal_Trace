@@ -35,6 +35,12 @@
                 <span>Materiales</span>
             </a>
         {% endif %}
+        {% if perms.gestion.view_usuario %}
+            <a class="menu__enlace{% if seccion == 'empleados' %} menu__enlace--activo{% endif %}" href="{% url 'lista_empleados' %}">
+                {% include "gestion/icono.html" with nombre="personas" %}
+                <span>Empleados</span>
+            </a>
+        {% endif %}
         {% if perms.gestion.change_proyecto %}
             <a class="menu__enlace{% if seccion == 'calendario' %} menu__enlace--activo{% endif %}" href="{% url 'calendario' %}">
                 {% include "gestion/icono.html" with nombre="cita" %}

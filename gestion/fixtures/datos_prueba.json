@@ -867,7 +867,7 @@
         "is_staff": false,
         "is_active": true,
         "date_joined": "2026-11-16T10:42:58.844",
-        "rol": 1,
+        "rol": 3,
         "groups": [
             [
                 "Operarios"
@@ -890,7 +890,7 @@
         "is_staff": false,
         "is_active": true,
         "date_joined": "2026-11-16T10:42:59.007",
-        "rol": 1,
+        "rol": 3,
         "groups": [
             [
                 "Operarios"

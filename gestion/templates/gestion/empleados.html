@@ -1,0 +1,104 @@
+{% extends "gestion/principal.html" %}
+
+{% block titulo %}Empleados · Gregal Trace{% endblock %}
+
+{% block contenido %}
+{% url 'index' as url_inicio %}
+<header class="pagina">
+    {% include "gestion/migas.html" with miga_actual="Empleados" %}
+    <div class="pagina__fila">
+        <div>
+            <h1 class="pagina__titulo">Empleados</h1>
+        </div>
+        {% if vista == 'obra' and perms.gestion.add_usuario %}
+            <div class="pagina__acciones">
+                <a class="boton" href="{% url 'empleado_crear' %}{% if rol_actual %}?rol={{ rol_actual }}{% endif %}">{% include "gestion/icono.html" with nombre="mas" %}Nuevo empleado</a>
+            </div>
+        {% endif %}
+    </div>
+    {# Los dos apartados: obra (oficiales y peones) y oficina #}
+    <nav class="apartados" aria-label="Apartados de empleados">
+        <a class="apartado{% if vista == 'obra' %} apartado--activo{% endif %}" href="{% url 'lista_empleados' %}"{% if vista == 'obra' %} aria-current="page"{% endif %}>Oficiales y peones</a>
+        <a class="apartado{% if vista == 'oficina' %} apartado--activo{% endif %}" href="{% url 'empleados_oficina' %}"{% if vista == 'oficina' %} aria-current="page"{% endif %}>Oficina</a>
+    </nav>
+</header>
+
+<section class="panel panel--lista">
+    {% if vista == 'obra' %}
+        <div class="barra-herramientas">
+            {% include "gestion/buscador.html" with texto_buscador="Buscar por nombre, usuario o correo" %}
+            <nav class="segmentos" aria-label="Filtrar por rol">
+                {% for boton in botones_rol %}
+                    <a href="{{ boton.url }}" class="segmento{% if boton.activo %} segmento--activo{% endif %}"{% if boton.activo %} aria-current="true"{% endif %}>{{ boton.texto }} <span class="segmento__numero">{{ boton.n }}</span></a>
+                {% endfor %}
+            </nav>
+        </div>
+    {% endif %}
+
+    {% if empleados %}
+        <div class="tabla-contenedor">
+            <table class="tabla tabla--empleados">
+                <thead>
+                    <tr>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Rol</th>
+                        <th scope="col">Correo</th>
+                        {% if vista == 'obra' %}
+                            <th scope="col" class="num">Horas apuntadas</th>
+                            <th scope="col">Último apunte</th>
+                        {% else %}
+                            <th scope="col">Último acceso</th>
+                        {% endif %}
+                        <th scope="col">Estado</th>
+                        {% if vista == 'obra' %}<th scope="col" class="num"><span class="solo-lector">Acciones</span></th>{% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for empleado in empleados %}
+                        <tr{% if not empleado.is_active %} class="tabla__fila--baja"{% endif %}>
+                            <td>
+                                <span class="persona">
+                                    <span class="avatar avatar--pequeno" aria-hidden="true">{{ empleado.first_name|default:empleado.username|slice:":1"|upper }}</span>
+                                    <span class="persona__texto">
+                                        <strong>{{ empleado.get_full_name|default:empleado.username }}</strong>
+                                        <span>{{ empleado.username }}</span>
+                                    </span>
+                                </span>
+                            </td>
+                            <td><span class="rol rol--{{ empleado.rol }}">{{ empleado.get_rol_display }}</span></td>
+                            <td>{% if empleado.email %}<a href="mailto:{{ empleado.email }}">{{ empleado.email }}</a>{% else %}<span class="tabla__nada">—</span>{% endif %}</td>
+                            {% if vista == 'obra' %}
+                                <td class="num">{% if empleado.horas %}{{ empleado.horas|floatformat:"-2" }} h{% else %}<span class="tabla__nada">—</span>{% endif %}</td>
+                                <td class="tabla__fecha">{{ empleado.ultimo_apunte|date:"d/m/Y"|default:"—" }}</td>
+                            {% else %}
+                                <td class="tabla__fecha">{{ empleado.last_login|date:"d/m/Y H:i"|default:"Nunca" }}</td>
+                            {% endif %}
+                            <td>{% if empleado.is_active %}<span class="estado-empleado">Activo</span>{% else %}<span class="estado-empleado estado-empleado--baja">De baja</span>{% endif %}</td>
+                            {% if vista == 'obra' %}
+                                <td class="tabla__acciones">
+                                    {% if perms.gestion.change_usuario %}
+                                        <a class="boton-tabla" href="{% url 'empleado_editar' empleado.pk %}" aria-label="Editar a {{ empleado.get_full_name|default:empleado.username }}" title="Editar">{% include "gestion/icono.html" with nombre="editar" %}</a>
+                                    {% endif %}
+                                    {% if perms.gestion.delete_usuario and not empleado.num_apuntes %}
+                                        <form method="post" action="{% url 'empleado_eliminar' empleado.pk %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="boton-tabla boton-tabla--peligro" aria-label="Eliminar a {{ empleado.get_full_name|default:empleado.username }}" title="Eliminar" onclick="return confirm('Se eliminará a {{ empleado.get_full_name|default:empleado.username|escapejs }} y ya no podrá entrar.');">{% include "gestion/icono.html" with nombre="borrar" %}</button>
+                                        </form>
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="vacio"><p>{% if busqueda %}Nadie coincide con «{{ busqueda }}».{% elif vista == 'oficina' %}No hay nadie de oficina.{% else %}Todavía no hay oficiales ni peones. Da de alta el primero.{% endif %}</p></div>
+    {% endif %}
+    {% if vista == 'obra' %}
+        <p class="pagina__texto panel__nota">Quien tiene apuntes no se puede eliminar (se perderían sus horas): edítalo y desmarca «Puede entrar en la aplicación» para darle de baja.</p>
+    {% endif %}
+</section>
+
+{% include "gestion/volver.html" with volver_url=url_inicio volver_texto="Volver al inicio" %}
+{% endblock %}

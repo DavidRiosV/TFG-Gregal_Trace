@@ -9,14 +9,32 @@ from django.utils import timezone
 class Usuario(AbstractUser):
     """Usuario que inicia sesión (Sesiones, diapositiva 9).
     Nombre, apellidos, email y contraseña ya vienen de AbstractUser."""
-    OPERARIO = 1
+    # Roles de la empresa. Oficial y Peón tienen los mismos permisos (grupo «Operarios»);
+    # se separan para saber qué es cada empleado. El 1 era «Operario» y pasa a ser Oficial.
+    OFICIAL = 1
     OFICINA = 2
+    PEON = 3
+    ADMIN = 4
+    OPERARIO = OFICIAL   # nombre antiguo, para el código que aún lo usa
     ROLES = (
-        (OPERARIO, 'Operario'),
+        (OFICIAL, 'Oficial'),
+        (PEON, 'Peón'),
         (OFICINA, 'Oficina'),
+        (ADMIN, 'Administrador'),
     )
-    # Por defecto Operario (el rol con menos permisos)
-    rol = models.PositiveSmallIntegerField(choices=ROLES, default=OPERARIO)
+    # Los que trabajan en obra: apuntan horas, notas y albaranes
+    ROLES_OPERARIO = (OFICIAL, PEON)
+    # Por defecto Oficial (un rol con pocos permisos)
+    rol = models.PositiveSmallIntegerField(choices=ROLES, default=OFICIAL)
+
+    def es_operario(self):
+        return self.rol in self.ROLES_OPERARIO
+
+    def save(self, *args, **kwargs):
+        # El superusuario (python manage.py createsuperuser) siempre tiene el rol de administrador
+        if self.is_superuser:
+            self.rol = self.ADMIN
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.username} ({self.get_rol_display()})"

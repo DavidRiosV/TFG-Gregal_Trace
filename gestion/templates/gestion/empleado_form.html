@@ -1,0 +1,79 @@
+{% extends "gestion/principal.html" %}
+
+{% block titulo %}{{ titulo }} · Gregal Trace{% endblock %}
+
+{% block contenido %}
+{% url 'lista_empleados' as url_lista %}
+<header class="pagina">
+    {% include "gestion/migas.html" with miga_url=url_lista miga_texto="Empleados" miga_actual=titulo %}
+    <h1 class="pagina__titulo">{{ titulo }}</h1>
+    {% if empleado %}<p class="pagina__texto">{{ empleado.get_rol_display }} · {{ num_apuntes }} apunte{{ num_apuntes|pluralize }}{% if empleado.last_login %} · último acceso el {{ empleado.last_login|date:"d/m/Y" }}{% endif %}</p>{% endif %}
+</header>
+
+<section class="panel panel--formulario">
+    <form method="post" class="formulario" novalidate
+          action="{% if empleado %}{% url 'empleado_editar' empleado.pk %}{% else %}{% url 'empleado_crear' %}{% endif %}">
+        {% csrf_token %}
+        {% for error in formulario.non_field_errors %}<p class="aviso aviso--error">{{ error }}</p>{% endfor %}
+
+        {# Rol: botones de opción, como el puesto en las horas #}
+        <div class="campo">
+            <span class="campo__titulo">{{ formulario.rol.label }}</span>
+            <div class="familias familias--formulario" role="radiogroup" aria-label="{{ formulario.rol.label }}">
+                {% for opcion in formulario.rol %}
+                    <label class="familia familia--opcion">{{ opcion.tag }} {{ opcion.choice_label }}</label>
+                {% endfor %}
+            </div>
+            {% for error in formulario.rol.errors %}<p class="error-campo">{{ error }}</p>{% endfor %}
+        </div>
+
+        <div class="formulario__fila">
+            {% include "gestion/campo.html" with campo=formulario.first_name autocompletar="off" %}
+            {% include "gestion/campo.html" with campo=formulario.last_name autocompletar="off" %}
+        </div>
+        <div class="formulario__fila">
+            {% include "gestion/campo.html" with campo=formulario.username autocompletar="off" %}
+            {% include "gestion/campo.html" with campo=formulario.email tipo="email" autocompletar="off" %}
+        </div>
+
+        <fieldset class="grupo-campos">
+            <legend>{% if empleado %}Cambiar la contraseña{% else %}Contraseña para entrar{% endif %}</legend>
+            <div class="formulario__fila">
+                {% include "gestion/campo.html" with campo=formulario.password1 tipo="password" autocompletar="new-password" %}
+                {% include "gestion/campo.html" with campo=formulario.password2 tipo="password" autocompletar="new-password" %}
+            </div>
+        </fieldset>
+
+        <label class="casilla">
+            {{ formulario.is_active }}
+            <span>
+                <strong>{{ formulario.is_active.label }}</strong>
+                <span class="ayuda-campo">{{ formulario.is_active.help_text }}</span>
+            </span>
+        </label>
+
+        <div class="formulario__botones">
+            <button type="submit" class="boton">{% if empleado %}Guardar cambios{% else %}Dar de alta{% endif %}</button>
+            {% if not empleado %}
+                <button type="submit" name="otro" value="1" class="boton boton--secundario">Dar de alta y añadir otro</button>
+            {% endif %}
+            <a class="boton boton--secundario" href="{{ url_lista }}">Cancelar</a>
+        </div>
+    </form>
+</section>
+
+{% if empleado and perms.gestion.delete_usuario %}
+    <section class="panel panel--formulario panel--peligro">
+        <h2 class="panel__titulo panel__titulo--formulario">Eliminar empleado</h2>
+        {% if num_apuntes %}
+            <p class="pagina__texto">Tiene {{ num_apuntes }} apunte{{ num_apuntes|pluralize }}, así que no se puede eliminar sin perder sus horas. Para que deje de entrar, desmarca «Puede entrar en la aplicación» y guarda.</p>
+        {% else %}
+            <p class="pagina__texto">Se borrará su cuenta y ya no podrá entrar. No tiene apuntes, así que no se pierde ningún dato.</p>
+            <form method="post" action="{% url 'empleado_eliminar' empleado.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="boton boton--peligro" onclick="return confirm('Se eliminará a {{ empleado.get_full_name|default:empleado.username|escapejs }}.');">{% include "gestion/icono.html" with nombre="borrar" %}Eliminar a {{ empleado.first_name|default:empleado.username }}</button>
+            </form>
+        {% endif %}
+    </section>
+{% endif %}
+{% endblock %}
