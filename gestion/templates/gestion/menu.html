@@ -30,8 +30,14 @@
             {% include "gestion/icono.html" with nombre="urgencias" %}
             <span>Urgencias</span>
         </a>
+        {% if not perms.gestion.view_vehiculo and user.vehiculos.exists %}
+            <a class="menu__enlace{% if seccion == 'vehiculos' %} menu__enlace--activo{% endif %}" href="{% url 'lista_vehiculos' %}"{% if seccion == 'vehiculos' %} aria-current="page"{% endif %}>
+                {% include "gestion/icono.html" with nombre="vehiculo" %}
+                <span>Mi vehículo</span>
+            </a>
+        {% endif %}
 
-        {% if perms.gestion.change_material or perms.gestion.view_usuario or perms.gestion.change_albaran or perms.gestion.change_cita %}
+        {% if perms.gestion.change_material or perms.gestion.view_usuario or perms.gestion.change_albaran or perms.gestion.change_cita or perms.gestion.view_vehiculo %}
             <p class="menu__grupo">Gestión</p>
             {% if perms.gestion.change_material %}
                 <a class="menu__enlace{% if seccion == 'materiales' %} menu__enlace--activo{% endif %}" href="{% url 'lista_materiales' %}"{% if seccion == 'materiales' %} aria-current="page"{% endif %}>
@@ -55,6 +61,12 @@
                     <span>Empleados</span>
                 </a>
             {% endif %}
+            {% if perms.gestion.view_vehiculo %}
+                <a class="menu__enlace{% if seccion == 'vehiculos' %} menu__enlace--activo{% endif %}" href="{% url 'lista_vehiculos' %}"{% if seccion == 'vehiculos' %} aria-current="page"{% endif %}>
+                    {% include "gestion/icono.html" with nombre="vehiculo" %}
+                    <span>Vehículos</span>
+                </a>
+            {% endif %}
             {% if perms.gestion.change_albaran %}
                 <a class="menu__enlace{% if seccion == 'albaranes' %} menu__enlace--activo{% endif %}" href="{% url 'lista_albaranes' %}"{% if seccion == 'albaranes' %} aria-current="page"{% endif %}>
                     {% include "gestion/icono.html" with nombre="albaran" %}
@@ -69,6 +81,12 @@
                 {% include "gestion/icono.html" with nombre="cita" %}
                 <span>Calendario</span>
             </a>
+            {% if perms.gestion.change_material %}
+                <a class="menu__enlace{% if seccion == 'estadisticas' %} menu__enlace--activo{% endif %}" href="{% url 'estadisticas' %}"{% if seccion == 'estadisticas' %} aria-current="page"{% endif %}>
+                    {% include "gestion/icono.html" with nombre="grafica" %}
+                    <span>Estadísticas</span>
+                </a>
+            {% endif %}
         {% endif %}
     </nav>
 

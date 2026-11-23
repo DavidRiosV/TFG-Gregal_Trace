@@ -4,7 +4,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.password_validation import validate_password
 
-from .models import Albaran, CampoHora, Categoria, Cita, Consumo, Material, Nota, Proyecto, Tipo, Usuario, FORMATOS_ALBARAN, buscar_materiales
+from .models import Asignacion, Kilometraje, NotaVehiculo, RevisionVehiculo, Vehiculo, Albaran, CampoHora, Categoria, Cita, Consumo, Material, Nota, Proyecto, Tipo, Usuario, FORMATOS_ALBARAN, buscar_materiales
 
 
 class RegistroForm(UserCreationForm):
@@ -316,6 +316,18 @@ class CitaForm(forms.ModelForm):
         return limpiar_texto(self.cleaned_data['motivo'])
 
 
+def trabajos_agrupados(trabajos):
+    """Opciones del desplegable de trabajos, agrupadas por tipo (Obras, Intervenciones, Mantenimientos,
+    Urgencias) y con el cliente al lado, para encontrarlos antes cuando hay muchos."""
+    grupos = {}
+    for trabajo in trabajos:
+        texto = trabajo.nombre + (f' · {trabajo.cliente}' if trabajo.cliente else '')
+        grupos.setdefault(trabajo.get_tipo_display(), []).append((trabajo.pk, texto))
+    orden = ['Obra', 'Intervención', 'Mantenimiento', 'Urgencia']
+    plurales = {'Obra': 'Obras', 'Intervención': 'Intervenciones', 'Mantenimiento': 'Mantenimientos', 'Urgencia': 'Urgencias'}
+    return [('', 'Elige el trabajo…')] + [(plurales[tipo], grupos[tipo]) for tipo in orden if tipo in grupos]
+
+
 class CitaGestionForm(CitaForm):
     # Cita desde el apartado Citas (Oficina): además del día, la hora y el motivo, se elige el trabajo
 
@@ -332,16 +344,7 @@ class CitaGestionForm(CitaForm):
             trabajos = trabajos | Proyecto.objects.filter(pk=self.instance.proyecto_id)
         trabajos = trabajos.order_by('nombre')
         self.fields['proyecto'].queryset = trabajos
-        # En el desplegable, agrupados por tipo: Obras, Intervenciones, Mantenimientos, Urgencias
-        grupos = {}
-        for trabajo in trabajos:
-            texto = trabajo.nombre + (f' · {trabajo.cliente}' if trabajo.cliente else '')
-            grupos.setdefault(trabajo.get_tipo_display(), []).append((trabajo.pk, texto))
-        orden = ['Obra', 'Intervención', 'Mantenimiento', 'Urgencia']
-        plurales = {'Obra': 'Obras', 'Intervención': 'Intervenciones', 'Mantenimiento': 'Mantenimientos', 'Urgencia': 'Urgencias'}
-        self.fields['proyecto'].widget.choices = [('', 'Elige el trabajo…')] + [
-            (plurales[tipo], grupos[tipo]) for tipo in orden if tipo in grupos
-        ]
+        self.fields['proyecto'].widget.choices = trabajos_agrupados(trabajos)
 
 
 # ---------------------------------------------------------------------------
@@ -504,16 +507,18 @@ class EmpleadoForm(forms.ModelForm):
 
     class Meta:
         model = Usuario
-        fields = ['first_name', 'last_name', 'username', 'email', 'rol', 'is_active']
+        fields = ['first_name', 'last_name', 'username', 'email', 'telefono', 'rol', 'is_active']
         labels = {
             'first_name': 'Nombre',
             'last_name': 'Apellidos',
             'username': 'Usuario',
             'email': 'Correo electrónico',
+            'telefono': 'Móvil',
             'is_active': 'Puede entrar en la aplicación',
         }
         help_texts = {
             'username': 'Con él inicia sesión. Sin espacios.',
+            'telefono': 'Para avisarle por WhatsApp cuando se le agende un trabajo.',
             'is_active': 'Si lo desmarcas no podrá entrar, pero se conservan sus apuntes.',
         }
 
@@ -552,3 +557,195 @@ class EmpleadoForm(forms.ModelForm):
         if commit:
             empleado.save()
         return empleado
+
+
+# ---------------------------------------------------------------------------
+# Agenda de empleados (Oficina): a qué trabajo va cada oficial o peón cada día
+# ---------------------------------------------------------------------------
+class AsignacionForm(forms.ModelForm):
+    class Meta:
+        model = Asignacion
+        fields = ['fecha', 'franja', 'proyecto', 'nota']
+        labels = {
+            'fecha': 'Día',
+            'franja': 'Cuándo',
+            'proyecto': 'Trabajo',
+            'nota': 'Nota para el empleado',
+        }
+        widgets = {
+            'fecha': forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'),
+            'franja': forms.RadioSelect(),
+            'nota': forms.TextInput(attrs={'placeholder': 'Ej.: llevar la escalera grande', 'maxlength': 120}),
+        }
+        error_messages = {
+            'fecha': {'required': 'Elige el día.'},
+            'proyecto': {'required': 'Elige el trabajo.'},
+        }
+
+    def __init__(self, *args, empleado=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.empleado = empleado
+        # Solo los trabajos abiertos (en proceso), de obras, intervenciones, mantenimientos y urgencias
+        trabajos = Proyecto.objects.filter(estado='PRO').order_by('nombre')
+        self.fields['proyecto'].queryset = trabajos
+        # Agrupados por tipo y con el cliente; en la plantilla se pueden filtrar escribiendo
+        self.fields['proyecto'].widget.choices = trabajos_agrupados(trabajos)
+
+    def clean_nota(self):
+        return limpiar_texto(self.cleaned_data['nota'])
+
+    def clean(self):
+        super().clean()
+        fecha = self.cleaned_data.get('fecha')
+        franja = self.cleaned_data.get('franja')
+        if fecha and franja and self.empleado:
+            # Lo que ya tiene ese día. Todo el día choca con todo; mañana y tarde, con lo mismo o con todo el día
+            ese_dia = Asignacion.objects.filter(empleado=self.empleado, fecha=fecha).exclude(pk=self.instance.pk)
+            if franja == 'DIA':
+                choca = ese_dia.exists()
+            else:
+                choca = ese_dia.filter(franja__in=[franja, 'DIA']).exists()
+            if choca:
+                self.add_error('franja', 'Ese día ya tiene trabajo a esa hora. Quita antes lo que tiene o elige otra franja.')
+        return self.cleaned_data
+
+
+# ---------------------------------------------------------------------------
+# Economía de un trabajo (Oficina): presupuesto acordado, ingreso y si está subcontratado por horas
+# ---------------------------------------------------------------------------
+class EconomiaForm(forms.ModelForm):
+    class Meta:
+        model = Proyecto
+        fields = ['presupuesto', 'ingreso', 'subcontratada', 'precio_hora_subcontrata']
+        labels = {
+            'presupuesto': 'Presupuesto acordado (€)',
+            'ingreso': 'Ingreso (€)',
+            'subcontratada': 'Trabajo subcontratado por horas',
+            'precio_hora_subcontrata': 'Precio por hora (€/h)',
+        }
+        help_texts = {
+            'ingreso': 'Lo facturado o cobrado. Si está subcontratado por horas se calcula solo.',
+            'precio_hora_subcontrata': 'Lo que se cobra por cada hora apuntada en este trabajo.',
+        }
+        widgets = {
+            'presupuesto': forms.NumberInput(attrs={'step': '0.01', 'min': '0', 'inputmode': 'decimal'}),
+            'ingreso': forms.NumberInput(attrs={'step': '0.01', 'min': '0', 'inputmode': 'decimal'}),
+            'precio_hora_subcontrata': forms.NumberInput(attrs={'step': '0.01', 'min': '0', 'inputmode': 'decimal'}),
+        }
+
+    def clean(self):
+        super().clean()
+        for campo in ('presupuesto', 'ingreso', 'precio_hora_subcontrata'):
+            valor = self.cleaned_data.get(campo)
+            if valor is not None and valor < 0:
+                self.add_error(campo, 'No puede ser negativo.')
+        if self.cleaned_data.get('subcontratada') and not self.cleaned_data.get('precio_hora_subcontrata'):
+            self.add_error('precio_hora_subcontrata', 'Si está subcontratado por horas, indica el precio por hora.')
+        return self.cleaned_data
+
+
+# ---------------------------------------------------------------------------
+# Vehículos: alta (Oficina), kilometraje, revisiones (taller e ITV) y anotaciones
+# ---------------------------------------------------------------------------
+class VehiculoForm(forms.ModelForm):
+    class Meta:
+        model = Vehiculo
+        fields = ['tipo', 'matricula', 'modelo', 'responsable', 'activo']
+        labels = {
+            'tipo': 'Tipo',
+            'matricula': 'Matrícula',
+            'modelo': 'Marca y modelo',
+            'responsable': 'Trabajador responsable',
+            'activo': 'En uso',
+        }
+        help_texts = {
+            'responsable': 'Lo verá en la web: sus revisiones, su kilometraje y las anotaciones.',
+            'activo': 'Desmárcalo si se vende o deja de usarse; se conserva su historial.',
+        }
+        widgets = {
+            'tipo': forms.RadioSelect(),
+            'matricula': forms.TextInput(attrs={'placeholder': '1234 ABC', 'autocomplete': 'off'}),
+            'modelo': forms.TextInput(attrs={'placeholder': 'Toyota Proace'}),
+        }
+        error_messages = {'matricula': {'unique': 'Ya hay un vehículo con esa matrícula.'}}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Responsable: un oficial o un peón en activo
+        self.fields['responsable'].queryset = Usuario.objects.filter(
+            rol__in=Usuario.ROLES_OPERARIO, is_active=True).order_by('first_name', 'last_name')
+        self.fields['responsable'].label_from_instance = lambda u: u.get_full_name() or u.username
+        self.fields['responsable'].empty_label = 'Sin responsable'
+
+    def clean_matricula(self):
+        # «1234abc» y «1234 ABC» son la misma: mayúsculas y un solo espacio
+        return ' '.join(self.cleaned_data['matricula'].upper().split())
+
+    def clean_modelo(self):
+        return limpiar_texto(self.cleaned_data['modelo'])
+
+
+class KilometrajeForm(forms.ModelForm):
+    class Meta:
+        model = Kilometraje
+        fields = ['fecha', 'km']
+        labels = {'fecha': 'Fecha', 'km': 'Kilómetros del cuentakilómetros'}
+        widgets = {
+            'fecha': forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'),
+            'km': forms.NumberInput(attrs={'min': '0', 'step': '1', 'inputmode': 'numeric', 'placeholder': 'Ej.: 125430'}),
+        }
+        error_messages = {'km': {'required': 'Escribe los kilómetros.'}}
+
+    def __init__(self, *args, vehiculo=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.vehiculo = vehiculo
+
+    def clean(self):
+        super().clean()
+        fecha = self.cleaned_data.get('fecha')
+        km = self.cleaned_data.get('km')
+        if fecha and km is not None and self.vehiculo:
+            # El cuentakilómetros no va hacia atrás: no puede tener menos que una lectura anterior
+            # ni más que una posterior
+            # (al editar una lectura, sin contarse a sí misma)
+            otras = self.vehiculo.kilometrajes.exclude(pk=self.instance.pk)
+            anterior = otras.filter(fecha__lte=fecha).order_by('-fecha', '-km').first()
+            posterior = otras.filter(fecha__gt=fecha).order_by('fecha', 'km').first()
+            if anterior and km < anterior.km:
+                self.add_error('km', f'El {anterior.fecha:%d/%m/%Y} ya tenía {anterior.km} km: no puede tener menos.')
+            elif posterior and km > posterior.km:
+                self.add_error('km', f'El {posterior.fecha:%d/%m/%Y} tenía {posterior.km} km: no puede tener más antes.')
+        return self.cleaned_data
+
+
+class RevisionVehiculoForm(forms.ModelForm):
+    class Meta:
+        model = RevisionVehiculo
+        fields = ['tipo', 'fecha', 'hora', 'motivo']
+        labels = {'tipo': 'Revisión', 'fecha': 'Día', 'hora': 'Hora', 'motivo': 'Dónde y qué'}
+        widgets = {
+            'tipo': forms.RadioSelect(),
+            'fecha': forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'),
+            'hora': forms.TimeInput(attrs={'type': 'time'}, format='%H:%M'),
+            'motivo': forms.TextInput(attrs={'placeholder': 'Taller Can Toni, cambio de aceite', 'maxlength': 120}),
+        }
+        error_messages = {'fecha': {'required': 'Elige el día.'}}
+
+    def clean_motivo(self):
+        return limpiar_texto(self.cleaned_data['motivo'])
+
+
+class NotaVehiculoForm(forms.ModelForm):
+    class Meta:
+        model = NotaVehiculo
+        fields = ['texto']
+        labels = {'texto': 'Anotación'}
+        widgets = {'texto': forms.Textarea(attrs={'rows': 3, 'maxlength': 1000,
+                                                   'placeholder': 'Un golpe, un ruido, las ruedas, la próxima revisión...'})}
+        error_messages = {'texto': {'required': 'Escribe la anotación.'}}
+
+    def clean_texto(self):
+        texto = self.cleaned_data['texto'].strip()
+        if not texto:
+            raise forms.ValidationError('Escribe la anotación.')
+        return texto

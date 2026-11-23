@@ -27,7 +27,7 @@
     </details>
 
     <details class="pestana-grupo">
-        <summary class="pestana{% if seccion == 'materiales' or seccion == 'precios_horas' or seccion == 'citas' or seccion == 'empleados' or seccion == 'albaranes' %} pestana--activa{% endif %}">
+        <summary class="pestana{% if seccion == 'materiales' or seccion == 'precios_horas' or seccion == 'citas' or seccion == 'empleados' or seccion == 'albaranes' or seccion == 'vehiculos' %} pestana--activa{% endif %}">
             {% include "gestion/icono.html" with nombre="materiales" %}<span>Gestión</span>
         </summary>
         <div class="pestana-grupo__panel">
@@ -42,6 +42,9 @@
             {% if perms.gestion.view_usuario %}
                 <a class="pestana-grupo__enlace{% if seccion == 'empleados' %} pestana-grupo__enlace--activo{% endif %}" href="{% url 'lista_empleados' %}">{% include "gestion/icono.html" with nombre="personas" %}<span>Empleados</span></a>
             {% endif %}
+            {% if perms.gestion.view_vehiculo %}
+                <a class="pestana-grupo__enlace{% if seccion == 'vehiculos' %} pestana-grupo__enlace--activo{% endif %}" href="{% url 'lista_vehiculos' %}">{% include "gestion/icono.html" with nombre="vehiculo" %}<span>Vehículos</span></a>
+            {% endif %}
             {% if perms.gestion.change_albaran %}
                 <a class="pestana-grupo__enlace{% if seccion == 'albaranes' %} pestana-grupo__enlace--activo{% endif %}" href="{% url 'lista_albaranes' %}">{% include "gestion/icono.html" with nombre="albaran" %}<span>Albaranes</span></a>
             {% endif %}
@@ -49,17 +52,21 @@
     </details>
 
     <details class="pestana-grupo">
-        <summary class="pestana{% if seccion == 'calendario' %} pestana--activa{% endif %}">
+        <summary class="pestana{% if seccion == 'calendario' or seccion == 'estadisticas' %} pestana--activa{% endif %}">
             {% include "gestion/icono.html" with nombre="cita" %}<span>Herramientas</span>
         </summary>
         <div class="pestana-grupo__panel">
             <p class="pestana-grupo__titulo">Herramientas</p>
             <a class="pestana-grupo__enlace{% if seccion == 'calendario' %} pestana-grupo__enlace--activo{% endif %}" href="{% url 'calendario' %}">{% include "gestion/icono.html" with nombre="cita" %}<span>Calendario</span></a>
+            {% if perms.gestion.change_material %}
+                <a class="pestana-grupo__enlace{% if seccion == 'estadisticas' %} pestana-grupo__enlace--activo{% endif %}" href="{% url 'estadisticas' %}">{% include "gestion/icono.html" with nombre="grafica" %}<span>Estadísticas</span></a>
+            {% endif %}
         </div>
     </details>
 </nav>
 {% else %}
-<nav class="pestanas pestanas--cuatro" aria-label="Menú">
+{% with tiene_vehiculo=user.vehiculos.exists %}
+<nav class="pestanas {% if tiene_vehiculo %}pestanas--cinco{% else %}pestanas--cuatro{% endif %}" aria-label="Menú">
     <a class="pestana{% if seccion == 'inicio' %} pestana--activa{% endif %}" href="{% url 'index' %}">
         {% include "gestion/icono.html" with nombre="inicio" %}<span>Inicio</span>
     </a>
@@ -67,10 +74,16 @@
         {% include "gestion/icono.html" with nombre="obras" %}<span>Obras</span>
     </a>
     <a class="pestana{% if seccion == 'mantenimientos' %} pestana--activa{% endif %}" href="{% url 'lista_proyectos' 'mantenimientos' %}">
-        {% include "gestion/icono.html" with nombre="mantenimientos" %}<span>Mantenimientos</span>
+        {% include "gestion/icono.html" with nombre="mantenimientos" %}<span>{% if tiene_vehiculo %}Mant.{% else %}Mantenimientos{% endif %}</span>
     </a>
     <a class="pestana{% if seccion == 'urgencias' %} pestana--activa{% endif %}" href="{% url 'urgencias' %}">
         {% include "gestion/icono.html" with nombre="urgencias" %}<span>Urgencias</span>
     </a>
+    {% if tiene_vehiculo %}
+        <a class="pestana{% if seccion == 'vehiculos' %} pestana--activa{% endif %}" href="{% url 'lista_vehiculos' %}">
+            {% include "gestion/icono.html" with nombre="vehiculo" %}<span>Vehículo</span>
+        </a>
+    {% endif %}
 </nav>
+{% endwith %}
 {% endif %}

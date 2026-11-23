@@ -2373,3 +2373,93 @@ a.indicador:hover { border-color: var(--verde-marca); }
     .pestana-grupo__numero { margin-left: auto; padding: 1px 8px; border-radius: 999px; background: var(--fondo); color: var(--texto-suave); font-size: 12px; font-weight: 700; }
 }
 :where(:root[data-tema="oscuro"]) .pestana-grupo__panel { background: #141C11; }
+
+/* ==========================================================
+   Agenda de empleados: formulario a la izquierda y la semana a la derecha
+   ========================================================== */
+.dos-columnas--agenda { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); align-items: start; }
+.dos-columnas--agenda > * { min-width: 0; }
+.agenda-libre { margin: 0; padding: 2px 20px 14px; color: var(--texto-suave); font-size: 13px; }
+.cita-fila form { flex: none; }
+.cita-fila__texto a { color: var(--texto); text-decoration: none; }
+.cita-fila__texto a:hover { color: var(--verde-accion); text-decoration: underline; }
+@media (max-width: 1024px) { .dos-columnas--agenda { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 760px) { .agenda-libre { padding: 2px 16px 12px; } }
+
+/* Calendario: apartado Trabajadores (agenda de empleados) */
+:root { --agenda-trabajador: #B26A00; --agenda-trabajador-suave: #FBF1E1; }
+.punto-agenda--trabajador { background: var(--agenda-trabajador); }
+.agenda__elemento--trabajador { border-left-color: var(--agenda-trabajador); background: var(--agenda-trabajador-suave); }
+.agenda__libres { padding: 4px 0 10px; color: var(--texto-suave); font-size: 13px; }
+.agenda__libres a { color: var(--texto); }
+.agenda__libres a:hover { color: var(--verde-accion); }
+:root[data-tema="oscuro"] { --agenda-trabajador: #F0B35A; --agenda-trabajador-suave: #2A2113; }
+
+/* ==========================================================
+   Estadísticas y economía de los trabajos
+   ========================================================== */
+.grafico { position: relative; height: 340px; padding: 8px 20px 4px; }
+.grafico__tabla { padding: 0 20px 16px; }
+.grafico__tabla summary { cursor: pointer; color: var(--verde-accion); font-size: 14px; font-weight: 650; }
+.grafico__tabla .tabla-contenedor { margin-top: 10px; }
+.indicador__detalle { color: var(--texto-suave); font-size: 12.5px; }
+.indicador--ganancia .indicador__valor { color: var(--verde-accion); }
+.indicador--perdida .indicador__valor, .importe--negativo { color: var(--rojo); }
+.tabla--estadisticas tfoot th, .tabla--estadisticas tfoot td { border-top: 2px solid var(--linea); font-weight: 700; }
+.tabla--estadisticas .tabla__material a { color: var(--texto); font-weight: 650; text-decoration: none; }
+.tabla--estadisticas .tabla__material a:hover { color: var(--verde-accion); text-decoration: underline; }
+.tabla--estadisticas td.num .tabla__detalle { display: block; }
+.barra-herramientas--fina { padding-top: 0; }
+.economia__titulo { margin: 4px 0 12px; font-size: 15px; }
+.indicadores--economia { margin-bottom: 22px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.economia__formulario { padding-top: 18px; border-top: 1px solid var(--linea); }
+@media (max-width: 1024px) { .indicadores--economia { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 760px) {
+    .grafico { height: 260px; padding: 4px 8px; }
+    .grafico__tabla { padding: 0 16px 14px; }
+    /* En el móvil cada importe lleva su nombre delante */
+    .tabla--estadisticas td[data-etiqueta]::before { content: attr(data-etiqueta) ": "; color: var(--texto-suave); font-weight: 500; }
+    .tabla--estadisticas tfoot tr { display: grid; }
+}
+
+/* ==========================================================
+   Vehículos: kilometraje, revisiones (taller e ITV) y anotaciones
+   ========================================================== */
+:root { --agenda-vehiculo: #6D28D9; --agenda-vehiculo-suave: #F1EAFE; }
+.matricula { display: inline-block; padding: 1px 8px; border: 1px solid var(--linea); border-radius: 6px; background: var(--blanco); font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.92em; font-weight: 700; letter-spacing: 0.04em; }
+.matricula--grande { font-size: 17px; padding: 3px 12px; }
+.vehiculo-fila--baja { opacity: 0.6; }
+.km-nuevo { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; }
+.revision-nueva { padding: 18px 24px 0; border-bottom: 1px solid var(--linea); background: #FAFCF8; }
+.revision-nueva .familias { margin-bottom: 4px; }
+.cita-nueva--sin-borde { padding: 0 0 18px; border: 0; background: transparent; }
+.revision__tipo { display: inline-block; margin-right: 6px; padding: 1px 8px; border-radius: 999px; background: var(--agenda-vehiculo-suave); color: var(--agenda-vehiculo); font-size: 12px; font-weight: 700; vertical-align: 1px; }
+.revision--itv .revision__tipo { background: #FDECEC; color: var(--rojo); }
+.km-meses { padding: 16px 24px; border-bottom: 1px solid var(--linea); }
+.km-meses__titulo { margin: 0 0 10px; font-size: 14px; color: var(--texto-suave); }
+.km-meses__lista { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; }
+.km-meses__lista li { display: flex; flex-direction: column; padding: 10px 12px; border: 1px solid var(--linea); border-radius: var(--radio-control); font-size: 12.5px; color: var(--texto-suave); }
+.km-meses__lista strong { color: var(--texto); font-size: 16px; }
+.punto-agenda--vehiculo { background: var(--agenda-vehiculo); }
+.agenda__elemento--vehiculo { border-left-color: var(--agenda-vehiculo); background: var(--agenda-vehiculo-suave); }
+.pestanas--cinco { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+:root[data-tema="oscuro"] { --agenda-vehiculo: #B69CF7; --agenda-vehiculo-suave: #221A35; }
+:where(:root[data-tema="oscuro"]) .revision-nueva, :where(:root[data-tema="oscuro"]) .matricula { background: #141C11; }
+@media (max-width: 1024px) { .km-meses__lista { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 760px) {
+    .km-nuevo { grid-template-columns: 1fr 1fr; }
+    .km-nuevo .boton { grid-column: 1 / -1; }
+    .revision-nueva { padding: 16px 16px 0; }
+    .cita-nueva--sin-borde { padding: 0 0 16px; }
+    .km-meses { padding: 14px 16px; }
+    .km-meses__lista { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .pestanas--cinco .pestana span { font-size: 10.5px; }
+}
+.mi-vehiculo { display: flex; flex-direction: column; gap: 6px; }
+.mi-vehiculo__nombre { margin: 0; font-weight: 700; }
+.mi-vehiculo__dato { margin: 0; color: var(--texto-suave); font-size: 14px; }
+.mi-vehiculo .boton { margin-top: 6px; }
+.nota--automatica { background: var(--fondo); }
+.nota--automatica .nota__texto { color: var(--texto-suave); }
+.cita > .boton-tabla { flex: none; }
+.km-meses__lista small { font-size: 11.5px; line-height: 1.3; }

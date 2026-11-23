@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 
-from ..models import buscar_materiales, Cita, Consumo, horas_texto, Material, Proyecto, Usuario
+from ..models import Asignacion, buscar_materiales, Cita, Consumo, horas_texto, Material, Proyecto, Usuario
 from .comun import datos_menu
 
 
@@ -49,6 +49,12 @@ def index(request):
             'horas_hoy_texto': horas_texto(mias.filter(fecha=hoy).aggregate(total=Sum('cantidad'))['total'] or 0),
             'horas_semana_texto': horas_texto(mias.filter(fecha__gte=lunes).aggregate(total=Sum('cantidad'))['total'] or 0),
             'trabajos_recientes': recientes,
+            # Dónde le ha agendado Oficina hoy y los próximos 6 días
+            # Vehículos a su cargo, con el último kilometraje y la próxima revisión
+            'mis_vehiculos': [{'vehiculo': v, 'ultimo': v.ultimo_kilometraje(), 'proxima': v.proxima_revision()}
+                              for v in request.user.vehiculos.filter(activo=True)],
+            'mi_semana': Asignacion.objects.filter(empleado=request.user, fecha__range=(hoy, hoy + timedelta(days=6)))
+                                          .select_related('proyecto'),
         })
     return render(request, 'gestion/index.html', contexto)
 

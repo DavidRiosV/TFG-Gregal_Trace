@@ -1,0 +1,137 @@
+{% extends "gestion/principal.html" %}
+{% load static %}
+
+{% block titulo %}Estadísticas · Gregal Trace{% endblock %}
+
+{% block contenido %}
+<header class="pagina">
+    {% include "gestion/migas.html" with miga_actual="Estadísticas" %}
+    <div class="pagina__fila">
+        <h1 class="pagina__titulo">Estadísticas</h1>
+        {# Año que se ve #}
+        <div class="calendario-nav">
+            <a class="boton-tabla" href="{{ url_anio_anterior }}" aria-label="Año anterior" title="Año anterior">{% include "gestion/icono.html" with nombre="volver" %}</a>
+            <span class="calendario-nav__rango">{{ anio }}</span>
+            <a class="boton-tabla" href="{{ url_anio_siguiente }}" aria-label="Año siguiente" title="Año siguiente">{% include "gestion/icono.html" with nombre="siguiente" %}</a>
+        </div>
+    </div>
+</header>
+
+{# ---------- Cifras del año ---------- #}
+<div class="indicadores">
+    <div class="indicador"><span class="indicador__nombre">Gastado en {{ anio }}</span><span class="indicador__valor">{{ totales_anio.gastos|floatformat:"0g" }} €</span><span class="indicador__detalle">Material {{ totales_anio.material|floatformat:"0g" }} € · mano de obra {{ totales_anio.mano_obra|floatformat:"0g" }} €</span></div>
+    <div class="indicador"><span class="indicador__nombre">Ingresos en {{ anio }}</span><span class="indicador__valor">{{ totales_anio.ingresos|floatformat:"0g" }} €</span></div>
+    <div class="indicador{% if totales_anio.beneficio < 0 %} indicador--perdida{% else %} indicador--ganancia{% endif %}"><span class="indicador__nombre">Ingresos − gastos</span><span class="indicador__valor">{{ totales_anio.beneficio|floatformat:"0g" }} €</span><span class="indicador__detalle">Los trabajos sin ingreso todavía solo restan</span></div>
+</div>
+
+{# ---------- Gráfico de barras mes a mes (Chart.js) ---------- #}
+<section class="panel">
+    <h2 class="panel__titulo">Gastos e ingresos mes a mes</h2>
+    <div class="grafico">
+        <canvas id="grafico-meses" aria-label="Gráfico de barras de gastos e ingresos por mes en {{ anio }}" role="img"></canvas>
+    </div>
+    {# Los mismos datos en tabla: sin JavaScript, para lectores de pantalla y para consultarlos exactos #}
+    <details class="grafico__tabla">
+        <summary>Ver los datos en tabla</summary>
+        <div class="tabla-contenedor">
+            <table class="tabla">
+                <thead><tr><th scope="col">Mes</th><th scope="col" class="num">Material</th><th scope="col" class="num">Mano de obra</th><th scope="col" class="num">Gastos</th><th scope="col" class="num">Ingresos</th><th scope="col" class="num">Beneficio</th></tr></thead>
+                <tbody>
+                    {% for mes in meses %}
+                        <tr><td>{{ mes.mes }}</td><td class="num">{{ mes.material|floatformat:"2g" }} €</td><td class="num">{{ mes.mano_obra|floatformat:"2g" }} €</td><td class="num">{{ mes.gastos|floatformat:"2g" }} €</td><td class="num">{{ mes.ingresos|floatformat:"2g" }} €</td><td class="num">{{ mes.beneficio|floatformat:"2g" }} €</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </details>
+    {{ grafico|json_script:"datos-grafico" }}
+</section>
+
+{# ---------- Por obra ---------- #}
+<section class="panel panel--lista">
+    <div class="barra-herramientas">
+        <nav class="segmentos" aria-label="Qué ver">
+            {% for boton in botones_vista %}<a href="{{ boton.url }}" class="segmento{% if boton.activo %} segmento--activo{% endif %}">{{ boton.texto }}</a>{% endfor %}
+        </nav>
+        <form class="buscador" method="get" role="search">
+            <input type="hidden" name="anio" value="{{ anio }}">
+            <input type="hidden" name="vista" value="{{ vista }}">
+            {% if tipo_actual %}<input type="hidden" name="tipo" value="{{ tipo_actual }}">{% endif %}
+            {% include "gestion/icono.html" with nombre="buscar" %}
+            <input type="search" name="q" value="{{ busqueda }}" placeholder="Buscar trabajo o cliente" aria-label="Buscar trabajo o cliente">
+            <button type="submit" class="buscador__boton">Buscar</button>
+        </form>
+    </div>
+    <div class="barra-herramientas barra-herramientas--fina">
+        <nav class="segmentos segmentos--desliza" aria-label="Tipo de trabajo">
+            {% for boton in botones_tipo %}<a href="{{ boton.url }}" class="segmento{% if boton.activo %} segmento--activo{% endif %}">{{ boton.texto }}</a>{% endfor %}
+        </nav>
+        <span class="barra-herramientas__total">{{ num_obras }} trabajo{{ num_obras|pluralize }} con movimiento en {{ anio }}</span>
+    </div>
+
+    {% if proyectos %}
+        <div class="tabla-contenedor">
+            <table class="tabla tabla--estadisticas">
+                <thead>
+                    <tr>
+                        <th scope="col">Trabajo</th>
+                        {% if vista == 'presupuestos' %}
+                            <th scope="col" class="num">Presupuesto acordado</th>
+                            <th scope="col" class="num">Gastado</th>
+                            <th scope="col" class="num">Beneficio previsto</th>
+                            <th scope="col" class="num">Subcontratada</th>
+                        {% else %}
+                            <th scope="col" class="num">Material</th>
+                            <th scope="col" class="num">Mano de obra</th>
+                            <th scope="col" class="num">Ingreso</th>
+                            <th scope="col" class="num">Beneficio</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in proyectos %}
+                        <tr>
+                            <td class="tabla__doble tabla__material"><a href="{% url 'detalle_proyecto' p.pk %}#economia">{{ p.nombre }}</a><span class="tabla__detalle">{{ p.get_tipo_display }}{% if p.cliente %} · {{ p.cliente }}{% endif %}{% if p.estado == 'TER' %} · terminado{% endif %}</span></td>
+                            {% if vista == 'presupuestos' %}
+                                <td class="num" data-etiqueta="Presupuesto">{% if p.presupuesto is not None %}{{ p.presupuesto|floatformat:"2g" }} €{% else %}<span class="tabla__nada">Sin presupuesto</span>{% endif %}</td>
+                                <td class="num" data-etiqueta="Gastado">{{ p.gastado|floatformat:"2g" }} €</td>
+                                <td class="num importe{% if p.beneficio_previsto is not None and p.beneficio_previsto < 0 %} importe--negativo{% endif %}" data-etiqueta="Beneficio">{% if p.beneficio_previsto is not None %}{{ p.beneficio_previsto|floatformat:"2g" }} €<span class="tabla__detalle">presupuesto − gastado</span>{% else %}<span class="tabla__nada">—</span>{% endif %}</td>
+                                <td class="num" data-etiqueta="Subcontratada">{% if p.subcontratada %}{{ p.precio_hora_subcontrata|floatformat:"2g" }} €/h{% else %}<span class="tabla__nada">No</span>{% endif %}</td>
+                            {% else %}
+                                <td class="num" data-etiqueta="Material">{{ p.material|floatformat:"2g" }} €</td>
+                                <td class="num" data-etiqueta="Mano de obra">{{ p.mano_obra|floatformat:"2g" }} €<span class="tabla__detalle">{{ p.horas|floatformat:"-2" }} h</span></td>
+                                <td class="num" data-etiqueta="Ingreso">{% if p.ingreso_real is not None %}{{ p.ingreso_real|floatformat:"2g" }} €{% else %}<span class="tabla__nada">Sin ingreso</span>{% endif %}</td>
+                                <td class="num importe{% if p.beneficio is not None and p.beneficio < 0 %} importe--negativo{% endif %}" data-etiqueta="Beneficio">{% if p.beneficio is not None %}{{ p.beneficio|floatformat:"2g" }} €{% else %}<span class="tabla__nada">—</span>{% endif %}</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th scope="row">Total ({{ num_obras }})</th>
+                        {% if vista == 'presupuestos' %}
+                            <td class="num">{{ totales_obras.presupuesto|floatformat:"2g" }} €</td>
+                            <td class="num">{{ totales_obras.gastado|floatformat:"2g" }} €</td>
+                            <td class="num"></td><td class="num"></td>
+                        {% else %}
+                            <td class="num">{{ totales_obras.material|floatformat:"2g" }} €</td>
+                            <td class="num">{{ totales_obras.mano_obra|floatformat:"2g" }} €<span class="tabla__detalle">{{ totales_obras.horas|floatformat:"-2" }} h</span></td>
+                            <td class="num">{{ totales_obras.ingreso|floatformat:"2g" }} €</td>
+                            <td class="num importe{% if totales_obras.beneficio < 0 %} importe--negativo{% endif %}">{{ totales_obras.beneficio|floatformat:"2g" }} €</td>
+                        {% endif %}
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        {% include "gestion/paginas.html" %}
+    {% else %}
+        <div class="vacio"><p>{% if busqueda %}Ningún trabajo coincide con «{{ busqueda }}».{% else %}No hay trabajos con movimiento en {{ anio }}.{% endif %}</p></div>
+    {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+    {# Chart.js: librería de gráficos. Se carga solo en esta página #}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="{% static 'js/estadisticas.js' %}?v=1"></script>
+{% endblock %}

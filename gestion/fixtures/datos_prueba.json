@@ -986,6 +986,104 @@
     }
 },
 {
+    "model": "gestion.campohora",
+    "pk": 1,
+    "fields": {
+        "nombre": "Calefacción"
+    }
+},
+{
+    "model": "gestion.campohora",
+    "pk": 2,
+    "fields": {
+        "nombre": "Climatización"
+    }
+},
+{
+    "model": "gestion.campohora",
+    "pk": 3,
+    "fields": {
+        "nombre": "Electricidad"
+    }
+},
+{
+    "model": "gestion.campohora",
+    "pk": 4,
+    "fields": {
+        "nombre": "Fontanería"
+    }
+},
+{
+    "model": "gestion.campohora",
+    "pk": 5,
+    "fields": {
+        "nombre": "Fotovoltaica"
+    }
+},
+{
+    "model": "gestion.tarifahora",
+    "pk": 1,
+    "fields": {
+        "puesto": 41,
+        "campo": 3,
+        "precio": "34.00"
+    }
+},
+{
+    "model": "gestion.tarifahora",
+    "pk": 2,
+    "fields": {
+        "puesto": 41,
+        "campo": 5,
+        "precio": "36.00"
+    }
+},
+{
+    "model": "gestion.tarifahora",
+    "pk": 3,
+    "fields": {
+        "puesto": 41,
+        "campo": 4,
+        "precio": "32.00"
+    }
+},
+{
+    "model": "gestion.tarifahora",
+    "pk": 4,
+    "fields": {
+        "puesto": 41,
+        "campo": 2,
+        "precio": "33.00"
+    }
+},
+{
+    "model": "gestion.tarifahora",
+    "pk": 5,
+    "fields": {
+        "puesto": 1,
+        "campo": 3,
+        "precio": "24.00"
+    }
+},
+{
+    "model": "gestion.tarifahora",
+    "pk": 6,
+    "fields": {
+        "puesto": 1,
+        "campo": 4,
+        "precio": "23.00"
+    }
+},
+{
+    "model": "gestion.tarifahora",
+    "pk": 7,
+    "fields": {
+        "puesto": 42,
+        "campo": 5,
+        "precio": "55.00"
+    }
+},
+{
     "model": "gestion.proyecto",
     "pk": 1,
     "fields": {
@@ -999,7 +1097,11 @@
         "tipo_destino": "",
         "creado_por": [
             "oficina"
-        ]
+        ],
+        "presupuesto": "7764.00",
+        "ingreso": null,
+        "subcontratada": false,
+        "precio_hora_subcontrata": null
     }
 },
 {
@@ -1016,7 +1118,11 @@
         "tipo_destino": "",
         "creado_por": [
             "oficina"
-        ]
+        ],
+        "presupuesto": "1326.00",
+        "ingreso": null,
+        "subcontratada": false,
+        "precio_hora_subcontrata": null
     }
 },
 {
@@ -1033,7 +1139,11 @@
         "tipo_destino": "",
         "creado_por": [
             "oficina"
-        ]
+        ],
+        "presupuesto": "1221.00",
+        "ingreso": null,
+        "subcontratada": false,
+        "precio_hora_subcontrata": null
     }
 },
 {
@@ -1050,7 +1160,11 @@
         "tipo_destino": "",
         "creado_por": [
             "oficina"
-        ]
+        ],
+        "presupuesto": "1860.00",
+        "ingreso": null,
+        "subcontratada": false,
+        "precio_hora_subcontrata": null
     }
 },
 {
@@ -1067,7 +1181,11 @@
         "tipo_destino": "",
         "creado_por": [
             "oficina"
-        ]
+        ],
+        "presupuesto": "10803.00",
+        "ingreso": "10564.00",
+        "subcontratada": false,
+        "precio_hora_subcontrata": null
     }
 },
 {
@@ -1084,7 +1202,11 @@
         "tipo_destino": "",
         "creado_por": [
             "oficina"
-        ]
+        ],
+        "presupuesto": "881.00",
+        "ingreso": "885.00",
+        "subcontratada": false,
+        "precio_hora_subcontrata": null
     }
 },
 {
@@ -1101,7 +1223,11 @@
         "tipo_destino": "",
         "creado_por": [
             "oficina"
-        ]
+        ],
+        "presupuesto": "915.00",
+        "ingreso": "918.00",
+        "subcontratada": false,
+        "precio_hora_subcontrata": null
     }
 },
 {
@@ -1118,7 +1244,11 @@
         "tipo_destino": "",
         "creado_por": [
             "oficina"
-        ]
+        ],
+        "presupuesto": "11620.00",
+        "ingreso": "11869.00",
+        "subcontratada": false,
+        "precio_hora_subcontrata": null
     }
 },
 {
@@ -1135,7 +1265,11 @@
         "tipo_destino": "",
         "creado_por": [
             "oficina"
-        ]
+        ],
+        "presupuesto": "663.00",
+        "ingreso": null,
+        "subcontratada": false,
+        "precio_hora_subcontrata": null
     }
 },
 {
@@ -1152,7 +1286,11 @@
         "tipo_destino": "",
         "creado_por": [
             "oficina"
-        ]
+        ],
+        "presupuesto": "1687.00",
+        "ingreso": null,
+        "subcontratada": false,
+        "precio_hora_subcontrata": null
     }
 },
 {
@@ -1169,7 +1307,11 @@
         "tipo_destino": "",
         "creado_por": [
             "oficina"
-        ]
+        ],
+        "presupuesto": "513.00",
+        "ingreso": null,
+        "subcontratada": false,
+        "precio_hora_subcontrata": null
     }
 },
 {
@@ -1186,7 +1328,11 @@
         "tipo_destino": "",
         "creado_por": [
             "oficina"
-        ]
+        ],
+        "presupuesto": "11186.00",
+        "ingreso": null,
+        "subcontratada": false,
+        "precio_hora_subcontrata": null
     }
 },
 {
@@ -1203,7 +1349,11 @@
         "tipo_destino": "",
         "creado_por": [
             "oficina"
-        ]
+        ],
+        "presupuesto": "2288.00",
+        "ingreso": "2346.00",
+        "subcontratada": false,
+        "precio_hora_subcontrata": null
     }
 },
 {
@@ -1220,7 +1370,11 @@
         "tipo_destino": "",
         "creado_por": [
             "oficina"
-        ]
+        ],
+        "presupuesto": "1178.00",
+        "ingreso": "769.00",
+        "subcontratada": false,
+        "precio_hora_subcontrata": null
     }
 },
 {
@@ -1237,7 +1391,11 @@
         "tipo_destino": "",
         "creado_por": [
             "oficina"
-        ]
+        ],
+        "presupuesto": "837.00",
+        "ingreso": "849.00",
+        "subcontratada": false,
+        "precio_hora_subcontrata": null
     }
 },
 {
@@ -1254,7 +1412,11 @@
         "tipo_destino": "",
         "creado_por": [
             "oficina"
-        ]
+        ],
+        "presupuesto": "1237.00",
+        "ingreso": "1208.00",
+        "subcontratada": false,
+        "precio_hora_subcontrata": null
     }
 },
 {
@@ -1271,7 +1433,11 @@
         "tipo_destino": "",
         "creado_por": [
             "oficina"
-        ]
+        ],
+        "presupuesto": "8053.00",
+        "ingreso": null,
+        "subcontratada": false,
+        "precio_hora_subcontrata": null
     }
 },
 {
@@ -1288,7 +1454,11 @@
         "tipo_destino": "",
         "creado_por": [
             "oficina"
-        ]
+        ],
+        "presupuesto": "8435.00",
+        "ingreso": null,
+        "subcontratada": false,
+        "precio_hora_subcontrata": null
     }
 },
 {
@@ -1305,7 +1475,11 @@
         "tipo_destino": "",
         "creado_por": [
             "oficina"
-        ]
+        ],
+        "presupuesto": null,
+        "ingreso": null,
+        "subcontratada": true,
+        "precio_hora_subcontrata": "42.00"
     }
 },
 {
@@ -1322,7 +1496,11 @@
         "tipo_destino": "",
         "creado_por": [
             "oficina"
-        ]
+        ],
+        "presupuesto": "7982.00",
+        "ingreso": null,
+        "subcontratada": false,
+        "precio_hora_subcontrata": null
     }
 },
 {
@@ -1339,7 +1517,11 @@
         "tipo_destino": "",
         "creado_por": [
             "oficina"
-        ]
+        ],
+        "presupuesto": "11225.00",
+        "ingreso": "11674.00",
+        "subcontratada": false,
+        "precio_hora_subcontrata": null
     }
 },
 {
@@ -1356,7 +1538,11 @@
         "tipo_destino": "",
         "creado_por": [
             "oficina"
-        ]
+        ],
+        "presupuesto": "2914.00",
+        "ingreso": "2815.00",
+        "subcontratada": false,
+        "precio_hora_subcontrata": null
     }
 },
 {
@@ -1373,7 +1559,11 @@
         "tipo_destino": "",
         "creado_por": [
             "oficina"
-        ]
+        ],
+        "presupuesto": null,
+        "ingreso": null,
+        "subcontratada": true,
+        "precio_hora_subcontrata": "42.00"
     }
 },
 {
@@ -1390,7 +1580,11 @@
         "tipo_destino": "",
         "creado_por": [
             "oficina"
-        ]
+        ],
+        "presupuesto": "3108.00",
+        "ingreso": "3122.00",
+        "subcontratada": false,
+        "precio_hora_subcontrata": null
     }
 },
 {
@@ -1407,7 +1601,11 @@
         "tipo_destino": "INT",
         "creado_por": [
             "tomeu"
-        ]
+        ],
+        "presupuesto": null,
+        "ingreso": null,
+        "subcontratada": false,
+        "precio_hora_subcontrata": null
     }
 },
 {
@@ -1424,7 +1622,11 @@
         "tipo_destino": "INT",
         "creado_por": [
             "xisco"
-        ]
+        ],
+        "presupuesto": null,
+        "ingreso": null,
+        "subcontratada": false,
+        "precio_hora_subcontrata": null
     }
 },
 {
@@ -1441,7 +1643,11 @@
         "tipo_destino": "OBR",
         "creado_por": [
             "xisco"
-        ]
+        ],
+        "presupuesto": null,
+        "ingreso": null,
+        "subcontratada": false,
+        "precio_hora_subcontrata": null
     }
 },
 {
@@ -1567,7 +1773,8 @@
         ],
         "cantidad": "1.00",
         "precio_unitario": "30.00",
-        "fecha": "2026-11-10"
+        "fecha": "2026-11-10",
+        "campo": 5
     }
 },
 {
@@ -1581,7 +1788,8 @@
         ],
         "cantidad": "2.00",
         "precio_unitario": "22.00",
-        "fecha": "2026-10-25"
+        "fecha": "2026-10-25",
+        "campo": 5
     }
 },
 {
@@ -1595,7 +1803,8 @@
         ],
         "cantidad": "2.00",
         "precio_unitario": "28.00",
-        "fecha": "2026-11-07"
+        "fecha": "2026-11-07",
+        "campo": 5
     }
 },
 {
@@ -1651,7 +1860,8 @@
         ],
         "cantidad": "4.00",
         "precio_unitario": "30.00",
-        "fecha": "2026-11-05"
+        "fecha": "2026-11-05",
+        "campo": 5
     }
 },
 {
@@ -1665,7 +1875,8 @@
         ],
         "cantidad": "6.00",
         "precio_unitario": "30.00",
-        "fecha": "2026-10-24"
+        "fecha": "2026-10-24",
+        "campo": 5
     }
 },
 {
@@ -1679,7 +1890,8 @@
         ],
         "cantidad": "1.00",
         "precio_unitario": "22.00",
-        "fecha": "2026-11-03"
+        "fecha": "2026-11-03",
+        "campo": 5
     }
 },
 {
@@ -1693,7 +1905,8 @@
         ],
         "cantidad": "6.00",
         "precio_unitario": "22.00",
-        "fecha": "2026-11-06"
+        "fecha": "2026-11-06",
+        "campo": 5
     }
 },
 {
@@ -1707,7 +1920,8 @@
         ],
         "cantidad": "6.00",
         "precio_unitario": "50.00",
-        "fecha": "2026-11-16"
+        "fecha": "2026-11-16",
+        "campo": 5
     }
 },
 {
@@ -1763,7 +1977,8 @@
         ],
         "cantidad": "6.00",
         "precio_unitario": "28.00",
-        "fecha": "2026-10-31"
+        "fecha": "2026-10-31",
+        "campo": 1
     }
 },
 {
@@ -1777,7 +1992,8 @@
         ],
         "cantidad": "8.00",
         "precio_unitario": "50.00",
-        "fecha": "2026-11-16"
+        "fecha": "2026-11-16",
+        "campo": 1
     }
 },
 {
@@ -1847,7 +2063,8 @@
         ],
         "cantidad": "8.00",
         "precio_unitario": "22.00",
-        "fecha": "2026-11-12"
+        "fecha": "2026-11-12",
+        "campo": 5
     }
 },
 {
@@ -1861,7 +2078,8 @@
         ],
         "cantidad": "6.00",
         "precio_unitario": "28.00",
-        "fecha": "2026-11-15"
+        "fecha": "2026-11-15",
+        "campo": 5
     }
 },
 {
@@ -1875,7 +2093,8 @@
         ],
         "cantidad": "1.50",
         "precio_unitario": "50.00",
-        "fecha": "2026-11-11"
+        "fecha": "2026-11-11",
+        "campo": 5
     }
 },
 {
@@ -1889,7 +2108,8 @@
         ],
         "cantidad": "6.00",
         "precio_unitario": "22.00",
-        "fecha": "2026-11-16"
+        "fecha": "2026-11-16",
+        "campo": 5
     }
 },
 {
@@ -1903,7 +2123,8 @@
         ],
         "cantidad": "1.00",
         "precio_unitario": "22.00",
-        "fecha": "2026-11-13"
+        "fecha": "2026-11-13",
+        "campo": 5
     }
 },
 {
@@ -1917,7 +2138,8 @@
         ],
         "cantidad": "1.50",
         "precio_unitario": "30.00",
-        "fecha": "2026-11-08"
+        "fecha": "2026-11-08",
+        "campo": 5
     }
 },
 {
@@ -1973,7 +2195,8 @@
         ],
         "cantidad": "4.00",
         "precio_unitario": "28.00",
-        "fecha": "2026-08-16"
+        "fecha": "2026-08-16",
+        "campo": 2
     }
 },
 {
@@ -1987,7 +2210,8 @@
         ],
         "cantidad": "4.00",
         "precio_unitario": "22.00",
-        "fecha": "2026-08-11"
+        "fecha": "2026-08-11",
+        "campo": 2
     }
 },
 {
@@ -2001,7 +2225,8 @@
         ],
         "cantidad": "1.50",
         "precio_unitario": "50.00",
-        "fecha": "2026-08-10"
+        "fecha": "2026-08-10",
+        "campo": 2
     }
 },
 {
@@ -2057,7 +2282,8 @@
         ],
         "cantidad": "6.00",
         "precio_unitario": "28.00",
-        "fecha": "2026-09-13"
+        "fecha": "2026-09-13",
+        "campo": 1
     }
 },
 {
@@ -2071,7 +2297,8 @@
         ],
         "cantidad": "8.00",
         "precio_unitario": "50.00",
-        "fecha": "2026-09-16"
+        "fecha": "2026-09-16",
+        "campo": 1
     }
 },
 {
@@ -2155,7 +2382,8 @@
         ],
         "cantidad": "3.00",
         "precio_unitario": "30.00",
-        "fecha": "2026-10-05"
+        "fecha": "2026-10-05",
+        "campo": 5
     }
 },
 {
@@ -2169,7 +2397,8 @@
         ],
         "cantidad": "6.00",
         "precio_unitario": "22.00",
-        "fecha": "2026-10-10"
+        "fecha": "2026-10-10",
+        "campo": 5
     }
 },
 {
@@ -2183,7 +2412,8 @@
         ],
         "cantidad": "1.00",
         "precio_unitario": "22.00",
-        "fecha": "2026-10-18"
+        "fecha": "2026-10-18",
+        "campo": 5
     }
 },
 {
@@ -2197,7 +2427,8 @@
         ],
         "cantidad": "4.00",
         "precio_unitario": "28.00",
-        "fecha": "2026-10-21"
+        "fecha": "2026-10-21",
+        "campo": 5
     }
 },
 {
@@ -2211,7 +2442,8 @@
         ],
         "cantidad": "1.00",
         "precio_unitario": "50.00",
-        "fecha": "2026-10-17"
+        "fecha": "2026-10-17",
+        "campo": 5
     }
 },
 {
@@ -2323,7 +2555,8 @@
         ],
         "cantidad": "2.00",
         "precio_unitario": "30.00",
-        "fecha": "2026-07-12"
+        "fecha": "2026-07-12",
+        "campo": 4
     }
 },
 {
@@ -2337,7 +2570,8 @@
         ],
         "cantidad": "6.00",
         "precio_unitario": "22.00",
-        "fecha": "2026-07-04"
+        "fecha": "2026-07-04",
+        "campo": 4
     }
 },
 {
@@ -2351,7 +2585,8 @@
         ],
         "cantidad": "1.50",
         "precio_unitario": "22.00",
-        "fecha": "2026-06-29"
+        "fecha": "2026-06-29",
+        "campo": 4
     }
 },
 {
@@ -2365,7 +2600,8 @@
         ],
         "cantidad": "8.00",
         "precio_unitario": "50.00",
-        "fecha": "2026-07-08"
+        "fecha": "2026-07-08",
+        "campo": 4
     }
 },
 {
@@ -2407,7 +2643,8 @@
         ],
         "cantidad": "1.00",
         "precio_unitario": "22.00",
-        "fecha": "2026-09-29"
+        "fecha": "2026-09-29",
+        "campo": 3
     }
 },
 {
@@ -2421,7 +2658,8 @@
         ],
         "cantidad": "3.00",
         "precio_unitario": "22.00",
-        "fecha": "2026-10-11"
+        "fecha": "2026-10-11",
+        "campo": 3
     }
 },
 {
@@ -2435,7 +2673,8 @@
         ],
         "cantidad": "1.00",
         "precio_unitario": "22.00",
-        "fecha": "2026-10-21"
+        "fecha": "2026-10-21",
+        "campo": 3
     }
 },
 {
@@ -2449,7 +2688,8 @@
         ],
         "cantidad": "2.00",
         "precio_unitario": "50.00",
-        "fecha": "2026-11-11"
+        "fecha": "2026-11-11",
+        "campo": 3
     }
 },
 {
@@ -2519,7 +2759,8 @@
         ],
         "cantidad": "1.50",
         "precio_unitario": "28.00",
-        "fecha": "2026-11-02"
+        "fecha": "2026-11-02",
+        "campo": 2
     }
 },
 {
@@ -2533,7 +2774,8 @@
         ],
         "cantidad": "1.00",
         "precio_unitario": "22.00",
-        "fecha": "2026-10-09"
+        "fecha": "2026-10-09",
+        "campo": 2
     }
 },
 {
@@ -2547,7 +2789,8 @@
         ],
         "cantidad": "3.00",
         "precio_unitario": "50.00",
-        "fecha": "2026-11-11"
+        "fecha": "2026-11-11",
+        "campo": 2
     }
 },
 {
@@ -2561,7 +2804,8 @@
         ],
         "cantidad": "1.50",
         "precio_unitario": "28.00",
-        "fecha": "2026-11-10"
+        "fecha": "2026-11-10",
+        "campo": 2
     }
 },
 {
@@ -2603,7 +2847,8 @@
         ],
         "cantidad": "1.00",
         "precio_unitario": "22.00",
-        "fecha": "2026-11-15"
+        "fecha": "2026-11-15",
+        "campo": 1
     }
 },
 {
@@ -2617,7 +2862,8 @@
         ],
         "cantidad": "1.50",
         "precio_unitario": "50.00",
-        "fecha": "2026-11-16"
+        "fecha": "2026-11-16",
+        "campo": 1
     }
 },
 {
@@ -2631,7 +2877,8 @@
         ],
         "cantidad": "4.00",
         "precio_unitario": "28.00",
-        "fecha": "2026-11-14"
+        "fecha": "2026-11-14",
+        "campo": 1
     }
 },
 {
@@ -2645,7 +2892,8 @@
         ],
         "cantidad": "1.50",
         "precio_unitario": "28.00",
-        "fecha": "2026-11-16"
+        "fecha": "2026-11-16",
+        "campo": 1
     }
 },
 {
@@ -2701,7 +2949,8 @@
         ],
         "cantidad": "2.00",
         "precio_unitario": "28.00",
-        "fecha": "2026-11-10"
+        "fecha": "2026-11-10",
+        "campo": 4
     }
 },
 {
@@ -2715,7 +2964,8 @@
         ],
         "cantidad": "1.50",
         "precio_unitario": "50.00",
-        "fecha": "2026-11-09"
+        "fecha": "2026-11-09",
+        "campo": 4
     }
 },
 {
@@ -2729,7 +2979,8 @@
         ],
         "cantidad": "2.00",
         "precio_unitario": "30.00",
-        "fecha": "2026-10-31"
+        "fecha": "2026-10-31",
+        "campo": 4
     }
 },
 {
@@ -2743,7 +2994,8 @@
         ],
         "cantidad": "4.00",
         "precio_unitario": "30.00",
-        "fecha": "2026-11-14"
+        "fecha": "2026-11-14",
+        "campo": 4
     }
 },
 {
@@ -2785,7 +3037,8 @@
         ],
         "cantidad": "4.00",
         "precio_unitario": "28.00",
-        "fecha": "2026-09-22"
+        "fecha": "2026-09-22",
+        "campo": 1
     }
 },
 {
@@ -2799,7 +3052,8 @@
         ],
         "cantidad": "8.00",
         "precio_unitario": "22.00",
-        "fecha": "2026-09-11"
+        "fecha": "2026-09-11",
+        "campo": 1
     }
 },
 {
@@ -2813,7 +3067,8 @@
         ],
         "cantidad": "6.00",
         "precio_unitario": "30.00",
-        "fecha": "2026-10-14"
+        "fecha": "2026-10-14",
+        "campo": 1
     }
 },
 {
@@ -2883,7 +3138,8 @@
         ],
         "cantidad": "6.00",
         "precio_unitario": "30.00",
-        "fecha": "2026-10-01"
+        "fecha": "2026-10-01",
+        "campo": 4
     }
 },
 {
@@ -2897,7 +3153,8 @@
         ],
         "cantidad": "3.00",
         "precio_unitario": "22.00",
-        "fecha": "2026-10-02"
+        "fecha": "2026-10-02",
+        "campo": 4
     }
 },
 {
@@ -2911,7 +3168,8 @@
         ],
         "cantidad": "1.50",
         "precio_unitario": "28.00",
-        "fecha": "2026-10-02"
+        "fecha": "2026-10-02",
+        "campo": 4
     }
 },
 {
@@ -2925,7 +3183,8 @@
         ],
         "cantidad": "8.00",
         "precio_unitario": "50.00",
-        "fecha": "2026-10-03"
+        "fecha": "2026-10-03",
+        "campo": 4
     }
 },
 {
@@ -2939,7 +3198,8 @@
         ],
         "cantidad": "1.00",
         "precio_unitario": "50.00",
-        "fecha": "2026-10-01"
+        "fecha": "2026-10-01",
+        "campo": 4
     }
 },
 {
@@ -2953,7 +3213,8 @@
         ],
         "cantidad": "1.00",
         "precio_unitario": "50.00",
-        "fecha": "2026-10-03"
+        "fecha": "2026-10-03",
+        "campo": 4
     }
 },
 {
@@ -2981,7 +3242,8 @@
         ],
         "cantidad": "1.00",
         "precio_unitario": "30.00",
-        "fecha": "2026-07-17"
+        "fecha": "2026-07-17",
+        "campo": 3
     }
 },
 {
@@ -2995,7 +3257,8 @@
         ],
         "cantidad": "3.00",
         "precio_unitario": "22.00",
-        "fecha": "2026-07-14"
+        "fecha": "2026-07-14",
+        "campo": 3
     }
 },
 {
@@ -3009,7 +3272,8 @@
         ],
         "cantidad": "8.00",
         "precio_unitario": "30.00",
-        "fecha": "2026-07-22"
+        "fecha": "2026-07-22",
+        "campo": 3
     }
 },
 {
@@ -3023,7 +3287,8 @@
         ],
         "cantidad": "2.00",
         "precio_unitario": "28.00",
-        "fecha": "2026-07-15"
+        "fecha": "2026-07-15",
+        "campo": 3
     }
 },
 {
@@ -3037,7 +3302,8 @@
         ],
         "cantidad": "4.00",
         "precio_unitario": "30.00",
-        "fecha": "2026-07-12"
+        "fecha": "2026-07-12",
+        "campo": 3
     }
 },
 {
@@ -3051,7 +3317,8 @@
         ],
         "cantidad": "1.00",
         "precio_unitario": "30.00",
-        "fecha": "2026-07-08"
+        "fecha": "2026-07-08",
+        "campo": 3
     }
 },
 {
@@ -3121,7 +3388,8 @@
         ],
         "cantidad": "4.00",
         "precio_unitario": "30.00",
-        "fecha": "2026-10-06"
+        "fecha": "2026-10-06",
+        "campo": 3
     }
 },
 {
@@ -3135,7 +3403,8 @@
         ],
         "cantidad": "8.00",
         "precio_unitario": "30.00",
-        "fecha": "2026-10-10"
+        "fecha": "2026-10-10",
+        "campo": 3
     }
 },
 {
@@ -3149,7 +3418,8 @@
         ],
         "cantidad": "8.00",
         "precio_unitario": "30.00",
-        "fecha": "2026-10-25"
+        "fecha": "2026-10-25",
+        "campo": 3
     }
 },
 {
@@ -3205,7 +3475,8 @@
         ],
         "cantidad": "3.00",
         "precio_unitario": "22.00",
-        "fecha": "2026-10-19"
+        "fecha": "2026-10-19",
+        "campo": 1
     }
 },
 {
@@ -3219,7 +3490,8 @@
         ],
         "cantidad": "8.00",
         "precio_unitario": "22.00",
-        "fecha": "2026-10-27"
+        "fecha": "2026-10-27",
+        "campo": 1
     }
 },
 {
@@ -3233,7 +3505,8 @@
         ],
         "cantidad": "2.00",
         "precio_unitario": "50.00",
-        "fecha": "2026-11-13"
+        "fecha": "2026-11-13",
+        "campo": 1
     }
 },
 {
@@ -3275,7 +3548,8 @@
         ],
         "cantidad": "1.50",
         "precio_unitario": "30.00",
-        "fecha": "2026-11-11"
+        "fecha": "2026-11-11",
+        "campo": 2
     }
 },
 {
@@ -3289,7 +3563,8 @@
         ],
         "cantidad": "6.00",
         "precio_unitario": "50.00",
-        "fecha": "2026-11-05"
+        "fecha": "2026-11-05",
+        "campo": 2
     }
 },
 {
@@ -3303,7 +3578,8 @@
         ],
         "cantidad": "6.00",
         "precio_unitario": "50.00",
-        "fecha": "2026-11-09"
+        "fecha": "2026-11-09",
+        "campo": 2
     }
 },
 {
@@ -3317,7 +3593,8 @@
         ],
         "cantidad": "4.00",
         "precio_unitario": "30.00",
-        "fecha": "2026-11-01"
+        "fecha": "2026-11-01",
+        "campo": 2
     }
 },
 {
@@ -3331,7 +3608,8 @@
         ],
         "cantidad": "3.00",
         "precio_unitario": "22.00",
-        "fecha": "2026-11-14"
+        "fecha": "2026-11-14",
+        "campo": 2
     }
 },
 {
@@ -3401,7 +3679,8 @@
         ],
         "cantidad": "1.50",
         "precio_unitario": "50.00",
-        "fecha": "2026-10-24"
+        "fecha": "2026-10-24",
+        "campo": 1
     }
 },
 {
@@ -3415,7 +3694,8 @@
         ],
         "cantidad": "6.00",
         "precio_unitario": "22.00",
-        "fecha": "2026-10-12"
+        "fecha": "2026-10-12",
+        "campo": 1
     }
 },
 {
@@ -3457,7 +3737,8 @@
         ],
         "cantidad": "3.00",
         "precio_unitario": "30.00",
-        "fecha": "2026-11-12"
+        "fecha": "2026-11-12",
+        "campo": 1
     }
 },
 {
@@ -3471,7 +3752,8 @@
         ],
         "cantidad": "8.00",
         "precio_unitario": "22.00",
-        "fecha": "2026-11-06"
+        "fecha": "2026-11-06",
+        "campo": 1
     }
 },
 {
@@ -3527,7 +3809,8 @@
         ],
         "cantidad": "4.00",
         "precio_unitario": "28.00",
-        "fecha": "2026-11-14"
+        "fecha": "2026-11-14",
+        "campo": 1
     }
 },
 {
@@ -3541,7 +3824,8 @@
         ],
         "cantidad": "4.00",
         "precio_unitario": "50.00",
-        "fecha": "2026-11-01"
+        "fecha": "2026-11-01",
+        "campo": 1
     }
 },
 {
@@ -3555,7 +3839,8 @@
         ],
         "cantidad": "3.00",
         "precio_unitario": "50.00",
-        "fecha": "2026-11-12"
+        "fecha": "2026-11-12",
+        "campo": 1
     }
 },
 {
@@ -3597,7 +3882,8 @@
         ],
         "cantidad": "1.50",
         "precio_unitario": "28.00",
-        "fecha": "2026-06-19"
+        "fecha": "2026-06-19",
+        "campo": 4
     }
 },
 {
@@ -3611,7 +3897,8 @@
         ],
         "cantidad": "6.00",
         "precio_unitario": "30.00",
-        "fecha": "2026-06-19"
+        "fecha": "2026-06-19",
+        "campo": 4
     }
 },
 {
@@ -3625,7 +3912,8 @@
         ],
         "cantidad": "4.00",
         "precio_unitario": "22.00",
-        "fecha": "2026-06-19"
+        "fecha": "2026-06-19",
+        "campo": 4
     }
 },
 {
@@ -3681,7 +3969,8 @@
         ],
         "cantidad": "4.00",
         "precio_unitario": "28.00",
-        "fecha": "2026-09-28"
+        "fecha": "2026-09-28",
+        "campo": 5
     }
 },
 {
@@ -3695,7 +3984,8 @@
         ],
         "cantidad": "1.50",
         "precio_unitario": "50.00",
-        "fecha": "2026-09-13"
+        "fecha": "2026-09-13",
+        "campo": 5
     }
 },
 {
@@ -3709,7 +3999,8 @@
         ],
         "cantidad": "1.00",
         "precio_unitario": "28.00",
-        "fecha": "2026-09-10"
+        "fecha": "2026-09-10",
+        "campo": 5
     }
 },
 {
@@ -3723,7 +4014,8 @@
         ],
         "cantidad": "2.00",
         "precio_unitario": "50.00",
-        "fecha": "2026-09-16"
+        "fecha": "2026-09-16",
+        "campo": 5
     }
 },
 {
@@ -3737,7 +4029,8 @@
         ],
         "cantidad": "2.00",
         "precio_unitario": "50.00",
-        "fecha": "2026-09-30"
+        "fecha": "2026-09-30",
+        "campo": 5
     }
 },
 {
@@ -3751,7 +4044,8 @@
         ],
         "cantidad": "2.00",
         "precio_unitario": "30.00",
-        "fecha": "2026-09-23"
+        "fecha": "2026-09-23",
+        "campo": 5
     }
 },
 {
@@ -3793,7 +4087,8 @@
         ],
         "cantidad": "1.50",
         "precio_unitario": "28.00",
-        "fecha": "2026-11-05"
+        "fecha": "2026-11-05",
+        "campo": 2
     }
 },
 {
@@ -3807,7 +4102,8 @@
         ],
         "cantidad": "6.00",
         "precio_unitario": "28.00",
-        "fecha": "2026-11-02"
+        "fecha": "2026-11-02",
+        "campo": 2
     }
 },
 {
@@ -3821,7 +4117,8 @@
         ],
         "cantidad": "2.00",
         "precio_unitario": "50.00",
-        "fecha": "2026-10-25"
+        "fecha": "2026-10-25",
+        "campo": 2
     }
 },
 {
@@ -3877,7 +4174,8 @@
         ],
         "cantidad": "6.00",
         "precio_unitario": "22.00",
-        "fecha": "2026-11-14"
+        "fecha": "2026-11-14",
+        "campo": 4
     }
 },
 {
@@ -3891,7 +4189,8 @@
         ],
         "cantidad": "1.00",
         "precio_unitario": "50.00",
-        "fecha": "2026-11-14"
+        "fecha": "2026-11-14",
+        "campo": 4
     }
 },
 {
@@ -3905,7 +4204,8 @@
         ],
         "cantidad": "3.00",
         "precio_unitario": "30.00",
-        "fecha": "2026-11-14"
+        "fecha": "2026-11-14",
+        "campo": 4
     }
 },
 {
@@ -3933,7 +4233,8 @@
         ],
         "cantidad": "4.00",
         "precio_unitario": "30.00",
-        "fecha": "2026-11-16"
+        "fecha": "2026-11-16",
+        "campo": 1
     }
 },
 {
@@ -3947,7 +4248,8 @@
         ],
         "cantidad": "8.00",
         "precio_unitario": "28.00",
-        "fecha": "2026-11-15"
+        "fecha": "2026-11-15",
+        "campo": 1
     }
 },
 {
@@ -3961,7 +4263,8 @@
         ],
         "cantidad": "8.00",
         "precio_unitario": "30.00",
-        "fecha": "2026-11-13"
+        "fecha": "2026-11-13",
+        "campo": 1
     }
 },
 {
@@ -3975,7 +4278,8 @@
         ],
         "cantidad": "3.00",
         "precio_unitario": "30.00",
-        "fecha": "2026-11-13"
+        "fecha": "2026-11-13",
+        "campo": 1
     }
 },
 {
@@ -3989,7 +4293,8 @@
         ],
         "cantidad": "3.00",
         "precio_unitario": "50.00",
-        "fecha": "2026-11-16"
+        "fecha": "2026-11-16",
+        "campo": 1
     }
 },
 {
@@ -4003,7 +4308,8 @@
         ],
         "cantidad": "3.00",
         "precio_unitario": "30.00",
-        "fecha": "2026-11-15"
+        "fecha": "2026-11-15",
+        "campo": 1
     }
 },
 {
@@ -4045,7 +4351,8 @@
         ],
         "cantidad": "1.00",
         "precio_unitario": "50.00",
-        "fecha": "2026-11-16"
+        "fecha": "2026-11-16",
+        "campo": 3
     }
 },
 {
@@ -4059,7 +4366,8 @@
         ],
         "cantidad": "6.00",
         "precio_unitario": "30.00",
-        "fecha": "2026-11-14"
+        "fecha": "2026-11-14",
+        "campo": 3
     }
 },
 {
@@ -4073,7 +4381,8 @@
         ],
         "cantidad": "2.00",
         "precio_unitario": "22.00",
-        "fecha": "2026-11-16"
+        "fecha": "2026-11-16",
+        "campo": 3
     }
 },
 {
@@ -4087,7 +4396,8 @@
         ],
         "cantidad": "4.00",
         "precio_unitario": "50.00",
-        "fecha": "2026-11-16"
+        "fecha": "2026-11-16",
+        "campo": 3
     }
 },
 {
@@ -4101,7 +4411,8 @@
         ],
         "cantidad": "3.00",
         "precio_unitario": "50.00",
-        "fecha": "2026-11-15"
+        "fecha": "2026-11-15",
+        "campo": 3
     }
 },
 {
@@ -4521,6 +4832,2877 @@
         ],
         "texto": "Aparcar en la calle de atrás: la entrada es estrecha.",
         "fecha": "2026-11-16T10:42:59.942"
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 28,
+    "fields": {
+        "nombre": "Placas sin producción · Camí de Son Vida 4, Palma",
+        "cliente": "Pere Bauzà",
+        "tipo": "URG",
+        "descripcion": "Datos de prueba inventados.",
+        "fecha_inicio": "2026-11-18",
+        "fecha_fin": null,
+        "estado": "PRO",
+        "tipo_destino": "INT",
+        "creado_por": [
+            "oficina"
+        ],
+        "presupuesto": null,
+        "ingreso": null,
+        "subcontratada": false,
+        "precio_hora_subcontrata": null
+    }
+},
+{
+    "model": "gestion.proyecto",
+    "pk": 29,
+    "fields": {
+        "nombre": "Split no enfría · C/ des Moll 7, Alcúdia",
+        "cliente": "Hotel Ses Roques",
+        "tipo": "URG",
+        "descripcion": "Datos de prueba inventados.",
+        "fecha_inicio": "2026-11-19",
+        "fecha_fin": null,
+        "estado": "PRO",
+        "tipo_destino": "MAN",
+        "creado_por": [
+            "oficina"
+        ],
+        "presupuesto": null,
+        "ingreso": null,
+        "subcontratada": false,
+        "precio_hora_subcontrata": null
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 1000,
+    "fields": {
+        "proyecto": 28,
+        "material": 41,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "2.50",
+        "precio_unitario": "30.00",
+        "fecha": "2026-11-18",
+        "campo": 5
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 1001,
+    "fields": {
+        "proyecto": 28,
+        "material": 1,
+        "trabajador": [
+            "tomeu"
+        ],
+        "cantidad": "2.50",
+        "precio_unitario": "22.00",
+        "fecha": "2026-11-18",
+        "campo": 5
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 1002,
+    "fields": {
+        "proyecto": 28,
+        "material": 5,
+        "trabajador": [
+            "joan"
+        ],
+        "cantidad": "4.00",
+        "precio_unitario": "3.40",
+        "fecha": "2026-11-18"
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 1003,
+    "fields": {
+        "proyecto": 29,
+        "material": 41,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "1.50",
+        "precio_unitario": "30.00",
+        "fecha": "2026-11-19",
+        "campo": 2
+    }
+},
+{
+    "model": "gestion.consumo",
+    "pk": 1004,
+    "fields": {
+        "proyecto": 29,
+        "material": 7,
+        "trabajador": [
+            "aina"
+        ],
+        "cantidad": "2.00",
+        "precio_unitario": "7.50",
+        "fecha": "2026-11-19"
+    }
+},
+{
+    "model": "gestion.cita",
+    "pk": 100,
+    "fields": {
+        "proyecto": 1,
+        "fecha": "2026-12-02",
+        "hora": "09:00:00",
+        "motivo": "Revisión de la instalación",
+        "creada_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.cita",
+    "pk": 101,
+    "fields": {
+        "proyecto": 9,
+        "fecha": "2026-12-03",
+        "hora": "11:30:00",
+        "motivo": "Cambio del termo",
+        "creada_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.cita",
+    "pk": 102,
+    "fields": {
+        "proyecto": 17,
+        "fecha": "2026-12-09",
+        "hora": "08:30:00",
+        "motivo": "Revisión anual caldera",
+        "creada_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.cita",
+    "pk": 103,
+    "fields": {
+        "proyecto": 3,
+        "fecha": "2026-12-15",
+        "hora": "10:00:00",
+        "motivo": "Entrega de llaves",
+        "creada_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.cita",
+    "pk": 104,
+    "fields": {
+        "proyecto": 28,
+        "fecha": "2026-12-01",
+        "hora": null,
+        "motivo": "Diagnóstico inversor",
+        "creada_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.cita",
+    "pk": 105,
+    "fields": {
+        "proyecto": 20,
+        "fecha": "2027-01-12",
+        "hora": "09:00:00",
+        "motivo": "Mantenimiento aerotermia",
+        "creada_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.cita",
+    "pk": 106,
+    "fields": {
+        "proyecto": 10,
+        "fecha": "2027-01-08",
+        "hora": "16:00:00",
+        "motivo": "Comprobar desagüe del split",
+        "creada_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 1,
+    "fields": {
+        "empleado": [
+            "tomeu"
+        ],
+        "proyecto": 28,
+        "fecha": "2026-11-30",
+        "franja": "MAN",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 2,
+    "fields": {
+        "empleado": [
+            "tomeu"
+        ],
+        "proyecto": 9,
+        "fecha": "2026-11-30",
+        "franja": "TAR",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 3,
+    "fields": {
+        "empleado": [
+            "joan"
+        ],
+        "proyecto": 28,
+        "fecha": "2026-11-30",
+        "franja": "MAN",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 4,
+    "fields": {
+        "empleado": [
+            "joan"
+        ],
+        "proyecto": 4,
+        "fecha": "2026-11-30",
+        "franja": "TAR",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 5,
+    "fields": {
+        "empleado": [
+            "aina"
+        ],
+        "proyecto": 29,
+        "fecha": "2026-11-30",
+        "franja": "MAN",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 6,
+    "fields": {
+        "empleado": [
+            "aina"
+        ],
+        "proyecto": 11,
+        "fecha": "2026-11-30",
+        "franja": "TAR",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 7,
+    "fields": {
+        "empleado": [
+            "laura"
+        ],
+        "proyecto": 2,
+        "fecha": "2026-11-30",
+        "franja": "MAN",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 8,
+    "fields": {
+        "empleado": [
+            "laura"
+        ],
+        "proyecto": 4,
+        "fecha": "2026-11-30",
+        "franja": "TAR",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 9,
+    "fields": {
+        "empleado": [
+            "joan"
+        ],
+        "proyecto": 2,
+        "fecha": "2026-12-01",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 10,
+    "fields": {
+        "empleado": [
+            "aina"
+        ],
+        "proyecto": 10,
+        "fecha": "2026-12-01",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 11,
+    "fields": {
+        "empleado": [
+            "miquel"
+        ],
+        "proyecto": 18,
+        "fecha": "2026-12-01",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 12,
+    "fields": {
+        "empleado": [
+            "tomeu"
+        ],
+        "proyecto": 28,
+        "fecha": "2026-12-02",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 13,
+    "fields": {
+        "empleado": [
+            "miquel"
+        ],
+        "proyecto": 19,
+        "fecha": "2026-12-02",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 14,
+    "fields": {
+        "empleado": [
+            "laura"
+        ],
+        "proyecto": 2,
+        "fecha": "2026-12-02",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 15,
+    "fields": {
+        "empleado": [
+            "tomeu"
+        ],
+        "proyecto": 9,
+        "fecha": "2026-12-03",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 16,
+    "fields": {
+        "empleado": [
+            "joan"
+        ],
+        "proyecto": 4,
+        "fecha": "2026-12-03",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 17,
+    "fields": {
+        "empleado": [
+            "aina"
+        ],
+        "proyecto": 11,
+        "fecha": "2026-12-03",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 18,
+    "fields": {
+        "empleado": [
+            "miquel"
+        ],
+        "proyecto": 3,
+        "fecha": "2026-12-03",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 19,
+    "fields": {
+        "empleado": [
+            "laura"
+        ],
+        "proyecto": 4,
+        "fecha": "2026-12-03",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 20,
+    "fields": {
+        "empleado": [
+            "tomeu"
+        ],
+        "proyecto": 1,
+        "fecha": "2026-12-04",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 21,
+    "fields": {
+        "empleado": [
+            "joan"
+        ],
+        "proyecto": 1,
+        "fecha": "2026-12-04",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 22,
+    "fields": {
+        "empleado": [
+            "aina"
+        ],
+        "proyecto": 9,
+        "fecha": "2026-12-04",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 23,
+    "fields": {
+        "empleado": [
+            "miquel"
+        ],
+        "proyecto": 17,
+        "fecha": "2026-12-04",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 24,
+    "fields": {
+        "empleado": [
+            "laura"
+        ],
+        "proyecto": 12,
+        "fecha": "2026-12-04",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 25,
+    "fields": {
+        "empleado": [
+            "joan"
+        ],
+        "proyecto": 4,
+        "fecha": "2026-12-07",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 26,
+    "fields": {
+        "empleado": [
+            "aina"
+        ],
+        "proyecto": 11,
+        "fecha": "2026-12-07",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 27,
+    "fields": {
+        "empleado": [
+            "miquel"
+        ],
+        "proyecto": 3,
+        "fecha": "2026-12-07",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 28,
+    "fields": {
+        "empleado": [
+            "tomeu"
+        ],
+        "proyecto": 1,
+        "fecha": "2026-12-08",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 29,
+    "fields": {
+        "empleado": [
+            "miquel"
+        ],
+        "proyecto": 17,
+        "fecha": "2026-12-08",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 30,
+    "fields": {
+        "empleado": [
+            "laura"
+        ],
+        "proyecto": 12,
+        "fecha": "2026-12-08",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 31,
+    "fields": {
+        "empleado": [
+            "tomeu"
+        ],
+        "proyecto": 3,
+        "fecha": "2026-12-09",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 32,
+    "fields": {
+        "empleado": [
+            "joan"
+        ],
+        "proyecto": 2,
+        "fecha": "2026-12-09",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 33,
+    "fields": {
+        "empleado": [
+            "aina"
+        ],
+        "proyecto": 10,
+        "fecha": "2026-12-09",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 34,
+    "fields": {
+        "empleado": [
+            "miquel"
+        ],
+        "proyecto": 18,
+        "fecha": "2026-12-09",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 35,
+    "fields": {
+        "empleado": [
+            "laura"
+        ],
+        "proyecto": 20,
+        "fecha": "2026-12-09",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 36,
+    "fields": {
+        "empleado": [
+            "tomeu"
+        ],
+        "proyecto": 28,
+        "fecha": "2026-12-10",
+        "franja": "MAN",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 37,
+    "fields": {
+        "empleado": [
+            "tomeu"
+        ],
+        "proyecto": 9,
+        "fecha": "2026-12-10",
+        "franja": "TAR",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 38,
+    "fields": {
+        "empleado": [
+            "joan"
+        ],
+        "proyecto": 28,
+        "fecha": "2026-12-10",
+        "franja": "MAN",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 39,
+    "fields": {
+        "empleado": [
+            "joan"
+        ],
+        "proyecto": 4,
+        "fecha": "2026-12-10",
+        "franja": "TAR",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 40,
+    "fields": {
+        "empleado": [
+            "aina"
+        ],
+        "proyecto": 29,
+        "fecha": "2026-12-10",
+        "franja": "MAN",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 41,
+    "fields": {
+        "empleado": [
+            "aina"
+        ],
+        "proyecto": 11,
+        "fecha": "2026-12-10",
+        "franja": "TAR",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 42,
+    "fields": {
+        "empleado": [
+            "miquel"
+        ],
+        "proyecto": 19,
+        "fecha": "2026-12-10",
+        "franja": "MAN",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 43,
+    "fields": {
+        "empleado": [
+            "miquel"
+        ],
+        "proyecto": 3,
+        "fecha": "2026-12-10",
+        "franja": "TAR",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 44,
+    "fields": {
+        "empleado": [
+            "laura"
+        ],
+        "proyecto": 2,
+        "fecha": "2026-12-10",
+        "franja": "MAN",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 45,
+    "fields": {
+        "empleado": [
+            "laura"
+        ],
+        "proyecto": 4,
+        "fecha": "2026-12-10",
+        "franja": "TAR",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 46,
+    "fields": {
+        "empleado": [
+            "tomeu"
+        ],
+        "proyecto": 9,
+        "fecha": "2026-12-11",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 47,
+    "fields": {
+        "empleado": [
+            "joan"
+        ],
+        "proyecto": 4,
+        "fecha": "2026-12-11",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 48,
+    "fields": {
+        "empleado": [
+            "aina"
+        ],
+        "proyecto": 11,
+        "fecha": "2026-12-11",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 49,
+    "fields": {
+        "empleado": [
+            "miquel"
+        ],
+        "proyecto": 3,
+        "fecha": "2026-12-11",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 50,
+    "fields": {
+        "empleado": [
+            "laura"
+        ],
+        "proyecto": 4,
+        "fecha": "2026-12-11",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 51,
+    "fields": {
+        "empleado": [
+            "tomeu"
+        ],
+        "proyecto": 28,
+        "fecha": "2026-12-14",
+        "franja": "DIA",
+        "nota": "Llevar la escalera grande",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 52,
+    "fields": {
+        "empleado": [
+            "miquel"
+        ],
+        "proyecto": 19,
+        "fecha": "2026-12-14",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 53,
+    "fields": {
+        "empleado": [
+            "laura"
+        ],
+        "proyecto": 2,
+        "fecha": "2026-12-14",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 54,
+    "fields": {
+        "empleado": [
+            "tomeu"
+        ],
+        "proyecto": 9,
+        "fecha": "2026-12-15",
+        "franja": "MAN",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 55,
+    "fields": {
+        "empleado": [
+            "tomeu"
+        ],
+        "proyecto": 1,
+        "fecha": "2026-12-15",
+        "franja": "TAR",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 56,
+    "fields": {
+        "empleado": [
+            "joan"
+        ],
+        "proyecto": 4,
+        "fecha": "2026-12-15",
+        "franja": "MAN",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 57,
+    "fields": {
+        "empleado": [
+            "joan"
+        ],
+        "proyecto": 1,
+        "fecha": "2026-12-15",
+        "franja": "TAR",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 58,
+    "fields": {
+        "empleado": [
+            "aina"
+        ],
+        "proyecto": 11,
+        "fecha": "2026-12-15",
+        "franja": "MAN",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 59,
+    "fields": {
+        "empleado": [
+            "aina"
+        ],
+        "proyecto": 9,
+        "fecha": "2026-12-15",
+        "franja": "TAR",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 60,
+    "fields": {
+        "empleado": [
+            "miquel"
+        ],
+        "proyecto": 3,
+        "fecha": "2026-12-15",
+        "franja": "MAN",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 61,
+    "fields": {
+        "empleado": [
+            "miquel"
+        ],
+        "proyecto": 17,
+        "fecha": "2026-12-15",
+        "franja": "TAR",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 62,
+    "fields": {
+        "empleado": [
+            "laura"
+        ],
+        "proyecto": 4,
+        "fecha": "2026-12-15",
+        "franja": "MAN",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 63,
+    "fields": {
+        "empleado": [
+            "laura"
+        ],
+        "proyecto": 12,
+        "fecha": "2026-12-15",
+        "franja": "TAR",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 64,
+    "fields": {
+        "empleado": [
+            "tomeu"
+        ],
+        "proyecto": 1,
+        "fecha": "2026-12-16",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 65,
+    "fields": {
+        "empleado": [
+            "joan"
+        ],
+        "proyecto": 1,
+        "fecha": "2026-12-16",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 66,
+    "fields": {
+        "empleado": [
+            "aina"
+        ],
+        "proyecto": 9,
+        "fecha": "2026-12-16",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 67,
+    "fields": {
+        "empleado": [
+            "miquel"
+        ],
+        "proyecto": 17,
+        "fecha": "2026-12-16",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 68,
+    "fields": {
+        "empleado": [
+            "laura"
+        ],
+        "proyecto": 12,
+        "fecha": "2026-12-16",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 69,
+    "fields": {
+        "empleado": [
+            "tomeu"
+        ],
+        "proyecto": 3,
+        "fecha": "2026-12-17",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 70,
+    "fields": {
+        "empleado": [
+            "joan"
+        ],
+        "proyecto": 2,
+        "fecha": "2026-12-17",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 71,
+    "fields": {
+        "empleado": [
+            "aina"
+        ],
+        "proyecto": 10,
+        "fecha": "2026-12-17",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 72,
+    "fields": {
+        "empleado": [
+            "miquel"
+        ],
+        "proyecto": 18,
+        "fecha": "2026-12-17",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 73,
+    "fields": {
+        "empleado": [
+            "laura"
+        ],
+        "proyecto": 20,
+        "fecha": "2026-12-17",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 74,
+    "fields": {
+        "empleado": [
+            "tomeu"
+        ],
+        "proyecto": 28,
+        "fecha": "2026-12-18",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 75,
+    "fields": {
+        "empleado": [
+            "joan"
+        ],
+        "proyecto": 28,
+        "fecha": "2026-12-18",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 76,
+    "fields": {
+        "empleado": [
+            "aina"
+        ],
+        "proyecto": 29,
+        "fecha": "2026-12-18",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 77,
+    "fields": {
+        "empleado": [
+            "laura"
+        ],
+        "proyecto": 2,
+        "fecha": "2026-12-18",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 78,
+    "fields": {
+        "empleado": [
+            "tomeu"
+        ],
+        "proyecto": 3,
+        "fecha": "2026-12-21",
+        "franja": "DIA",
+        "nota": "Llevar la escalera grande",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 79,
+    "fields": {
+        "empleado": [
+            "joan"
+        ],
+        "proyecto": 2,
+        "fecha": "2026-12-21",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 80,
+    "fields": {
+        "empleado": [
+            "aina"
+        ],
+        "proyecto": 10,
+        "fecha": "2026-12-21",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 81,
+    "fields": {
+        "empleado": [
+            "miquel"
+        ],
+        "proyecto": 18,
+        "fecha": "2026-12-21",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 82,
+    "fields": {
+        "empleado": [
+            "laura"
+        ],
+        "proyecto": 20,
+        "fecha": "2026-12-21",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 83,
+    "fields": {
+        "empleado": [
+            "tomeu"
+        ],
+        "proyecto": 28,
+        "fecha": "2026-12-22",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 84,
+    "fields": {
+        "empleado": [
+            "joan"
+        ],
+        "proyecto": 28,
+        "fecha": "2026-12-22",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 85,
+    "fields": {
+        "empleado": [
+            "aina"
+        ],
+        "proyecto": 29,
+        "fecha": "2026-12-22",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 86,
+    "fields": {
+        "empleado": [
+            "miquel"
+        ],
+        "proyecto": 19,
+        "fecha": "2026-12-22",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 87,
+    "fields": {
+        "empleado": [
+            "laura"
+        ],
+        "proyecto": 2,
+        "fecha": "2026-12-22",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 88,
+    "fields": {
+        "empleado": [
+            "tomeu"
+        ],
+        "proyecto": 9,
+        "fecha": "2026-12-23",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 89,
+    "fields": {
+        "empleado": [
+            "joan"
+        ],
+        "proyecto": 4,
+        "fecha": "2026-12-23",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 90,
+    "fields": {
+        "empleado": [
+            "aina"
+        ],
+        "proyecto": 11,
+        "fecha": "2026-12-23",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 91,
+    "fields": {
+        "empleado": [
+            "miquel"
+        ],
+        "proyecto": 3,
+        "fecha": "2026-12-23",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.asignacion",
+    "pk": 92,
+    "fields": {
+        "empleado": [
+            "laura"
+        ],
+        "proyecto": 4,
+        "fecha": "2026-12-23",
+        "franja": "DIA",
+        "nota": "",
+        "creada_por": [
+            "oficina"
+        ],
+        "avisada": null
+    }
+},
+{
+    "model": "gestion.vehiculo",
+    "pk": 1,
+    "fields": {
+        "tipo": "FUR",
+        "matricula": "4521 KLM",
+        "modelo": "Toyota Proace",
+        "responsable": [
+            "tomeu"
+        ],
+        "activo": true
+    }
+},
+{
+    "model": "gestion.notavehiculo",
+    "pk": 1,
+    "fields": {
+        "vehiculo": 1,
+        "autor": [
+            "oficina"
+        ],
+        "automatica": true,
+        "texto": "Alta del vehículo. Responsable: Tomeu.",
+        "fecha": "2026-06-10T09:00:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 1,
+    "fields": {
+        "vehiculo": 1,
+        "fecha": "2026-06-16",
+        "km": 118879,
+        "registrado_por": [
+            "oficina"
+        ],
+        "registrado": "2026-06-16T11:50:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 2,
+    "fields": {
+        "vehiculo": 1,
+        "fecha": "2026-06-30",
+        "km": 119403,
+        "registrado_por": [
+            "oficina"
+        ],
+        "registrado": "2026-06-30T17:35:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 3,
+    "fields": {
+        "vehiculo": 1,
+        "fecha": "2026-07-14",
+        "km": 119808,
+        "registrado_por": [
+            "tomeu"
+        ],
+        "registrado": "2026-07-14T18:35:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 4,
+    "fields": {
+        "vehiculo": 1,
+        "fecha": "2026-07-28",
+        "km": 120560,
+        "registrado_por": [
+            "tomeu"
+        ],
+        "registrado": "2026-07-28T14:50:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 5,
+    "fields": {
+        "vehiculo": 1,
+        "fecha": "2026-08-11",
+        "km": 121032,
+        "registrado_por": [
+            "tomeu"
+        ],
+        "registrado": "2026-08-11T13:50:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 6,
+    "fields": {
+        "vehiculo": 1,
+        "fecha": "2026-08-25",
+        "km": 121531,
+        "registrado_por": [
+            "tomeu"
+        ],
+        "registrado": "2026-08-25T13:50:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 7,
+    "fields": {
+        "vehiculo": 1,
+        "fecha": "2026-09-08",
+        "km": 122318,
+        "registrado_por": [
+            "tomeu"
+        ],
+        "registrado": "2026-09-08T15:35:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 8,
+    "fields": {
+        "vehiculo": 1,
+        "fecha": "2026-09-22",
+        "km": 123128,
+        "registrado_por": [
+            "tomeu"
+        ],
+        "registrado": "2026-09-22T16:50:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 9,
+    "fields": {
+        "vehiculo": 1,
+        "fecha": "2026-10-06",
+        "km": 123533,
+        "registrado_por": [
+            "tomeu"
+        ],
+        "registrado": "2026-10-06T16:20:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 10,
+    "fields": {
+        "vehiculo": 1,
+        "fecha": "2026-10-20",
+        "km": 124045,
+        "registrado_por": [
+            "tomeu"
+        ],
+        "registrado": "2026-10-20T07:05:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 11,
+    "fields": {
+        "vehiculo": 1,
+        "fecha": "2026-11-03",
+        "km": 124864,
+        "registrado_por": [
+            "tomeu"
+        ],
+        "registrado": "2026-11-03T14:20:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 12,
+    "fields": {
+        "vehiculo": 1,
+        "fecha": "2026-11-17",
+        "km": 125737,
+        "registrado_por": [
+            "tomeu"
+        ],
+        "registrado": "2026-11-17T10:05:00"
+    }
+},
+{
+    "model": "gestion.vehiculo",
+    "pk": 2,
+    "fields": {
+        "tipo": "FUR",
+        "matricula": "7788 HJB",
+        "modelo": "Peugeot Partner",
+        "responsable": [
+            "joan"
+        ],
+        "activo": true
+    }
+},
+{
+    "model": "gestion.notavehiculo",
+    "pk": 2,
+    "fields": {
+        "vehiculo": 2,
+        "autor": [
+            "oficina"
+        ],
+        "automatica": true,
+        "texto": "Alta del vehículo. Responsable: Joan.",
+        "fecha": "2026-06-10T09:00:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 13,
+    "fields": {
+        "vehiculo": 2,
+        "fecha": "2026-06-17",
+        "km": 87297,
+        "registrado_por": [
+            "oficina"
+        ],
+        "registrado": "2026-06-17T17:50:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 14,
+    "fields": {
+        "vehiculo": 2,
+        "fecha": "2026-07-01",
+        "km": 87934,
+        "registrado_por": [
+            "joan"
+        ],
+        "registrado": "2026-07-01T15:50:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 15,
+    "fields": {
+        "vehiculo": 2,
+        "fecha": "2026-07-15",
+        "km": 88629,
+        "registrado_por": [
+            "joan"
+        ],
+        "registrado": "2026-07-15T15:50:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 16,
+    "fields": {
+        "vehiculo": 2,
+        "fecha": "2026-07-29",
+        "km": 89420,
+        "registrado_por": [
+            "joan"
+        ],
+        "registrado": "2026-07-29T13:20:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 17,
+    "fields": {
+        "vehiculo": 2,
+        "fecha": "2026-08-12",
+        "km": 90101,
+        "registrado_por": [
+            "joan"
+        ],
+        "registrado": "2026-08-12T11:05:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 18,
+    "fields": {
+        "vehiculo": 2,
+        "fecha": "2026-08-26",
+        "km": 90514,
+        "registrado_por": [
+            "joan"
+        ],
+        "registrado": "2026-08-26T09:50:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 19,
+    "fields": {
+        "vehiculo": 2,
+        "fecha": "2026-09-09",
+        "km": 91395,
+        "registrado_por": [
+            "joan"
+        ],
+        "registrado": "2026-09-09T12:20:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 20,
+    "fields": {
+        "vehiculo": 2,
+        "fecha": "2026-09-23",
+        "km": 92041,
+        "registrado_por": [
+            "joan"
+        ],
+        "registrado": "2026-09-23T18:50:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 21,
+    "fields": {
+        "vehiculo": 2,
+        "fecha": "2026-10-07",
+        "km": 92898,
+        "registrado_por": [
+            "joan"
+        ],
+        "registrado": "2026-10-07T15:50:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 22,
+    "fields": {
+        "vehiculo": 2,
+        "fecha": "2026-10-21",
+        "km": 93722,
+        "registrado_por": [
+            "joan"
+        ],
+        "registrado": "2026-10-21T15:05:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 23,
+    "fields": {
+        "vehiculo": 2,
+        "fecha": "2026-11-04",
+        "km": 94399,
+        "registrado_por": [
+            "joan"
+        ],
+        "registrado": "2026-11-04T12:50:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 24,
+    "fields": {
+        "vehiculo": 2,
+        "fecha": "2026-11-18",
+        "km": 94879,
+        "registrado_por": [
+            "joan"
+        ],
+        "registrado": "2026-11-18T14:35:00"
+    }
+},
+{
+    "model": "gestion.vehiculo",
+    "pk": 3,
+    "fields": {
+        "tipo": "FUR",
+        "matricula": "3310 LBC",
+        "modelo": "Toyota Proace",
+        "responsable": [
+            "aina"
+        ],
+        "activo": true
+    }
+},
+{
+    "model": "gestion.notavehiculo",
+    "pk": 3,
+    "fields": {
+        "vehiculo": 3,
+        "autor": [
+            "oficina"
+        ],
+        "automatica": true,
+        "texto": "Alta del vehículo. Responsable: Aina.",
+        "fecha": "2026-06-10T09:00:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 25,
+    "fields": {
+        "vehiculo": 3,
+        "fecha": "2026-06-18",
+        "km": 54863,
+        "registrado_por": [
+            "oficina"
+        ],
+        "registrado": "2026-06-18T09:50:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 26,
+    "fields": {
+        "vehiculo": 3,
+        "fecha": "2026-07-02",
+        "km": 55733,
+        "registrado_por": [
+            "aina"
+        ],
+        "registrado": "2026-07-02T08:35:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 27,
+    "fields": {
+        "vehiculo": 3,
+        "fecha": "2026-07-16",
+        "km": 56623,
+        "registrado_por": [
+            "aina"
+        ],
+        "registrado": "2026-07-16T12:05:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 28,
+    "fields": {
+        "vehiculo": 3,
+        "fecha": "2026-07-30",
+        "km": 57202,
+        "registrado_por": [
+            "aina"
+        ],
+        "registrado": "2026-07-30T18:50:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 29,
+    "fields": {
+        "vehiculo": 3,
+        "fecha": "2026-08-13",
+        "km": 57731,
+        "registrado_por": [
+            "aina"
+        ],
+        "registrado": "2026-08-13T14:05:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 30,
+    "fields": {
+        "vehiculo": 3,
+        "fecha": "2026-08-27",
+        "km": 58205,
+        "registrado_por": [
+            "aina"
+        ],
+        "registrado": "2026-08-27T07:50:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 31,
+    "fields": {
+        "vehiculo": 3,
+        "fecha": "2026-09-10",
+        "km": 58670,
+        "registrado_por": [
+            "aina"
+        ],
+        "registrado": "2026-09-10T16:20:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 32,
+    "fields": {
+        "vehiculo": 3,
+        "fecha": "2026-09-24",
+        "km": 59303,
+        "registrado_por": [
+            "aina"
+        ],
+        "registrado": "2026-09-24T08:05:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 33,
+    "fields": {
+        "vehiculo": 3,
+        "fecha": "2026-10-08",
+        "km": 59957,
+        "registrado_por": [
+            "aina"
+        ],
+        "registrado": "2026-10-08T17:35:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 34,
+    "fields": {
+        "vehiculo": 3,
+        "fecha": "2026-10-22",
+        "km": 60495,
+        "registrado_por": [
+            "aina"
+        ],
+        "registrado": "2026-10-22T07:35:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 35,
+    "fields": {
+        "vehiculo": 3,
+        "fecha": "2026-11-05",
+        "km": 61378,
+        "registrado_por": [
+            "aina"
+        ],
+        "registrado": "2026-11-05T18:20:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 36,
+    "fields": {
+        "vehiculo": 3,
+        "fecha": "2026-11-19",
+        "km": 61986,
+        "registrado_por": [
+            "aina"
+        ],
+        "registrado": "2026-11-19T14:20:00"
+    }
+},
+{
+    "model": "gestion.vehiculo",
+    "pk": 4,
+    "fields": {
+        "tipo": "FUR",
+        "matricula": "9025 JZN",
+        "modelo": "Peugeot Partner",
+        "responsable": [
+            "miquel"
+        ],
+        "activo": true
+    }
+},
+{
+    "model": "gestion.notavehiculo",
+    "pk": 4,
+    "fields": {
+        "vehiculo": 4,
+        "autor": [
+            "oficina"
+        ],
+        "automatica": true,
+        "texto": "Alta del vehículo. Responsable: Miquel.",
+        "fecha": "2026-06-10T09:00:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 37,
+    "fields": {
+        "vehiculo": 4,
+        "fecha": "2026-06-19",
+        "km": 144766,
+        "registrado_por": [
+            "oficina"
+        ],
+        "registrado": "2026-06-19T11:05:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 38,
+    "fields": {
+        "vehiculo": 4,
+        "fecha": "2026-07-03",
+        "km": 145573,
+        "registrado_por": [
+            "miquel"
+        ],
+        "registrado": "2026-07-03T17:20:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 39,
+    "fields": {
+        "vehiculo": 4,
+        "fecha": "2026-07-17",
+        "km": 146091,
+        "registrado_por": [
+            "miquel"
+        ],
+        "registrado": "2026-07-17T16:35:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 40,
+    "fields": {
+        "vehiculo": 4,
+        "fecha": "2026-07-31",
+        "km": 146990,
+        "registrado_por": [
+            "miquel"
+        ],
+        "registrado": "2026-07-31T13:50:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 41,
+    "fields": {
+        "vehiculo": 4,
+        "fecha": "2026-08-14",
+        "km": 147522,
+        "registrado_por": [
+            "miquel"
+        ],
+        "registrado": "2026-08-14T15:20:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 42,
+    "fields": {
+        "vehiculo": 4,
+        "fecha": "2026-08-28",
+        "km": 148287,
+        "registrado_por": [
+            "miquel"
+        ],
+        "registrado": "2026-08-28T07:05:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 43,
+    "fields": {
+        "vehiculo": 4,
+        "fecha": "2026-09-11",
+        "km": 149065,
+        "registrado_por": [
+            "miquel"
+        ],
+        "registrado": "2026-09-11T08:05:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 44,
+    "fields": {
+        "vehiculo": 4,
+        "fecha": "2026-09-25",
+        "km": 149800,
+        "registrado_por": [
+            "miquel"
+        ],
+        "registrado": "2026-09-25T17:35:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 45,
+    "fields": {
+        "vehiculo": 4,
+        "fecha": "2026-10-09",
+        "km": 150206,
+        "registrado_por": [
+            "miquel"
+        ],
+        "registrado": "2026-10-09T07:50:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 46,
+    "fields": {
+        "vehiculo": 4,
+        "fecha": "2026-10-23",
+        "km": 150921,
+        "registrado_por": [
+            "miquel"
+        ],
+        "registrado": "2026-10-23T17:35:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 47,
+    "fields": {
+        "vehiculo": 4,
+        "fecha": "2026-11-06",
+        "km": 151761,
+        "registrado_por": [
+            "miquel"
+        ],
+        "registrado": "2026-11-06T12:05:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 48,
+    "fields": {
+        "vehiculo": 4,
+        "fecha": "2026-11-20",
+        "km": 152650,
+        "registrado_por": [
+            "miquel"
+        ],
+        "registrado": "2026-11-20T14:20:00"
+    }
+},
+{
+    "model": "gestion.vehiculo",
+    "pk": 5,
+    "fields": {
+        "tipo": "COC",
+        "matricula": "6402 MDF",
+        "modelo": "Toyota Corolla",
+        "responsable": [
+            "laura"
+        ],
+        "activo": true
+    }
+},
+{
+    "model": "gestion.notavehiculo",
+    "pk": 5,
+    "fields": {
+        "vehiculo": 5,
+        "autor": [
+            "oficina"
+        ],
+        "automatica": true,
+        "texto": "Alta del vehículo. Responsable: Laura.",
+        "fecha": "2026-06-10T09:00:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 49,
+    "fields": {
+        "vehiculo": 5,
+        "fecha": "2026-06-20",
+        "km": 32428,
+        "registrado_por": [
+            "oficina"
+        ],
+        "registrado": "2026-06-20T16:20:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 50,
+    "fields": {
+        "vehiculo": 5,
+        "fecha": "2026-07-04",
+        "km": 32850,
+        "registrado_por": [
+            "laura"
+        ],
+        "registrado": "2026-07-04T16:35:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 51,
+    "fields": {
+        "vehiculo": 5,
+        "fecha": "2026-07-18",
+        "km": 33284,
+        "registrado_por": [
+            "laura"
+        ],
+        "registrado": "2026-07-18T16:20:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 52,
+    "fields": {
+        "vehiculo": 5,
+        "fecha": "2026-08-01",
+        "km": 33519,
+        "registrado_por": [
+            "laura"
+        ],
+        "registrado": "2026-08-01T15:50:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 53,
+    "fields": {
+        "vehiculo": 5,
+        "fecha": "2026-08-15",
+        "km": 33736,
+        "registrado_por": [
+            "laura"
+        ],
+        "registrado": "2026-08-15T10:20:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 54,
+    "fields": {
+        "vehiculo": 5,
+        "fecha": "2026-08-29",
+        "km": 33959,
+        "registrado_por": [
+            "laura"
+        ],
+        "registrado": "2026-08-29T17:05:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 55,
+    "fields": {
+        "vehiculo": 5,
+        "fecha": "2026-09-12",
+        "km": 34390,
+        "registrado_por": [
+            "laura"
+        ],
+        "registrado": "2026-09-12T17:20:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 56,
+    "fields": {
+        "vehiculo": 5,
+        "fecha": "2026-09-26",
+        "km": 34837,
+        "registrado_por": [
+            "laura"
+        ],
+        "registrado": "2026-09-26T18:05:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 57,
+    "fields": {
+        "vehiculo": 5,
+        "fecha": "2026-10-10",
+        "km": 35103,
+        "registrado_por": [
+            "laura"
+        ],
+        "registrado": "2026-10-10T17:20:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 58,
+    "fields": {
+        "vehiculo": 5,
+        "fecha": "2026-10-24",
+        "km": 35567,
+        "registrado_por": [
+            "laura"
+        ],
+        "registrado": "2026-10-24T09:20:00"
+    }
+},
+{
+    "model": "gestion.kilometraje",
+    "pk": 59,
+    "fields": {
+        "vehiculo": 5,
+        "fecha": "2026-11-07",
+        "km": 35862,
+        "registrado_por": [
+            "laura"
+        ],
+        "registrado": "2026-11-07T13:35:00"
+    }
+},
+{
+    "model": "gestion.revisionvehiculo",
+    "pk": 1,
+    "fields": {
+        "vehiculo": 1,
+        "tipo": "ITV",
+        "fecha": "2026-12-04",
+        "hora": "09:30:00",
+        "motivo": "ITV Son Castelló",
+        "creada_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.revisionvehiculo",
+    "pk": 2,
+    "fields": {
+        "vehiculo": 1,
+        "tipo": "TAL",
+        "fecha": "2027-01-14",
+        "hora": null,
+        "motivo": "Taller Can Toni, cambio de aceite",
+        "creada_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.revisionvehiculo",
+    "pk": 3,
+    "fields": {
+        "vehiculo": 1,
+        "tipo": "TAL",
+        "fecha": "2026-09-08",
+        "hora": "08:00:00",
+        "motivo": "Pastillas de freno",
+        "creada_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.revisionvehiculo",
+    "pk": 4,
+    "fields": {
+        "vehiculo": 2,
+        "tipo": "TAL",
+        "fecha": "2026-12-11",
+        "hora": "08:30:00",
+        "motivo": "Cambio de ruedas delanteras",
+        "creada_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.revisionvehiculo",
+    "pk": 5,
+    "fields": {
+        "vehiculo": 2,
+        "tipo": "ITV",
+        "fecha": "2027-02-03",
+        "hora": "10:00:00",
+        "motivo": "ITV Inca",
+        "creada_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.revisionvehiculo",
+    "pk": 6,
+    "fields": {
+        "vehiculo": 3,
+        "tipo": "TAL",
+        "fecha": "2026-12-18",
+        "hora": null,
+        "motivo": "Revisión de los 60.000 km",
+        "creada_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.revisionvehiculo",
+    "pk": 7,
+    "fields": {
+        "vehiculo": 4,
+        "tipo": "ITV",
+        "fecha": "2026-12-02",
+        "hora": "11:00:00",
+        "motivo": "ITV Son Castelló (segunda inspección)",
+        "creada_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.revisionvehiculo",
+    "pk": 8,
+    "fields": {
+        "vehiculo": 4,
+        "tipo": "TAL",
+        "fecha": "2026-10-20",
+        "hora": "08:00:00",
+        "motivo": "Embrague",
+        "creada_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.revisionvehiculo",
+    "pk": 9,
+    "fields": {
+        "vehiculo": 5,
+        "tipo": "TAL",
+        "fecha": "2027-01-20",
+        "hora": "09:00:00",
+        "motivo": "Revisión anual en el concesionario",
+        "creada_por": [
+            "oficina"
+        ]
+    }
+},
+{
+    "model": "gestion.notavehiculo",
+    "pk": 6,
+    "fields": {
+        "vehiculo": 1,
+        "autor": [
+            "tomeu"
+        ],
+        "automatica": false,
+        "texto": "Ruido en la rueda delantera derecha al frenar.",
+        "fecha": "2026-11-12T17:40:00"
+    }
+},
+{
+    "model": "gestion.notavehiculo",
+    "pk": 7,
+    "fields": {
+        "vehiculo": 1,
+        "autor": [
+            "oficina"
+        ],
+        "automatica": false,
+        "texto": "Pedida cita en el taller para revisar los frenos.",
+        "fecha": "2026-11-13T09:15:00"
+    }
+},
+{
+    "model": "gestion.notavehiculo",
+    "pk": 8,
+    "fields": {
+        "vehiculo": 2,
+        "autor": [
+            "joan"
+        ],
+        "automatica": false,
+        "texto": "Golpe pequeño en el paragolpes trasero (aparcando en Inca).",
+        "fecha": "2026-10-28T13:05:00"
+    }
+},
+{
+    "model": "gestion.notavehiculo",
+    "pk": 9,
+    "fields": {
+        "vehiculo": 3,
+        "autor": [
+            "aina"
+        ],
+        "automatica": false,
+        "texto": "La rueda de repuesto está pinchada.",
+        "fecha": "2026-11-05T08:20:00"
+    }
+},
+{
+    "model": "gestion.notavehiculo",
+    "pk": 10,
+    "fields": {
+        "vehiculo": 4,
+        "autor": [
+            "miquel"
+        ],
+        "automatica": false,
+        "texto": "Se enciende el testigo del aceite de vez en cuando.",
+        "fecha": "2026-11-17T18:10:00"
+    }
+},
+{
+    "model": "gestion.notavehiculo",
+    "pk": 11,
+    "fields": {
+        "vehiculo": 5,
+        "autor": [
+            "laura"
+        ],
+        "automatica": false,
+        "texto": "Lavado y limpieza interior hechos.",
+        "fecha": "2026-11-02T12:30:00"
     }
 }
 ]

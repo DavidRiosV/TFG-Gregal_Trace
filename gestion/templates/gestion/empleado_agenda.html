@@ -1,0 +1,89 @@
+{% extends "gestion/principal.html" %}
+
+{% block titulo %}Agenda de {{ empleado.get_full_name|default:empleado.username }} · Gregal Trace{% endblock %}
+
+{% block contenido %}
+{% url 'lista_empleados' as url_lista %}
+<header class="pagina">
+    {% include "gestion/migas.html" with miga_url=url_lista miga_texto="Empleados" miga_actual="Agenda" %}
+    <div class="pagina__fila">
+        <div>
+            <h1 class="pagina__titulo">Agenda de {{ empleado.get_full_name|default:empleado.username }}</h1>
+            <p class="pagina__texto">{{ empleado.get_rol_display }}{% if empleado.telefono %} · {{ empleado.telefono }}{% else %} · sin móvil para avisos{% endif %}</p>
+        </div>
+    </div>
+</header>
+
+<div class="dos-columnas dos-columnas--agenda">
+    {# ---------- Agendar un trabajo ---------- #}
+    <section class="panel">
+        <h2 class="panel__titulo">Agendar trabajo</h2>
+        <form method="post" class="formulario" novalidate>
+            {% csrf_token %}
+            {% include "gestion/campo_widget.html" with campo=formulario.fecha %}
+            <div class="campo">
+                <span class="campo__titulo">{{ formulario.franja.label }}</span>
+                <div class="familias familias--formulario" role="radiogroup" aria-label="{{ formulario.franja.label }}">
+                    {% for opcion in formulario.franja %}
+                        <label class="familia familia--opcion">{{ opcion.tag }} {{ opcion.choice_label }}</label>
+                    {% endfor %}
+                </div>
+                {% for error in formulario.franja.errors %}<p class="error-campo">{{ error }}</p>{% endfor %}
+            </div>
+            <div class="campo cita-campos__trabajo">
+                <label for="{{ formulario.proyecto.id_for_label }}">{{ formulario.proyecto.label }}</label>
+                {# Escribir aquí filtra el desplegable por nombre o cliente (main.js); si solo queda uno, se elige solo #}
+                <div class="entrada entrada--filtro">
+                    {% include "gestion/icono.html" with nombre="buscar" %}
+                    <input type="search" placeholder="Buscar obra, intervención, cliente…" aria-label="Buscar trabajo" data-filtrar-select="{{ formulario.proyecto.id_for_label }}" autocomplete="off">
+                </div>
+                <div class="entrada{% if formulario.proyecto.errors %} entrada--error{% endif %}">{{ formulario.proyecto }}</div>
+                {% for error in formulario.proyecto.errors %}<p class="error-campo">{{ error }}</p>{% endfor %}
+            </div>
+            {% include "gestion/campo_widget.html" with campo=formulario.nota %}
+            <button type="submit" class="boton boton--ancho">{% include "gestion/icono.html" with nombre="agenda" %}Agendar</button>
+        </form>
+    </section>
+
+    {# ---------- Su semana ---------- #}
+    <section class="panel panel--lista">
+        <div class="panel__cabecera">
+            <h2 class="panel__titulo">Semana del {{ lunes|date:"j \d\e F" }}</h2>
+            <span class="panel__enlaces">
+                <a class="panel__enlace" href="?semana={{ semana_anterior }}">Anterior</a>
+                {% if not es_esta_semana %}<a class="panel__enlace" href="?">Esta semana</a>{% endif %}
+                <a class="panel__enlace" href="?semana={{ semana_siguiente }}">Siguiente</a>
+            </span>
+        </div>
+        {% for dia in dias %}
+            <div class="citas-dia">
+                <h3 class="citas-dia__fecha{% if dia.fecha == hoy %} citas-dia__fecha--hoy{% endif %}">
+                    {% if dia.fecha == hoy %}Hoy{% else %}{{ dia.fecha|date:"l"|capfirst }}{% endif %}
+                    <span>{{ dia.fecha|date:"j \d\e F" }}</span>
+                </h3>
+                {% if dia.asignaciones %}
+                    <ul class="citas-dia__lista">
+                        {% for asignacion in dia.asignaciones %}
+                            <li class="cita-fila">
+                                <span class="cita-fila__hora">{{ asignacion.get_franja_display }}</span>
+                                <span class="cita-fila__texto">
+                                    <strong><a href="{% url 'detalle_proyecto' asignacion.proyecto.pk %}">{{ asignacion.proyecto.nombre }}</a></strong>
+                                    <span>{{ asignacion.proyecto.get_tipo_display }}{% if asignacion.proyecto.cliente %} · {{ asignacion.proyecto.cliente }}{% endif %}{% if asignacion.nota %} · {{ asignacion.nota }}{% endif %}{% if asignacion.avisada %} · avisado por WhatsApp{% endif %}</span>
+                                </span>
+                                {% if perms.gestion.delete_asignacion %}
+                                    <form method="post" action="{% url 'asignacion_eliminar' asignacion.pk %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="boton-tabla boton-tabla--peligro" aria-label="Quitar este trabajo" title="Quitar" onclick="return confirm('¿Quitar {{ asignacion.proyecto.nombre|escapejs }} del {{ asignacion.fecha|date:'d/m' }}?');">{% include "gestion/icono.html" with nombre="borrar" %}</button>
+                                    </form>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="agenda-libre">Sin trabajo agendado</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </section>
+</div>
+{% endblock %}

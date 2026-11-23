@@ -42,6 +42,7 @@
                     <tr>
                         <th scope="col">Nombre</th>
                         <th scope="col">Rol</th>
+                        {% if vista == 'obra' %}<th scope="col">Hoy</th>{% endif %}
                         <th scope="col">Correo</th>
                         {% if vista == 'obra' %}
                             <th scope="col" class="num">Horas apuntadas</th>
@@ -66,6 +67,10 @@
                                 </span>
                             </td>
                             <td><span class="rol rol--{{ empleado.rol }}">{{ empleado.get_rol_display }}</span></td>
+                            {% if vista == 'obra' %}
+                                {# Dónde trabaja hoy, según su agenda #}
+                                <td>{% for asignacion in empleado.hoy %}<span class="tabla__doble"><span>{{ asignacion.proyecto.nombre|truncatechars:32 }}</span><span class="tabla__detalle">{{ asignacion.get_franja_display }}</span></span>{% empty %}<span class="tabla__nada">—</span>{% endfor %}</td>
+                            {% endif %}
                             <td>{% if empleado.email %}<a href="mailto:{{ empleado.email }}">{{ empleado.email }}</a>{% else %}<span class="tabla__nada">—</span>{% endif %}</td>
                             {% if vista == 'obra' %}
                                 <td class="num">{% if empleado.horas %}{{ empleado.horas|floatformat:"-2" }} h{% else %}<span class="tabla__nada">—</span>{% endif %}</td>
@@ -76,6 +81,9 @@
                             <td>{% if empleado.is_active %}<span class="estado-empleado">Activo</span>{% else %}<span class="estado-empleado estado-empleado--baja">De baja</span>{% endif %}</td>
                             {% if vista == 'obra' %}
                                 <td class="tabla__acciones">
+                                    {% if perms.gestion.add_asignacion and empleado.is_active %}
+                                        <a class="boton-tabla" href="{% url 'empleado_agenda' empleado.pk %}" aria-label="Agenda de {{ empleado.get_full_name|default:empleado.username }}" title="Agendar trabajo">{% include "gestion/icono.html" with nombre="agenda" %}</a>
+                                    {% endif %}
                                     {% if perms.gestion.change_usuario %}
                                         <a class="boton-tabla" href="{% url 'empleado_editar' empleado.pk %}" aria-label="Editar a {{ empleado.get_full_name|default:empleado.username }}" title="Editar">{% include "gestion/icono.html" with nombre="editar" %}</a>
                                     {% endif %}

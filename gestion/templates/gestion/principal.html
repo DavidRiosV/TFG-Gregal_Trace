@@ -18,10 +18,17 @@
             document.documentElement.dataset.tema = tema;
         })();
     </script>
+    {# App instalable: manifest, icono para iPhone y modo pantalla completa #}
+    <link rel="manifest" href="{% static 'pwa/manifest.webmanifest' %}">
+    <link rel="apple-touch-icon" href="{% static 'pwa/apple-touch-icon.png' %}">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Gregal Trace">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>{% block titulo %}Gregal Trace{% endblock %}</title>
     {# Fuente Manrope servida desde static/fonts (sin Google Fonts). Se precarga la parte latina, la que más se usa #}
     <link rel="preload" href="{% static 'fonts/manrope-latin.woff2' %}" as="font" type="font/woff2" crossorigin>
-    <link rel="stylesheet" href="{% static 'css/estilos.css' %}?v=12">
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}?v=20">
     {% block estilos %}{% endblock %}
 </head>
 <body class="{% block clase_body %}{% endblock %}">
@@ -63,6 +70,7 @@
         </div>
     </dialog>
 {% endblock %}
-    <script src="{% static 'js/main.js' %}?v=6"></script>
+    <script src="{% static 'js/main.js' %}?v=21"></script>
+    {% block scripts %}{% endblock %}
 </body>
 </html>

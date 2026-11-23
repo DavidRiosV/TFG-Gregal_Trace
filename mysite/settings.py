@@ -31,7 +31,7 @@ DEBUG = env.bool("DEBUG", default=False)
 
 # Direcciones desde las que se puede abrir la web. Cada sitio pone las suyas en su .env
 # (ALLOWED_HOSTS=127.0.0.1,localhost). Si no las pone, valen estas.
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost', 'davidrv.pythonanywhere.com'])
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost', 'davidrv.pythonanywhere.com','192.168.88.232'])
 # Webs de confianza para los formularios (token CSRF) cuando se entra a través de Nginx o con HTTPS
 CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS', default=[])
 
@@ -133,6 +133,9 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # Enlace .ics del calendario de Outlook publicado (apartado Calendario de Oficina).
 # Quien tenga el enlace ve el calendario, por eso va en el .env y no aquí.
 OUTLOOK_ICS_URL = env('OUTLOOK_ICS_URL', default='')
+
+# Aviso por WhatsApp al agendar un trabajo (por ejemplo, el webhook de un flujo de n8n). Vacío: sin avisos
+WHATSAPP_WEBHOOK_URL = env('WHATSAPP_WEBHOOK_URL', default='')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

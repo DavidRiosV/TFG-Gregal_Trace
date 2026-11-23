@@ -93,6 +93,30 @@
                 {% endif %}
             </section>
         {% else %}
+            {# ---------- Mi semana: dónde le ha agendado Oficina ---------- #}
+            <section class="panel panel--lista">
+                <div class="panel__cabecera">
+                    <h2 class="panel__titulo">Mi semana</h2>
+                </div>
+                {% if mi_semana %}
+                    <ul class="filas">
+                        {% for asignacion in mi_semana %}
+                            <li>
+                                <a class="fila" href="{% url 'detalle_proyecto' asignacion.proyecto.pk %}#horas">
+                                    <span class="fila__principal">
+                                        <span class="fila__titulo">{% if asignacion.fecha == hoy %}Hoy{% else %}{{ asignacion.fecha|date:"l j"|capfirst }}{% endif %} · {{ asignacion.get_franja_display|lower }}</span>
+                                        <span class="fila__meta">{{ asignacion.proyecto.nombre }}{% if asignacion.proyecto.cliente %} · {{ asignacion.proyecto.cliente }}{% endif %}{% if asignacion.nota %} · {{ asignacion.nota }}{% endif %}</span>
+                                    </span>
+                                    {% if asignacion.fecha == hoy %}<span class="boton boton--secundario boton--pequeno">Apuntar horas</span>{% endif %}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="vacio vacio--corto"><p>Oficina todavía no te ha agendado trabajo esta semana.</p></div>
+                {% endif %}
+            </section>
+
             {# ---------- Mis trabajos: donde ha apuntado hace poco ---------- #}
             <section class="panel panel--lista">
                 <div class="panel__cabecera">
@@ -120,6 +144,22 @@
     </div>
 
     <aside class="tablero__lateral">
+        {# ---------- Mi vehículo (oficial o peón responsable de una furgoneta o coche) ---------- #}
+        {% for dato in mis_vehiculos %}
+            <section class="panel panel--lista">
+                <div class="panel__cabecera">
+                    <h2 class="panel__titulo">Mi vehículo</h2>
+                    <a class="panel__enlace" href="{% url 'detalle_vehiculo' dato.vehiculo.pk %}">Ver</a>
+                </div>
+                <div class="panel__cuerpo mi-vehiculo">
+                    <p class="mi-vehiculo__nombre">{{ dato.vehiculo.modelo }} <span class="matricula">{{ dato.vehiculo.matricula }}</span></p>
+                    <p class="mi-vehiculo__dato">{% if dato.ultimo %}{{ dato.ultimo.km|floatformat:"0g" }} km · apuntado el {{ dato.ultimo.fecha|date:"d/m" }}{% else %}Sin kilómetros apuntados{% endif %}</p>
+                    {% if dato.proxima %}<p class="mi-vehiculo__dato{% if dato.proxima.es_cercana %} entrega--cerca{% endif %}">{{ dato.proxima.get_tipo_display }} el {{ dato.proxima.fecha|date:"d/m" }}{% if dato.proxima.hora %} a las {{ dato.proxima.hora|time:"H:i" }}{% endif %} · {{ dato.proxima.dias }}</p>{% endif %}
+                    <a class="boton boton--secundario boton--ancho" href="{% url 'detalle_vehiculo' dato.vehiculo.pk %}#kilometraje">{% include "gestion/icono.html" with nombre="mas" %}Apuntar km</a>
+                </div>
+            </section>
+        {% endfor %}
+
         {# ---------- Citas de esta semana (Oficina ya las ve en grande a la izquierda) ---------- #}
         {% if not es_oficina %}
         <section class="panel panel--lista">

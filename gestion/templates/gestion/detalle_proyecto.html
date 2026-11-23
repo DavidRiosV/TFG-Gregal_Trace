@@ -97,6 +97,9 @@
         {% if perms.gestion.add_cita or citas_proximas or citas_pasadas %}
             <a class="pestana-proyecto" href="#citas" role="tab" data-pestana="citas">{% include "gestion/icono.html" with nombre="cita" %}<span>Citas</span><span class="pestana-proyecto__numero">{{ citas_proximas|length }}</span></a>
         {% endif %}
+        {% if economia %}
+            <a class="pestana-proyecto" href="#economia" role="tab" data-pestana="economia">{% include "gestion/icono.html" with nombre="euro" %}<span>Economía</span></a>
+        {% endif %}
     </div>
 
     {% if puede_apuntar %}
@@ -184,6 +187,44 @@
                     </ul>
                 </details>
             {% endif %}
+        </div>
+    {% endif %}
+
+    {% if economia %}
+        {# Economía (Oficina): lo gastado sale de los apuntes; presupuesto, ingreso y subcontrata se escriben aquí #}
+        <div class="pestanas-proyecto__panel" id="economia" role="tabpanel">
+            <h2 class="panel__titulo pestanas-proyecto__titulo">Economía</h2>
+            <div class="panel__cuerpo">
+                <h3 class="economia__titulo">Gastos e ingresos</h3>
+                <div class="indicadores indicadores--economia">
+                    <div class="indicador"><span class="indicador__nombre">Material</span><span class="indicador__valor">{{ economia.material|floatformat:"2g" }} €</span></div>
+                    <div class="indicador"><span class="indicador__nombre">Mano de obra</span><span class="indicador__valor">{{ economia.mano_obra|floatformat:"2g" }} €</span><span class="indicador__detalle">{{ economia.horas|floatformat:"-2" }} h</span></div>
+                    <div class="indicador"><span class="indicador__nombre">Gastado</span><span class="indicador__valor">{{ economia.gastado|floatformat:"2g" }} €</span></div>
+                    <div class="indicador"><span class="indicador__nombre">Ingreso</span><span class="indicador__valor">{% if economia.ingreso_real is not None %}{{ economia.ingreso_real|floatformat:"2g" }} €{% else %}—{% endif %}</span>{% if economia.ingreso_real is None %}<span class="indicador__detalle">Sin indicar todavía</span>{% endif %}{% if proyecto.subcontratada and proyecto.precio_hora_subcontrata %}<span class="indicador__detalle">{{ economia.horas|floatformat:"-2" }} h × {{ proyecto.precio_hora_subcontrata|floatformat:"2g" }} €/h</span>{% endif %}</div>
+                </div>
+
+                <h3 class="economia__titulo">Presupuesto y beneficio</h3>
+                <div class="indicadores indicadores--economia">
+                    <div class="indicador"><span class="indicador__nombre">Presupuesto acordado</span><span class="indicador__valor">{% if proyecto.presupuesto is not None %}{{ proyecto.presupuesto|floatformat:"2g" }} €{% else %}—{% endif %}</span></div>
+                    <div class="indicador{% if economia.beneficio is not None %}{% if economia.beneficio < 0 %} indicador--perdida{% else %} indicador--ganancia{% endif %}{% endif %}"><span class="indicador__nombre">Beneficio</span><span class="indicador__valor">{% if economia.beneficio is not None %}{{ economia.beneficio|floatformat:"2g" }} €{% else %}—{% endif %}</span><span class="indicador__detalle">{% if economia.beneficio is not None %}Ingreso − gastado{% else %}Cuando haya ingreso{% endif %}</span></div>
+                    {% if economia.beneficio_previsto is not None %}
+                        <div class="indicador{% if economia.beneficio_previsto < 0 %} indicador--perdida{% endif %}"><span class="indicador__nombre">Beneficio previsto</span><span class="indicador__valor">{{ economia.beneficio_previsto|floatformat:"2g" }} €</span><span class="indicador__detalle">Presupuesto − gastado</span></div>
+                    {% endif %}
+                    <div class="indicador"><span class="indicador__nombre">Subcontratada</span><span class="indicador__valor">{% if proyecto.subcontratada %}{{ proyecto.precio_hora_subcontrata|floatformat:"2g" }} €/h{% else %}No{% endif %}</span></div>
+                </div>
+
+                <form method="post" class="formulario economia__formulario" novalidate>
+                    {% csrf_token %}
+                    <input type="hidden" name="apunte" value="economia">
+                    <div class="formulario__fila">
+                        {% include "gestion/campo_widget.html" with campo=formulario_economia.presupuesto %}
+                        {% include "gestion/campo_widget.html" with campo=formulario_economia.ingreso %}
+                    </div>
+                    <label class="casilla">{{ formulario_economia.subcontratada }} {{ formulario_economia.subcontratada.label }}</label>
+                    {% include "gestion/campo_widget.html" with campo=formulario_economia.precio_hora_subcontrata %}
+                    <button type="submit" class="boton">Guardar</button>
+                </form>
+            </div>
         </div>
     {% endif %}
 

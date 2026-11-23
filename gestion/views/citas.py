@@ -12,7 +12,7 @@ from django.utils.http import url_has_allowed_host_and_scheme
 
 from ..calendario import descargar_ics, dias_del_evento, leer_eventos, url_outlook_web
 from ..forms import CitaGestionForm
-from ..models import Cita
+from ..models import Asignacion, Cita, RevisionVehiculo, Usuario
 from .comun import datos_menu
 
 
@@ -46,9 +46,9 @@ def calendario(request):
         desde = hoy
     hasta = desde + timedelta(days=DIAS_CALENDARIO - 1)
 
-    # Qué se ve: todo, solo Outlook o solo las citas de los proyectos
+    # Qué se ve: todo, solo Outlook, solo las citas de los proyectos o dónde está cada trabajador
     ver = request.GET.get('ver', 'todo')
-    if ver not in ('todo', 'outlook', 'citas'):
+    if ver not in ('todo', 'outlook', 'citas', 'trabajadores', 'vehiculos'):
         ver = 'todo'
 
     por_dia = {}
@@ -56,7 +56,7 @@ def calendario(request):
         por_dia[desde + timedelta(days=numero)] = []
 
     error = ''
-    if ver != 'citas':
+    if ver in ('todo', 'outlook'):
         try:
             eventos = leer_eventos(descargar_ics())
         except (OSError, ValueError):
@@ -80,7 +80,7 @@ def calendario(request):
                         'orden': evento['inicio'].strftime('%H:%M') if con_hora else '',
                     })
 
-    if ver != 'outlook':
+    if ver in ('todo', 'citas'):
         for cita in Cita.objects.filter(fecha__range=(desde, hasta)).select_related('proyecto'):
             por_dia[cita.fecha].append({
                 'fuente': 'cita',
@@ -90,12 +90,51 @@ def calendario(request):
                 'orden': cita.hora.strftime('%H:%M') if cita.hora else '',
             })
 
-    # Días con algo (y hoy siempre); dentro de cada día, primero lo de todo el día y luego por hora
+    # Vehículos: revisiones de taller e ITV
+    if ver in ('todo', 'vehiculos'):
+        for revision in RevisionVehiculo.objects.filter(fecha__range=(desde, hasta)).select_related('vehiculo'):
+            por_dia[revision.fecha].append({
+                'fuente': 'vehiculo',
+                'titulo': f'{revision.get_tipo_display()} · {revision.vehiculo.modelo}',
+                'vehiculo': revision.vehiculo,
+                'motivo': revision.motivo,
+                'inicio': revision.hora,
+                'orden': revision.hora.strftime('%H:%M') if revision.hora else '',
+            })
+
+    # Trabajadores: a qué trabajo va cada oficial o peón (agenda de empleados)
+    sin_agendar = {}
+    if ver in ('todo', 'trabajadores'):
+        asignaciones = (Asignacion.objects.filter(fecha__range=(desde, hasta))
+                        .select_related('empleado', 'proyecto').order_by('fecha', 'franja', 'empleado__first_name'))
+        for asignacion in asignaciones:
+            por_dia[asignacion.fecha].append({
+                'fuente': 'trabajador',
+                'titulo': asignacion.empleado.get_full_name() or asignacion.empleado.username,
+                'empleado': asignacion.empleado,
+                'proyecto': asignacion.proyecto,
+                'nota': asignacion.nota,
+                'franja': asignacion.get_franja_display(),
+                # Todo el día arriba, luego la mañana y luego la tarde
+                'orden': {'DIA': '', 'MAN': '08:00', 'TAR': '15:00'}[asignacion.franja],
+            })
+        if ver == 'trabajadores':
+            # Quién no tiene nada agendado cada día (oficiales y peones en activo), para verlo de un vistazo
+            plantilla = list(Usuario.objects.filter(rol__in=Usuario.ROLES_OPERARIO, is_active=True)
+                             .order_by('first_name', 'last_name'))
+            for dia in por_dia:
+                ocupados = {a.empleado_id for a in asignaciones if a.fecha == dia}
+                sin_agendar[dia] = [e for e in plantilla if e.pk not in ocupados]
+
+    # Días con algo (y hoy siempre); dentro de cada día, primero lo de todo el día y luego por hora.
+    # En «Trabajadores» salen todos los días de lunes a sábado, para ver también quién está libre
     dias = []
     for dia, elementos in por_dia.items():
-        if elementos or dia == hoy:
+        laborable = ver == 'trabajadores' and dia.weekday() < 6
+        if elementos or dia == hoy or laborable:
             elementos.sort(key=lambda elemento: elemento['orden'])
-            dias.append({'fecha': dia, 'elementos': elementos, 'es_hoy': dia == hoy})
+            dias.append({'fecha': dia, 'elementos': elementos, 'es_hoy': dia == hoy,
+                         'sin_agendar': sin_agendar.get(dia, [])})
 
     def url_desde(fecha):
         parametros = {'desde': fecha.isoformat()}

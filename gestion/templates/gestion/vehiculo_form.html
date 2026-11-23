@@ -1,0 +1,36 @@
+{% extends "gestion/principal.html" %}
+
+{% block titulo %}{{ titulo }} · Gregal Trace{% endblock %}
+
+{% block contenido %}
+{% url 'lista_vehiculos' as url_lista %}
+<header class="pagina">
+    {% include "gestion/migas.html" with miga_url=url_lista miga_texto="Vehículos" miga_actual=titulo %}
+    <h1 class="pagina__titulo">{{ titulo }}</h1>
+</header>
+
+<section class="panel panel--formulario">
+    <form method="post" class="formulario" novalidate>
+        {% csrf_token %}
+        <div class="campo">
+            <span class="campo__titulo">{{ formulario.tipo.label }}</span>
+            <div class="familias familias--formulario" role="radiogroup" aria-label="{{ formulario.tipo.label }}">
+                {% for opcion in formulario.tipo %}
+                    <label class="familia familia--opcion">{{ opcion.tag }} {{ opcion.choice_label }}</label>
+                {% endfor %}
+            </div>
+            {% for error in formulario.tipo.errors %}<p class="error-campo">{{ error }}</p>{% endfor %}
+        </div>
+        <div class="formulario__fila">
+            {% include "gestion/campo_widget.html" with campo=formulario.matricula %}
+            {% include "gestion/campo_widget.html" with campo=formulario.modelo %}
+        </div>
+        {% include "gestion/campo_widget.html" with campo=formulario.responsable %}
+        <label class="casilla">{{ formulario.activo }}<span><strong>{{ formulario.activo.label }}</strong><span class="ayuda-campo">{{ formulario.activo.help_text }}</span></span></label>
+        <div class="formulario__botones">
+            <button type="submit" class="boton">{% if vehiculo %}Guardar cambios{% else %}Dar de alta{% endif %}</button>
+            <a class="boton boton--secundario" href="{% if vehiculo %}{% url 'detalle_vehiculo' vehiculo.pk %}{% else %}{{ url_lista }}{% endif %}">Cancelar</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

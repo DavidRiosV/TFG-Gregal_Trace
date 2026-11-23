@@ -26,6 +26,8 @@ class Usuario(AbstractUser):
     ROLES_OPERARIO = (OFICIAL, PEON)
     # Por defecto Oficial (un rol con pocos permisos)
     rol = models.PositiveSmallIntegerField(choices=ROLES, default=OFICIAL)
+    # Móvil del empleado, para avisarle por WhatsApp cuando se le agenda un trabajo
+    telefono = models.CharField(max_length=20, blank=True)
 
     def es_operario(self):
         return self.rol in self.ROLES_OPERARIO
@@ -81,6 +83,13 @@ class Proyecto(models.Model):
     tipo_destino = models.CharField(max_length=3, choices=TIPOS, blank=True)
     creado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
                                    null=True, blank=True, related_name='proyectos_creados')
+
+    # Economía del trabajo (solo Oficina). Lo gastado no se guarda: sale de los apuntes de material y horas
+    presupuesto = models.DecimalField('Presupuesto acordado', max_digits=10, decimal_places=2, null=True, blank=True)
+    ingreso = models.DecimalField('Ingreso', max_digits=10, decimal_places=2, null=True, blank=True)
+    # Trabajo subcontratado a Gregal por horas: lo que se ingresa son las horas apuntadas por el precio por hora
+    subcontratada = models.BooleanField('Subcontratada por horas', default=False)
+    precio_hora_subcontrata = models.DecimalField('Precio por hora', max_digits=8, decimal_places=2, null=True, blank=True)
 
     def esta_terminado(self):
         return self.estado == 'TER'
@@ -375,3 +384,120 @@ class Albaran(models.Model):
 
     def __str__(self):
         return f"Albarán de {self.proyecto.nombre}"
+
+
+class Asignacion(models.Model):
+    """Agenda de empleados: dónde trabaja un oficial o un peón un día (todo el día, por la mañana
+    o por la tarde). La pone Oficina y el empleado la ve en su inicio («Mi semana»)."""
+    FRANJAS = [
+        ('DIA', 'Todo el día'),
+        ('MAN', 'Mañana'),
+        ('TAR', 'Tarde'),
+    ]
+    empleado = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='asignaciones')
+    proyecto = models.ForeignKey(Proyecto, on_delete=models.CASCADE, related_name='asignaciones')
+    fecha = models.DateField()
+    franja = models.CharField(max_length=3, choices=FRANJAS, default='DIA')
+    nota = models.CharField(max_length=120, blank=True)
+    creada_por = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True, related_name='asignaciones_creadas')
+    # Cuándo se le avisó por WhatsApp (vacío: todavía no se ha avisado)
+    avisada = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        # DIA, MAN y TAR quedan en ese orden también alfabéticamente
+        ordering = ['fecha', 'franja', 'id']
+
+    def __str__(self):
+        return f"{self.empleado.username} · {self.fecha:%d/%m/%Y} ({self.get_franja_display()}) en {self.proyecto.nombre}"
+
+
+# ---------------------------------------------------------------------------
+# Vehículos de la empresa: kilometraje, revisiones (taller e ITV) y anotaciones
+# ---------------------------------------------------------------------------
+class Vehiculo(models.Model):
+    """Furgoneta o coche de la empresa. Oficina lo da de alta y le asigna un trabajador responsable,
+    que lo ve en la web, apunta sus kilómetros y escribe anotaciones."""
+    TIPOS = [
+        ('FUR', 'Furgoneta'),
+        ('COC', 'Coche'),
+    ]
+    tipo = models.CharField(max_length=3, choices=TIPOS, default='FUR')
+    matricula = models.CharField(max_length=15, unique=True)
+    modelo = models.CharField(max_length=80)
+    # SET_NULL: si se borra al trabajador, el vehículo se queda sin responsable
+    responsable = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True, blank=True, related_name='vehiculos')
+    activo = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['-activo', 'matricula']
+
+    def ultimo_kilometraje(self):
+        return self.kilometrajes.first()
+
+    def proxima_revision(self):
+        return self.revisiones.filter(fecha__gte=timezone.now().date()).order_by('fecha', 'hora').first()
+
+    def __str__(self):
+        return f"{self.modelo} ({self.matricula})"
+
+
+class Kilometraje(models.Model):
+    """Lectura del cuentakilómetros en una fecha. Queda guardado quién la apuntó y a qué hora."""
+    vehiculo = models.ForeignKey(Vehiculo, on_delete=models.CASCADE, related_name='kilometrajes')
+    fecha = models.DateField(default=timezone.now)
+    km = models.PositiveIntegerField()
+    registrado_por = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True, related_name='kilometrajes')
+    registrado = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        # La más reciente primero
+        ordering = ['-fecha', '-km', '-id']
+
+    def __str__(self):
+        return f"{self.vehiculo.matricula}: {self.km} km el {self.fecha:%d/%m/%Y}"
+
+
+class RevisionVehiculo(models.Model):
+    """Cita especial de un vehículo: taller o ITV. Sale en el calendario (apartado Vehículos)."""
+    TIPOS = [
+        ('TAL', 'Taller'),
+        ('ITV', 'ITV'),
+    ]
+    vehiculo = models.ForeignKey(Vehiculo, on_delete=models.CASCADE, related_name='revisiones')
+    tipo = models.CharField(max_length=3, choices=TIPOS, default='TAL')
+    fecha = models.DateField()
+    hora = models.TimeField(blank=True, null=True)
+    # Dónde y qué se hace: «Taller Can Toni, cambio de aceite»
+    motivo = models.CharField(max_length=120, blank=True)
+    creada_por = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True, related_name='revisiones_creadas')
+
+    class Meta:
+        ordering = ['fecha', 'hora', 'id']
+
+    def dias(self):
+        return dias_texto(self.fecha)
+
+    def es_pasada(self):
+        return self.fecha < timezone.now().date()
+
+    def es_cercana(self):
+        return 0 <= (self.fecha - timezone.now().date()).days <= 1
+
+    def __str__(self):
+        return f"{self.get_tipo_display()} de {self.vehiculo.matricula} el {self.fecha:%d/%m/%Y}"
+
+
+class NotaVehiculo(models.Model):
+    """Anotación sobre un vehículo (un golpe, ruidos, ruedas...). La escribe Oficina o su responsable."""
+    vehiculo = models.ForeignKey(Vehiculo, on_delete=models.CASCADE, related_name='notas')
+    autor = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True, related_name='notas_vehiculo')
+    texto = models.TextField(max_length=1000)
+    fecha = models.DateTimeField(auto_now_add=True)
+    # La escribe la aplicación (p. ej. «Responsable: Toni → Joan»). Forma parte del historial: no se borra
+    automatica = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['-fecha', '-id']
+
+    def __str__(self):
+        return f"Nota de {self.vehiculo.matricula} ({self.fecha:%d/%m/%Y})"

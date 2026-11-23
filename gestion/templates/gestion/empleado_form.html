@@ -34,6 +34,7 @@
         <div class="formulario__fila">
             {% include "gestion/campo.html" with campo=formulario.username autocompletar="off" %}
             {% include "gestion/campo.html" with campo=formulario.email tipo="email" autocompletar="off" %}
+            {% include "gestion/campo.html" with campo=formulario.telefono tipo="tel" autocompletar="off" %}
         </div>
 
         <fieldset class="grupo-campos">

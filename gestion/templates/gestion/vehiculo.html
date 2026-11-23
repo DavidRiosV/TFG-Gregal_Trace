@@ -1,0 +1,171 @@
+{% extends "gestion/principal.html" %}
+
+{% block titulo %}{{ vehiculo.modelo }} {{ vehiculo.matricula }} · Gregal Trace{% endblock %}
+
+{% block contenido %}
+{% url 'lista_vehiculos' as url_lista %}
+<header class="pagina">
+    {% include "gestion/migas.html" with miga_url=url_lista miga_texto="Vehículos" miga_actual=vehiculo.matricula %}
+    <div class="pagina__fila">
+        <div>
+            <div class="pagina__titulo-con-estado">
+                <h1 class="pagina__titulo">{{ vehiculo.modelo }}</h1>
+                <span class="matricula matricula--grande">{{ vehiculo.matricula }}</span>
+            </div>
+            <dl class="datos">
+                <div><dt>Tipo</dt><dd>{{ vehiculo.get_tipo_display }}</dd></div>
+                <div><dt>Responsable</dt><dd>{% if vehiculo.responsable %}{{ vehiculo.responsable.get_full_name|default:vehiculo.responsable.username }}{% else %}Sin responsable{% endif %}</dd></div>
+                {% if not vehiculo.activo %}<div><dt>Estado</dt><dd>Fuera de uso</dd></div>{% endif %}
+            </dl>
+        </div>
+        {% if gestiona %}
+            <div class="pagina__acciones">
+                {% if perms.gestion.change_vehiculo %}<a class="boton boton--secundario" href="{% url 'vehiculo_editar' vehiculo.pk %}">{% include "gestion/icono.html" with nombre="editar" %}Editar</a>{% endif %}
+                {% if perms.gestion.delete_vehiculo %}
+                    <form method="post" action="{% url 'vehiculo_eliminar' vehiculo.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="boton boton--secundario boton--peligro" onclick="return confirm('Se eliminará {{ vehiculo.matricula|escapejs }} con todo su kilometraje, revisiones y anotaciones. No se puede deshacer.');">{% include "gestion/icono.html" with nombre="borrar" %}Eliminar</button>
+                    </form>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</header>
+
+<div class="indicadores indicadores--ficha">
+    <div class="indicador"><span class="indicador__nombre">Kilómetros</span><span class="indicador__valor">{% if ultimo %}{{ ultimo.km|floatformat:"0g" }} km{% else %}—{% endif %}</span>{% if ultimo %}<span class="indicador__detalle">el {{ ultimo.fecha|date:"d/m/Y" }}</span>{% endif %}</div>
+    <div class="indicador"><span class="indicador__nombre">Este mes</span><span class="indicador__valor">{% if km_meses.0.km is not None %}{{ km_meses.0.km|floatformat:"0g" }} km{% else %}—{% endif %}</span>{% if km_meses.0.primera %}<span class="indicador__detalle">Primera lectura: falta otra para calcularlo</span>{% endif %}</div>
+    {% with revision=revisiones_proximas.0 %}
+        <div class="indicador{% if revision and revision.es_cercana %} indicador--aviso{% endif %}"><span class="indicador__nombre">Próxima revisión</span><span class="indicador__valor">{% if revision %}{{ revision.get_tipo_display }} {{ revision.fecha|date:"d/m" }}{% else %}—{% endif %}</span>{% if revision %}<span class="indicador__detalle">{{ revision.dias }}{% if revision.hora %} · {{ revision.hora|time:"H:i" }}{% endif %}</span>{% endif %}</div>
+    {% endwith %}
+</div>
+
+<section class="panel panel--lista pestanas-proyecto" data-pestanas data-pestana-inicial="{{ pestana }}">
+    <div class="pestanas-proyecto__barra" role="tablist" aria-label="Apartados del vehículo">
+        <a class="pestana-proyecto" href="#kilometraje" role="tab" data-pestana="kilometraje">{% include "gestion/icono.html" with nombre="vehiculo" %}<span>Kilometraje</span><span class="pestana-proyecto__numero">{{ lecturas|length }}</span></a>
+        <a class="pestana-proyecto" href="#revisiones" role="tab" data-pestana="revisiones">{% include "gestion/icono.html" with nombre="herramienta" %}<span>Revisiones</span><span class="pestana-proyecto__numero">{{ revisiones_proximas|length }}</span></a>
+        <a class="pestana-proyecto" href="#anotaciones" role="tab" data-pestana="anotaciones">{% include "gestion/icono.html" with nombre="nota" %}<span>Anotaciones</span><span class="pestana-proyecto__numero">{{ notas|length }}</span></a>
+    </div>
+
+    {# ---------- Kilometraje: lo apunta Oficina o el responsable; queda quién y cuándo ---------- #}
+    <div class="pestanas-proyecto__panel" id="kilometraje" role="tabpanel">
+        <h2 class="panel__titulo pestanas-proyecto__titulo">Kilometraje</h2>
+        <form method="post" class="cita-nueva km-nuevo" novalidate>
+            {% csrf_token %}
+            <input type="hidden" name="apunte" value="km">
+            {% include "gestion/campo_widget.html" with campo=formulario_km.fecha %}
+            {% include "gestion/campo_widget.html" with campo=formulario_km.km %}
+            <button type="submit" class="boton">{% include "gestion/icono.html" with nombre="mas" %}Apuntar km</button>
+        </form>
+
+        <div class="km-meses">
+            <h3 class="km-meses__titulo">Kilómetros por mes</h3>
+            <ul class="km-meses__lista">
+                {% for mes in km_meses %}
+                    <li><span>{{ mes.mes }}</span><strong>{% if mes.km is not None %}{{ mes.km|floatformat:"0g" }} km{% else %}—{% endif %}</strong>{% if mes.primera %}<small>1.ª lectura: se calculará con la siguiente</small>{% endif %}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        {% if lecturas %}
+            <div class="tabla-contenedor">
+                <table class="tabla tabla--km">
+                    <thead><tr><th scope="col">Fecha</th><th scope="col" class="num">Kilómetros</th><th scope="col" class="num">Recorrido</th><th scope="col">Apuntado por</th>{% if perms.gestion.change_kilometraje or perms.gestion.delete_kilometraje %}<th scope="col" class="num"><span class="solo-lector">Acciones</span></th>{% endif %}</tr></thead>
+                    <tbody>
+                        {% for lectura in lecturas %}
+                            <tr>
+                                <td class="tabla__material">{{ lectura.fecha|date:"d/m/Y" }}</td>
+                                <td class="num">{{ lectura.km|floatformat:"0g" }} km</td>
+                                <td class="num">{% if lectura.recorrido is not None %}+{{ lectura.recorrido|floatformat:"0g" }} km{% else %}<span class="tabla__nada">primera</span>{% endif %}</td>
+                                <td class="tabla__doble"><span>{% if lectura.registrado_por %}{{ lectura.registrado_por.get_full_name|default:lectura.registrado_por.username }}{% else %}Usuario eliminado{% endif %}</span><span class="tabla__detalle">{{ lectura.registrado|date:"d/m/Y · H:i" }}</span></td>
+                                {% if perms.gestion.change_kilometraje or perms.gestion.delete_kilometraje %}
+                                    <td class="tabla__acciones">
+                                        {% if perms.gestion.change_kilometraje %}<a class="boton-tabla" href="{% url 'kilometraje_editar' lectura.pk %}" aria-label="Corregir lectura" title="Corregir">{% include "gestion/icono.html" with nombre="editar" %}</a>{% endif %}
+                                        {% if perms.gestion.delete_kilometraje %}<form method="post" action="{% url 'kilometraje_eliminar' lectura.pk %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="boton-tabla boton-tabla--peligro" aria-label="Eliminar lectura" title="Eliminar" onclick="return confirm('¿Eliminar la lectura de {{ lectura.km|floatformat:"0g" }} km?');">{% include "gestion/icono.html" with nombre="borrar" %}</button>
+                                        </form>{% endif %}
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="vacio vacio--corto"><p>Todavía no hay kilómetros apuntados.</p></div>
+        {% endif %}
+    </div>
+
+    {# ---------- Revisiones: taller o ITV. Las pone Oficina; el responsable las ve ---------- #}
+    <div class="pestanas-proyecto__panel" id="revisiones" role="tabpanel">
+        <h2 class="panel__titulo pestanas-proyecto__titulo">Revisiones</h2>
+        {% if gestiona %}
+            <form method="post" class="revision-nueva" novalidate>
+                {% csrf_token %}
+                <input type="hidden" name="apunte" value="revision">
+                <div class="campo">
+                    <span class="campo__titulo">{{ formulario_revision.tipo.label }}</span>
+                    <div class="familias familias--formulario" role="radiogroup" aria-label="{{ formulario_revision.tipo.label }}">
+                        {% for opcion in formulario_revision.tipo %}<label class="familia familia--opcion">{{ opcion.tag }} {{ opcion.choice_label }}</label>{% endfor %}
+                    </div>
+                </div>
+                <div class="cita-nueva cita-nueva--sin-borde">
+                    {% include "gestion/campo_widget.html" with campo=formulario_revision.fecha %}
+                    {% include "gestion/campo_widget.html" with campo=formulario_revision.hora %}
+                    {% include "gestion/campo_widget.html" with campo=formulario_revision.motivo %}
+                    <button type="submit" class="boton">{% include "gestion/icono.html" with nombre="mas" %}Añadir revisión</button>
+                </div>
+            </form>
+        {% endif %}
+        <ul class="citas">
+            {% for revision in revisiones_proximas %}
+                {% include "gestion/revision_vehiculo.html" %}
+            {% empty %}
+                <li class="vacio vacio--corto"><p>No hay revisiones pendientes.</p></li>
+            {% endfor %}
+        </ul>
+        {% if revisiones_pasadas %}
+            <details class="citas-pasadas">
+                <summary>Revisiones pasadas ({{ revisiones_pasadas|length }})</summary>
+                <ul class="citas">{% for revision in revisiones_pasadas %}{% include "gestion/revision_vehiculo.html" %}{% endfor %}</ul>
+            </details>
+        {% endif %}
+    </div>
+
+    {# ---------- Anotaciones: Oficina y el responsable ---------- #}
+    <div class="pestanas-proyecto__panel" id="anotaciones" role="tabpanel">
+        <h2 class="panel__titulo pestanas-proyecto__titulo">Anotaciones</h2>
+        <form method="post" class="nota-nueva" novalidate>
+            {% csrf_token %}
+            <input type="hidden" name="apunte" value="nota">
+            <label class="campo__titulo" for="{{ formulario_nota.texto.id_for_label }}">{{ formulario_nota.texto.label }}</label>
+            <div class="entrada{% if formulario_nota.texto.errors %} entrada--error{% endif %}">{{ formulario_nota.texto }}</div>
+            {% for error in formulario_nota.texto.errors %}<p class="error-campo">{{ error }}</p>{% endfor %}
+            <div class="nota-nueva__pie">
+                <span class="ayuda-campo">Quedará guardada con tu nombre y la hora. Solo podrás borrar las tuyas.</span>
+                <button type="submit" class="boton">{% include "gestion/icono.html" with nombre="mas" %}Añadir anotación</button>
+            </div>
+        </form>
+        <ul class="notas">
+            {% for nota in notas %}
+                <li class="nota{% if nota.automatica %} nota--automatica{% endif %}">
+                    <span class="avatar avatar--mini" aria-hidden="true">{% if nota.autor %}{{ nota.autor.first_name|default:nota.autor.username|slice:":1"|upper }}{% else %}?{% endif %}</span>
+                    <div class="nota__cuerpo">
+                        <p class="nota__cabecera"><strong>{% if nota.autor %}{{ nota.autor.get_full_name|default:nota.autor.username }}{% else %}Usuario eliminado{% endif %}</strong><span>{{ nota.fecha|date:"d/m/Y · H:i" }}</span></p>
+                        <p class="nota__texto">{% if nota.automatica %}<span class="revision__tipo">Historial</span>{% endif %}{{ nota.texto|linebreaksbr }}</p>
+                    </div>
+                    {% if nota.autor == user and not nota.automatica %}
+                        <form method="post" action="{% url 'nota_vehiculo_eliminar' nota.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="boton-tabla boton-tabla--peligro" aria-label="Eliminar anotación" title="Eliminar" onclick="return confirm('¿Eliminar esta anotación?');">{% include "gestion/icono.html" with nombre="borrar" %}</button>
+                        </form>
+                    {% endif %}
+                </li>
+            {% empty %}
+                <li class="vacio vacio--corto"><p>Todavía no hay anotaciones.</p></li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+{% endblock %}

@@ -467,3 +467,10 @@ document.querySelectorAll("[data-filtrar-select]").forEach(function (entrada) {
         if (primera && (!elegida || !elegida.value || elegida.hidden)) { lista.value = primera.value; }
     });
 });
+
+// App instalable: registra el service worker (/sw.js). Si el navegador no lo admite, no pasa nada.
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+        navigator.serviceWorker.register("/sw.js");
+    });
+}

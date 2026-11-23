@@ -29,10 +29,12 @@
             <a class="boton-tabla" href="{{ url_siguiente }}" aria-label="Dos semanas después" title="Dos semanas después">{% include "gestion/icono.html" with nombre="siguiente" %}</a>
             {% if not es_desde_hoy %}<a class="buscador__boton calendario-nav__hoy" href="{{ url_hoy }}">Hoy</a>{% endif %}
         </div>
-        <nav class="segmentos" aria-label="Qué ver">
+        <nav class="segmentos segmentos--desliza" aria-label="Qué ver">
             <a href="?desde={{ desde|date:'Y-m-d' }}" class="segmento{% if ver_actual == 'todo' %} segmento--activo{% endif %}">Todo</a>
             <a href="?desde={{ desde|date:'Y-m-d' }}&ver=outlook" class="segmento{% if ver_actual == 'outlook' %} segmento--activo{% endif %}"><span class="punto-agenda punto-agenda--outlook" aria-hidden="true"></span>Outlook</a>
             <a href="?desde={{ desde|date:'Y-m-d' }}&ver=citas" class="segmento{% if ver_actual == 'citas' %} segmento--activo{% endif %}"><span class="punto-agenda punto-agenda--cita" aria-hidden="true"></span>Citas</a>
+            <a href="?desde={{ desde|date:'Y-m-d' }}&ver=trabajadores" class="segmento{% if ver_actual == 'trabajadores' %} segmento--activo{% endif %}"><span class="punto-agenda punto-agenda--trabajador" aria-hidden="true"></span>Trabajadores</a>
+            <a href="?desde={{ desde|date:'Y-m-d' }}&ver=vehiculos" class="segmento{% if ver_actual == 'vehiculos' %} segmento--activo{% endif %}"><span class="punto-agenda punto-agenda--vehiculo" aria-hidden="true"></span>Vehículos</a>
         </nav>
     </div>
 
@@ -46,9 +48,20 @@
                 {% for elemento in dia.elementos %}
                     <li class="agenda__elemento agenda__elemento--{{ elemento.fuente }}">
                         <span class="agenda__hora">
-                            {% if elemento.inicio %}{{ elemento.inicio|time:"H:i" }}{% if elemento.fin %}<span>{{ elemento.fin|time:"H:i" }}</span>{% endif %}{% else %}<em class="agenda__dia-completo">Todo el día</em>{% endif %}
+                            {% if elemento.franja %}<em class="agenda__dia-completo">{{ elemento.franja }}</em>{% elif elemento.inicio %}{{ elemento.inicio|time:"H:i" }}{% if elemento.fin %}<span>{{ elemento.fin|time:"H:i" }}</span>{% endif %}{% else %}<em class="agenda__dia-completo">Todo el día</em>{% endif %}
                         </span>
-                        {% if elemento.fuente == 'cita' %}
+                        {% if elemento.fuente == 'vehiculo' %}
+                            <a class="agenda__cuerpo" href="{% url 'detalle_vehiculo' elemento.vehiculo.pk %}#revisiones">
+                                <span class="agenda__titulo">{{ elemento.titulo }}</span>
+                                <span class="agenda__meta">{{ elemento.vehiculo.matricula }}{% if elemento.motivo %} · {{ elemento.motivo }}{% endif %}</span>
+                            </a>
+                        {% elif elemento.fuente == 'trabajador' %}
+                            {# Quién va adónde: lleva a la agenda de ese trabajador #}
+                            <a class="agenda__cuerpo" href="{% url 'empleado_agenda' elemento.empleado.pk %}?semana={{ dia.fecha|date:'Y-m-d' }}">
+                                <span class="agenda__titulo">{{ elemento.titulo }}</span>
+                                <span class="agenda__meta">{{ elemento.proyecto.nombre }}{% if elemento.proyecto.cliente %} · {{ elemento.proyecto.cliente }}{% endif %}{% if elemento.nota %} · {{ elemento.nota }}{% endif %}</span>
+                            </a>
+                        {% elif elemento.fuente == 'cita' %}
                             <a class="agenda__cuerpo" href="{% url 'detalle_proyecto' elemento.proyecto.pk %}#citas">
                                 <span class="agenda__titulo">{{ elemento.titulo }}</span>
                                 <span class="agenda__meta">{{ elemento.proyecto.nombre }}{% if elemento.proyecto.cliente %} · {{ elemento.proyecto.cliente }}{% endif %}</span>
@@ -59,11 +72,14 @@
                                 {% if elemento.lugar or elemento.varios_dias %}<span class="agenda__meta">{{ elemento.lugar }}{% if elemento.lugar and elemento.varios_dias %} · {% endif %}{{ elemento.varios_dias }}</span>{% endif %}
                             </span>
                         {% endif %}
-                        <span class="agenda__fuente">{% if elemento.fuente == 'cita' %}Cita{% else %}Outlook{% endif %}</span>
+                        <span class="agenda__fuente">{% if elemento.fuente == 'cita' %}Cita{% elif elemento.fuente == 'trabajador' %}Trabajador{% elif elemento.fuente == 'vehiculo' %}Vehículo{% else %}Outlook{% endif %}</span>
                     </li>
                 {% empty %}
-                    <li class="agenda__vacio">Nada para hoy.</li>
+                    <li class="agenda__vacio">{% if ver_actual == 'trabajadores' %}Nadie agendado.{% else %}Nada para hoy.{% endif %}</li>
                 {% endfor %}
+                {% if dia.sin_agendar %}
+                    <li class="agenda__libres"><strong>Sin agendar:</strong> {% for empleado in dia.sin_agendar %}<a href="{% url 'empleado_agenda' empleado.pk %}?semana={{ dia.fecha|date:'Y-m-d' }}">{{ empleado.first_name|default:empleado.username }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</li>
+                {% endif %}
             </ul>
         </div>
     {% empty %}

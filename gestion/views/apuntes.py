@@ -7,7 +7,8 @@ from django.db.models import Sum
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
-from ..forms import AlbaranForm, CitaForm, ConsumoForm, HorasForm, NotaForm
+from ..economia import resumen
+from ..forms import AlbaranForm, CitaForm, ConsumoForm, EconomiaForm, HorasForm, NotaForm
 from ..models import Consumo, horas_texto, Material, Nota, precio_hora, Proyecto, Usuario
 from .comun import datos_menu, filtros_material, slug_del_tipo, url_con_filtros
 
@@ -61,6 +62,7 @@ def detalle_proyecto(request, pk):
     formulario_nota = NotaForm()
     formulario_albaran = AlbaranForm()
     formulario_cita = CitaForm()
+    formulario_economia = EconomiaForm(instance=proyecto)
     # Pestaña que se abre al cargar: Horas si puede apuntar; si no, Apuntes.
     # Si un formulario vuelve con errores, se abre su pestaña
     pestana = 'horas' if puede_apuntar else 'apuntes'
@@ -79,6 +81,15 @@ def detalle_proyecto(request, pk):
                 cita.save()
                 messages.success(request, f'Cita añadida para el {cita.fecha:%d/%m/%Y} ({cita.dias()}).')
                 return redirect(reverse('detalle_proyecto', args=[proyecto.pk]) + '#citas')
+
+        elif enviado == 'economia' and request.user.has_perm('gestion.change_material'):
+            # Presupuesto, ingreso y subcontrata (Oficina)
+            pestana = 'economia'
+            formulario_economia = EconomiaForm(request.POST, instance=proyecto)
+            if formulario_economia.is_valid():
+                formulario_economia.save()
+                messages.success(request, 'Datos económicos guardados.')
+                return redirect(reverse('detalle_proyecto', args=[proyecto.pk]) + '#economia')
 
         elif enviado == 'nota' and request.user.has_perm('gestion.add_nota'):
             pestana = 'notas'
@@ -180,6 +191,10 @@ def detalle_proyecto(request, pk):
         for consumo in consumos:
             coste_total += consumo.total()
         contexto['coste_total'] = coste_total
+    # Pestaña Economía: gastado (material + mano de obra), ingreso, presupuesto y beneficio
+    if request.user.has_perm('gestion.change_material'):
+        contexto['economia'] = resumen(proyecto)
+        contexto['formulario_economia'] = formulario_economia
     return render(request, 'gestion/detalle_proyecto.html', contexto)
 
 

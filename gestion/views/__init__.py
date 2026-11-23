@@ -7,3 +7,6 @@ from .citas import *  # noqa: F401,F403
 from .albaranes import *  # noqa: F401,F403
 from .catalogo import *  # noqa: F401,F403
 from .empleados import *  # noqa: F401,F403
+from .estadisticas import *  # noqa: F401,F403
+from .vehiculos import *  # noqa: F401,F403
+from .app import *  # noqa: F401,F403

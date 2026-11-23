@@ -1,0 +1,17 @@
+{# Una revisión (taller o ITV): el día en grande, qué es, la hora y cuánto falta #}
+<li class="cita revision revision--{{ revision.tipo|lower }}{% if revision.es_pasada %} cita--pasada{% elif revision.es_cercana %} cita--cercana{% endif %}">
+    <span class="cita__dia" aria-hidden="true"><span class="cita__numero">{{ revision.fecha|date:"j" }}</span><span class="cita__mes">{{ revision.fecha|date:"M" }}</span></span>
+    <span class="cita__datos">
+        <span class="cita__titulo"><span class="revision__tipo">{{ revision.get_tipo_display }}</span>{% if revision.motivo %} {{ revision.motivo }}{% endif %}</span>
+        <span class="cita__meta">{{ revision.fecha|date:"l, d/m/Y"|capfirst }}{% if revision.hora %} · {{ revision.hora|time:"H:i" }}{% else %} · sin hora{% endif %} · <strong>{{ revision.dias }}</strong></span>
+    </span>
+    {% if perms.gestion.change_revisionvehiculo %}
+        <a class="boton-tabla" href="{% url 'revision_vehiculo_editar' revision.pk %}" aria-label="Cambiar revisión" title="Cambiar">{% include "gestion/icono.html" with nombre="editar" %}</a>
+    {% endif %}
+    {% if perms.gestion.delete_revisionvehiculo %}
+        <form method="post" action="{% url 'revision_vehiculo_eliminar' revision.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="boton-tabla boton-tabla--peligro" aria-label="Eliminar revisión" title="Eliminar" onclick="return confirm('¿Eliminar la revisión del {{ revision.fecha|date:'d/m/Y' }}?');">{% include "gestion/icono.html" with nombre="borrar" %}</button>
+        </form>
+    {% endif %}
+</li>

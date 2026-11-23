@@ -1,0 +1,46 @@
+{% extends "gestion/principal.html" %}
+
+{% block titulo %}Vehículos · Gregal Trace{% endblock %}
+
+{% block contenido %}
+<header class="pagina">
+    {% include "gestion/migas.html" with miga_actual="Vehículos" %}
+    <div class="pagina__fila">
+        <h1 class="pagina__titulo">{% if gestiona %}Vehículos{% else %}Mis vehículos{% endif %}</h1>
+        {% if perms.gestion.add_vehiculo %}
+            <div class="pagina__acciones">
+                <a class="boton" href="{% url 'vehiculo_crear' %}">{% include "gestion/icono.html" with nombre="mas" %}Nuevo vehículo</a>
+            </div>
+        {% endif %}
+    </div>
+</header>
+
+<section class="panel panel--lista">
+    {% if vehiculos %}
+        <ul class="filas">
+            {% for vehiculo in vehiculos %}
+                <li>
+                    <a class="fila vehiculo-fila{% if not vehiculo.activo %} vehiculo-fila--baja{% endif %}" href="{% url 'detalle_vehiculo' vehiculo.pk %}">
+                        <span class="fila__icono" aria-hidden="true">{% include "gestion/icono.html" with nombre="vehiculo" %}</span>
+                        <span class="fila__principal">
+                            <span class="fila__titulo">{{ vehiculo.modelo }} · <span class="matricula">{{ vehiculo.matricula }}</span></span>
+                            <span class="fila__meta">
+                                {{ vehiculo.get_tipo_display }}
+                                · {% if vehiculo.responsable %}{{ vehiculo.responsable.get_full_name|default:vehiculo.responsable.username }}{% else %}sin responsable{% endif %}
+                                {% if vehiculo.ultimo %} · {{ vehiculo.ultimo.km|floatformat:"0g" }} km el {{ vehiculo.ultimo.fecha|date:"d/m/Y" }}{% endif %}
+                                {% if not vehiculo.activo %} · fuera de uso{% endif %}
+                            </span>
+                        </span>
+                        {% if vehiculo.proxima %}
+                            <span class="entrega{% if vehiculo.proxima.es_cercana %} entrega--cerca{% endif %}">{% include "gestion/icono.html" with nombre="herramienta" %}{{ vehiculo.proxima.get_tipo_display }} {{ vehiculo.proxima.fecha|date:"d/m" }} · {{ vehiculo.proxima.dias }}</span>
+                        {% endif %}
+                        {% include "gestion/icono.html" with nombre="siguiente" %}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="vacio"><p>{% if gestiona %}Todavía no hay vehículos. Da de alta la primera furgoneta o coche.{% else %}No tienes ningún vehículo a tu cargo.{% endif %}</p></div>
+    {% endif %}
+</section>
+{% endblock %}
